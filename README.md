@@ -1,6 +1,6 @@
 # The 97th Academy Awards
 
-![Version](https://img.shields.io/badge/version-1.0.0--6-blue)
+![Version](https://img.shields.io/badge/version-1.0.0--0-blue)
 ![License](https://img.shields.io/badge/license-GPL--3.0-green)
 ![Downloads](https://img.shields.io/github/downloads/ALi3naTEd0/oscars/total)
 ![Last Commit](https://img.shields.io/github/last-commit/ALi3naTEd0/oscars)
