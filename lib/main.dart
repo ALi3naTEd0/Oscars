@@ -118,55 +118,73 @@ class _MovieBrowserScreenState extends State<MovieBrowserScreen> {
 
   final Map<String, List<String>> categories = {
     "Best Picture": [
-      "Anora", "The Brutalist", "A Complete Unknown", "Conclave", "Dune: Part Two", "Emilia Pérez", "I'm Still Here", "Nickel Boys", "The Substance", "Wicked"
+        "Anora", "The Brutalist", "A Complete Unknown", "Conclave", "Dune: Part Two", "Emilia Pérez", "I'm Still Here", "Nickel Boys", "The Substance", "Wicked"
     ],
     "Best Director": [
-      "Anora", "The Brutalist", "A Complete Unknown", "Emilia Pérez", "The Substance"
+        "Anora", "The Brutalist", "A Complete Unknown", "Emilia Pérez", "The Substance"
     ],
     "Best Actress": [
-      "Wicked", "Emilia Pérez", "Anora", "The Substance", "I'm Still Here"
+        "Wicked", "Emilia Pérez", "Anora", "The Substance", "I'm Still Here"
     ],
     "Best Actor": [
-      "The Brutalist", "A Complete Unknown", "Sing Sing", "Conclave", "The Apprentice"
+        "The Brutalist", "A Complete Unknown", "Sing Sing", "Conclave", "The Apprentice"
     ],
     "Best Cinematography": [
-      "The Brutalist", "Dune: Part Two", "Emilia Pérez", "Maria", "Nosferatu"
+        "The Brutalist", "Dune: Part Two", "Emilia Pérez", "Maria", "Nosferatu"
     ],
     "Best Visual Effects": [
-      "Alien: Romulus", "Better Man", "Dune: Part Two", "Kingdom of the Planet of the Apes", "Wicked"
+        "Alien: Romulus", "Better Man", "Dune: Part Two", "Kingdom of the Planet of the Apes", "Wicked"
     ],
     "Best Sound": [
-      "A Complete Unknown", "Dune: Part Two", "Emilia Pérez", "Wicked", "The Wild Robot"
+        "A Complete Unknown", "Dune: Part Two", "Emilia Pérez", "Wicked", "The Wild Robot"
     ],
     "Best Film Editing": [
-      "Anora", "The Brutalist", "Conclave", "Emilia Pérez", "Wicked"
+        "Anora", "The Brutalist", "Conclave", "Emilia Pérez", "Wicked"
     ],
     "Best Production Design": [
-      "The Brutalist", "Conclave", "Dune: Part Two", "Nosferatu", "Wicked"
+        "The Brutalist", "Conclave", "Dune: Part Two", "Nosferatu", "Wicked"
     ],
     "Best Animated Feature Film": [
-      "Flow", "Inside Out 2", "Memoir of a Snail", "Wallace & Gromit: Vengeance Most Fowl", "The Wild Robot"
+        "Flow", "Inside Out 2", "Memoir of a Snail", "Wallace & Gromit: Vengeance Most Fowl", "The Wild Robot"
     ],
     "Best International Feature Film": [
-      "I'm Still Here", "The Girl With the Needle", "Emilia Pérez", "The Seed of the Sacred Fig", "Flow"
+        "I'm Still Here", "The Girl With the Needle", "Emilia Pérez", "The Seed of the Sacred Fig", "Flow"
     ],
     "Best Documentary Short Film": [
-      "Death by Numbers", "I Am Ready, Warden", "Incident", "Instruments of a Beating Heart", "The Only Girl in the Orchestra"
+        "Death by Numbers", "I Am Ready, Warden", "Incident", "Instruments of a Beating Heart", "The Only Girl in the Orchestra"
     ],
     "Best Documentary Feature Film": [
-      "Black Box Diaries", "No Other Land", "Porcelain War", "Soundtrack to a Coup d'Etat", "Sugarcane"
+        "Black Box Diaries", "No Other Land", "Porcelain War", "Soundtrack to a Coup d'Etat", "Sugarcane"
     ],
     "Best Original Song": [
-      "Emilia Pérez", "The Six Triple Eight", "Sing Sing", "Emilia Pérez", "Elton John: Never Too Late"
+        "Emilia Pérez", "The Six Triple Eight", "Sing Sing", "Emilia Pérez", "Elton John: Never Too Late"
     ],
     "Best Supporting Actress": [
-      "A Complete Unknown", "Wicked", "The Brutalist", "Conclave", "Emilia Pérez"
+        "A Complete Unknown", "Wicked", "The Brutalist", "Conclave", "Emilia Pérez"
     ],
     "Best Original Screenplay": [
-      "Anora", "The Brutalist", "A Real Pain", "September 5", "The Substance"
+        "Anora", "The Brutalist", "A Real Pain", "September 5", "The Substance"
     ],
     "Best Adapted Screenplay": [
-      "A Complete Unknown", "Conclave", "Emilia Pérez", "Nickel Boys", "Sing Sing"
+        "A Complete Unknown", "Conclave", "Emilia Pérez", "Nickel Boys", "Sing Sing"
+    ],
+    "Best Animated Short Film": [
+        "Beautiful Men", "In the Shadow of the Cypress", "Magic Candies", "Wander to Wonder", "Yuck!"
+    ],
+    "Best Live Action Short Film": [
+        "A Lien", "Anuja", "I'm Not a Robot", "The Last Ranger", "The Man Who Could Not Remain Silent"
+    ],
+    "Best Original Score": [
+        "The Brutalist", "Conclave", "Emilia Pérez", "Wicked", "The Wild Robot"
+    ],
+    "Best Makeup and Hairstyling": [
+        "A Different Man", "Emilia Pérez", "Nosferatu", "The Substance", "Wicked"
+    ],
+    "Best Costume Design": [
+        "A Complete Unknown", "Conclave", "Gladiator II", "Nosferatu", "Wicked"
+    ],
+    "Best Supporting Actor": [
+        "Anora", "A Real Pain", "A Complete Unknown", "The Brutalist", "The Apprentice"
     ]
   };
 
