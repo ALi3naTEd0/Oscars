@@ -18,7 +18,7 @@ class MovieAwardsApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Academy Awards Browser',
+      title: 'The 97th Academy Awards',
       theme: ThemeData(
         primaryColor: Colors.black,
         scaffoldBackgroundColor: Colors.black,
@@ -167,24 +167,6 @@ class _MovieBrowserScreenState extends State<MovieBrowserScreen> {
     ],
     "Best Adapted Screenplay": [
       "A Complete Unknown", "Conclave", "Emilia Pérez", "Nickel Boys", "Sing Sing"
-    ],
-    "Best Animated Short Film": [
-      "Beautiful Men", "In the Shadow of the Cypress", "Magic Candies", "Wander to Wonder", "Yuck!"
-    ],
-    "Best Live Action Short Film": [
-      "A Lien", "Anuja", "I'm Not a Robot", "The Last Ranger", "The Man Who Could Not Remain Silent"
-    ],
-    "Best Original Score": [
-      "The Brutalist", "Conclave", "Emilia Pérez", "Wicked", "The Wild Robot"
-    ],
-    "Best Makeup and Hairstyling": [
-      "A Different Man", "Emilia Pérez", "Nosferatu", "The Substance", "Wicked"
-    ],
-    "Best Costume Design": [
-      "A Complete Unknown", "Conclave", "Gladiator II", "Nosferatu", "Wicked"
-    ],
-    "Best Supporting Actor": [
-      "Anora", "A Real Pain", "A Complete Unknown", "The Brutalist", "The Apprentice"
     ]
   };
 
@@ -203,14 +185,14 @@ class _MovieBrowserScreenState extends State<MovieBrowserScreen> {
     });
   }
 
-void _initializeEntries() {
+  void _initializeEntries() {
     Set<String> uniqueImdbIds = {};
     imdbIds.forEach((movieTitle, imdbId) {
       if (!uniqueImdbIds.contains(imdbId)) {
-        String category = categories.entries.firstWhere(
-            (element) => element.value.contains(movieTitle),
-            orElse: () => MapEntry('Uncategorized', [])
-        ).key;
+        String category = categories.entries
+            .firstWhere((element) => element.value.contains(movieTitle),
+                orElse: () => MapEntry('Uncategorized', []))
+            .key;
 
         entries.add({
           'imdbId': imdbId,
@@ -222,21 +204,20 @@ void _initializeEntries() {
     });
   }
 
-
   Future<void> _preloadData() async {
     final client = http.Client();
     try {
       await Future.wait(
-        entries.asMap().entries.map((entry) => _loadMovieData(entry.value['imdbId'], client)),
+        entries.map((entry) => _loadMovieData(entry['imdbId'], client)),
       );
     } finally {
       client.close();
     }
+
     setState(() {
       isLoading = false;
       currentIndex = 0;
     });
-    MovieCache.saveCache(cache).catchError((error) => print('Error saving cache: $error'));
   }
 
   Future<void> _loadMovieData(String movieId, http.Client client) async {
@@ -251,41 +232,29 @@ void _initializeEntries() {
         headers: {
           "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36",
         },
-      ).timeout(Duration(seconds: 10));
+      );
 
       if (response.statusCode != 200) return;
 
       final jsonData = _extractJsonData(response.body);
       if (jsonData == null) return;
 
-      final movieData = {
-        "imdb_url": "https://www.imdb.com/title/$movieId/",
-        "title": jsonData["name"] ?? movieId,
-        "rating": jsonData["aggregateRating"]?["ratingValue"] ?? "N/A",
-        "duration": _formatDuration(jsonData["duration"] ?? ""),
-        "genres": (jsonData["genre"] as List<dynamic>?)?.join(", ") ?? "N/A",
-        "plot": jsonData["description"] ?? "Sin sinopsis disponible",
-        "image_url": _extractImageUrl(response.body),
-      };
-
       setState(() {
-        cache[movieId] = movieData;
+        cache[movieId] = {
+          "imdb_url": "https://www.imdb.com/title/$movieId/",
+          "title": jsonData["name"] ?? movieId,
+          "rating": jsonData["aggregateRating"]?["ratingValue"] ?? "N/A",
+          "duration": _formatDuration(jsonData["duration"] ?? ""),
+          "genres": (jsonData["genre"] as List<dynamic>?)?.join(", ") ?? "N/A",
+          "plot": jsonData["description"] ?? "Sin sinopsis disponible",
+          "image_url": _extractImageUrl(response.body),
+        };
       });
+
       print('Data loaded from IMDb for $movieId');
     } catch (e) {
       print('Error loading data for $movieId: $e');
     }
-  }
-
-  String _cleanTitle(String title) {
-    if (title.contains("(")) return title.split("(")[0].trim();
-    return title;
-  }
-
-  Map<String, dynamic>? _extractJsonData(String html) {
-    final regex = RegExp(r'<script type="application/ld\+json">(.*?)</script>', dotAll: true);
-    final match = regex.firstMatch(html);
-    return match == null ? null : json.decode(match.group(1)!);
   }
 
   String _formatDuration(String duration) {
@@ -320,7 +289,7 @@ void _initializeEntries() {
     return Scaffold(
       appBar: AppBar(
         title: const Text(
-          "Academy Awards",
+          "The 97th Academy Awards",
           style: TextStyle(
             color: Colors.amber,
             fontSize: 24,
@@ -349,11 +318,11 @@ void _initializeEntries() {
     );
   }
 
- Widget _buildNominationInfo(Map<String, dynamic> entry) {
+  Widget _buildNominationInfo(Map<String, dynamic> entry) {
     return Column(
-      crossAxisAlignment: CrossAxisAlignment.center, // Added to center text
+      crossAxisAlignment: CrossAxisAlignment.center,
       children: [
-        Text(
+        const Text(
           "Nominación Actual",
           style: TextStyle(
             color: Colors.white,
@@ -361,15 +330,15 @@ void _initializeEntries() {
             fontWeight: FontWeight.bold,
           ),
         ),
-        SizedBox(height: 10),
+        const SizedBox(height: 10),
         Text(
           entry['category'],
-          style: TextStyle(color: Colors.grey, fontSize: 16),
+          style: const TextStyle(color: Colors.grey, fontSize: 16),
         ),
-        SizedBox(height: 10),
+        const SizedBox(height: 10),
         Text(
           entry['movieTitle'],
-          style: TextStyle(
+          style: const TextStyle(
             color: Colors.amber,
             fontSize: 18,
             fontWeight: FontWeight.bold,
@@ -380,38 +349,38 @@ void _initializeEntries() {
   }
 
   Widget _buildNavigationControls() {
-    return Platform.isAndroid
-        ? Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              _buildControlButton("Anterior", Icons.arrow_back, () => _navigate(-1)),
-              SizedBox(height: 10),
-              _buildControlButton("Aleatorio", Icons.shuffle, _randomEntry),
-              SizedBox(height: 10),
-              _buildControlButton("Siguiente", Icons.arrow_forward, () => _navigate(1)),
-            ],
-          )
-        : Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              _buildControlButton("Anterior", Icons.arrow_back, () => _navigate(-1)),
-              SizedBox(width: 20),
-              _buildControlButton("Aleatorio", Icons.shuffle, _randomEntry),
-              SizedBox(width: 20),
-              _buildControlButton("Siguiente", Icons.arrow_forward, () => _navigate(1)),
-            ],
-          );
+    return LayoutBuilder(builder: (context, constraints) {
+      bool isDesktop = constraints.maxWidth > 600;
+      return Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          _buildControlButton("Anterior", Icons.arrow_back, () => _navigate(-1), isDesktop: isDesktop),
+          SizedBox(width: isDesktop ? 20 : 0),
+          _buildControlButton("Aleatorio", Icons.shuffle, _randomEntry, isDesktop: isDesktop),
+          SizedBox(width: isDesktop ? 20 : 0),
+          _buildControlButton("Siguiente", Icons.arrow_forward, () => _navigate(1), isDesktop: isDesktop),
+        ],
+      );
+    });
   }
 
-  Widget _buildControlButton(String text, IconData icon, VoidCallback action) {
+  Widget _buildControlButton(String text, IconData icon, VoidCallback action, {bool isDesktop = false}) {
+    double fontSize = isDesktop ? 16 : 12;
+    EdgeInsets padding = EdgeInsets.symmetric(horizontal: isDesktop ? 16 : 8, vertical: isDesktop ? 12 : 8);
+
     return ElevatedButton.icon(
-      icon: Icon(icon, color: Colors.amber),
-      label: Text(text, style: TextStyle(color: Colors.white)),
+      icon: Icon(icon, color: Colors.amber, size: isDesktop ? 24 : 20),
+      label: Text(
+        text,
+        style: TextStyle(color: Colors.white, fontSize: fontSize),
+      ),
       onPressed: action,
       style: ElevatedButton.styleFrom(
         backgroundColor: Colors.grey[800],
         foregroundColor: Colors.white,
-        padding: EdgeInsets.symmetric(horizontal: 20, vertical: 12),
+        padding: padding,
+        minimumSize: Size.zero,
+        tapTargetSize: MaterialTapTargetSize.shrinkWrap,
       ),
     );
   }
@@ -433,7 +402,7 @@ void _initializeEntries() {
               placeholder: (context, url) => Center(child: CircularProgressIndicator()),
               errorWidget: (context, url, error) => Icon(Icons.error),
             )
-          : Center(child: Text("Imagen no disponible")),
+          : const Center(child: Text("Imagen no disponible")),
     );
   }
 
@@ -442,17 +411,17 @@ void _initializeEntries() {
       children: [
         Text(
           data?["title"] ?? "N/A",
-          style: TextStyle(
+          style: const TextStyle(
             color: Colors.white,
             fontSize: 20,
             fontWeight: FontWeight.bold,
           ),
           textAlign: TextAlign.center,
         ),
-        SizedBox(height: 10),
+        const SizedBox(height: 10),
         if (data?["imdb_url"] != null)
           InkWell(
-            child: Text(
+            child: const Text(
               "🔗 Ver en IMDb",
               style: TextStyle(
                 color: Colors.lightBlue,
@@ -462,27 +431,33 @@ void _initializeEntries() {
             ),
             onTap: () => launch(data!["imdb_url"]),
           ),
-        SizedBox(height: 10),
+        const SizedBox(height: 10),
         Text(
           "⭐ ${data?["rating"] ?? "N/A"}/10",
-          style: TextStyle(color: Colors.red, fontSize: 18),
+          style: const TextStyle(color: Colors.red, fontSize: 18),
         ),
-        SizedBox(height: 10),
+        const SizedBox(height: 10),
         Text(
           "⏱️ ${data?["duration"] ?? "N/A"} | 🎭 ${data?["genres"] ?? "N/A"}",
-          style: TextStyle(color: Colors.white),
+          style: const TextStyle(color: Colors.white),
         ),
-        SizedBox(height: 20),
+        const SizedBox(height: 20),
         Padding(
-          padding: EdgeInsets.symmetric(horizontal: 20),
+          padding: const EdgeInsets.symmetric(horizontal: 20),
           child: Text(
             data?["plot"] ?? "Sin sinopsis disponible",
-            style: TextStyle(color: Colors.white, fontSize: 16),
+            style: const TextStyle(color: Colors.white, fontSize: 16),
             textAlign: TextAlign.justify,
           ),
         ),
       ],
     );
+  }
+
+  Map<String, dynamic>? _extractJsonData(String html) {
+    final regex = RegExp(r'<script type="application/ld\+json">(.*?)</script>', dotAll: true);
+    final match = regex.firstMatch(html);
+    return match == null ? null : json.decode(match.group(1)!);
   }
 }
 
@@ -497,7 +472,7 @@ class MovieCache {
       if (await file.exists()) {
         final jsonString = await file.readAsString();
         _cache = json.decode(jsonString);
-         print('Cache loaded from file with ${_cache.length} entries.');
+        print('Cache loaded from file with ${_cache.length} entries.');
         return _cache;
       } else {
         print('Cache file not found, returning empty cache.');
@@ -510,7 +485,7 @@ class MovieCache {
   }
 
   static Future<void> saveCache(Map<String, dynamic> cacheData) async {
-     _cache = cacheData; // Update the static cache with the new data
+    _cache = cacheData;
     try {
       final directory = await getApplicationDocumentsDirectory();
       final file = File(p.join(directory.path, _cacheFileName));
@@ -521,7 +496,6 @@ class MovieCache {
       print('Error saving cache: $e');
     }
   }
-
 
   static dynamic get(String key) {
     return _cache[key];
