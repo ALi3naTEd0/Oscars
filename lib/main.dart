@@ -1,6 +1,5 @@
 import 'dart:async';
 import 'dart:convert';
-import 'dart:io';
 import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
@@ -10,6 +9,8 @@ import 'package:cached_network_image/cached_network_image.dart';
 void main() => runApp(MovieAwardsApp());
 
 class MovieAwardsApp extends StatelessWidget {
+  const MovieAwardsApp({super.key});
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -25,6 +26,8 @@ class MovieAwardsApp extends StatelessWidget {
 }
 
 class MovieBrowserScreen extends StatefulWidget {
+  const MovieBrowserScreen({super.key});
+
   @override
   _MovieBrowserScreenState createState() => _MovieBrowserScreenState();
 }
