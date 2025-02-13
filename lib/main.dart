@@ -1,23 +1,48 @@
 import 'dart:async';
 import 'dart:convert';
 import 'dart:math';
+import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:url_launcher/url_launcher.dart';
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:path_provider/path_provider.dart';
+import 'package:flutter/foundation.dart';
+import 'package:path/path.dart' as p;
 
 void main() => runApp(MovieAwardsApp());
 
 class MovieAwardsApp extends StatelessWidget {
-  const MovieAwardsApp({super.key});
+  const MovieAwardsApp({Key? key});
 
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Movie Awards Browser',
+      title: 'Academy Awards Browser',
       theme: ThemeData(
-        primarySwatch: Colors.blue,
-        scaffoldBackgroundColor: Color(0xFF2c3e50),
+        primaryColor: Colors.black,
+        scaffoldBackgroundColor: Colors.black,
+        colorScheme: ColorScheme.fromSwatch().copyWith(secondary: Colors.grey[900]),
+        appBarTheme: const AppBarTheme(
+          backgroundColor: Colors.black,
+          centerTitle: true,
+          titleTextStyle: TextStyle(
+            color: Colors.amber,
+            fontSize: 24,
+            fontWeight: FontWeight.bold,
+          ),
+        ),
+        elevatedButtonTheme: ElevatedButtonThemeData(
+          style: ElevatedButton.styleFrom(
+            backgroundColor: Colors.grey[800],
+            foregroundColor: Colors.white,
+          ),
+        ),
+        textTheme: const TextTheme(
+          bodyLarge: TextStyle(color: Colors.white),
+          bodyMedium: TextStyle(color: Colors.white),
+          titleLarge: TextStyle(color: Colors.white),
+        ),
       ),
       home: MovieBrowserScreen(),
       debugShowCheckedModeBanner: false,
@@ -26,15 +51,15 @@ class MovieAwardsApp extends StatelessWidget {
 }
 
 class MovieBrowserScreen extends StatefulWidget {
-  const MovieBrowserScreen({super.key});
+  const MovieBrowserScreen({Key? key});
 
   @override
   _MovieBrowserScreenState createState() => _MovieBrowserScreenState();
 }
 
 class _MovieBrowserScreenState extends State<MovieBrowserScreen> {
-  List<Map<String, String>> entries = [];
-  Map<int, Map<String, dynamic>> cache = {};
+  List<Map<String, dynamic>> entries = [];
+  Map<String, dynamic> cache = {};
   int currentIndex = 0;
   bool isLoading = true;
 
@@ -93,73 +118,73 @@ class _MovieBrowserScreenState extends State<MovieBrowserScreen> {
 
   final Map<String, List<String>> categories = {
     "Best Picture": [
-        "Anora", "The Brutalist", "A Complete Unknown", "Conclave", "Dune: Part Two", "Emilia Pérez", "I'm Still Here", "Nickel Boys", "The Substance", "Wicked"
+      "Anora", "The Brutalist", "A Complete Unknown", "Conclave", "Dune: Part Two", "Emilia Pérez", "I'm Still Here", "Nickel Boys", "The Substance", "Wicked"
     ],
     "Best Director": [
-        "Anora", "The Brutalist", "A Complete Unknown", "Emilia Pérez", "The Substance"
+      "Anora", "The Brutalist", "A Complete Unknown", "Emilia Pérez", "The Substance"
     ],
     "Best Actress": [
-        "Wicked", "Emilia Pérez", "Anora", "The Substance", "I'm Still Here"
+      "Wicked", "Emilia Pérez", "Anora", "The Substance", "I'm Still Here"
     ],
     "Best Actor": [
-        "The Brutalist", "A Complete Unknown", "Sing Sing", "Conclave", "The Apprentice"
+      "The Brutalist", "A Complete Unknown", "Sing Sing", "Conclave", "The Apprentice"
     ],
     "Best Cinematography": [
-        "The Brutalist", "Dune: Part Two", "Emilia Pérez", "Maria", "Nosferatu"
+      "The Brutalist", "Dune: Part Two", "Emilia Pérez", "Maria", "Nosferatu"
     ],
     "Best Visual Effects": [
-        "Alien: Romulus", "Better Man", "Dune: Part Two", "Kingdom of the Planet of the Apes", "Wicked"
+      "Alien: Romulus", "Better Man", "Dune: Part Two", "Kingdom of the Planet of the Apes", "Wicked"
     ],
     "Best Sound": [
-        "A Complete Unknown", "Dune: Part Two", "Emilia Pérez", "Wicked", "The Wild Robot"
+      "A Complete Unknown", "Dune: Part Two", "Emilia Pérez", "Wicked", "The Wild Robot"
     ],
     "Best Film Editing": [
-        "Anora", "The Brutalist", "Conclave", "Emilia Pérez", "Wicked"
+      "Anora", "The Brutalist", "Conclave", "Emilia Pérez", "Wicked"
     ],
     "Best Production Design": [
-        "The Brutalist", "Conclave", "Dune: Part Two", "Nosferatu", "Wicked"
+      "The Brutalist", "Conclave", "Dune: Part Two", "Nosferatu", "Wicked"
     ],
     "Best Animated Feature Film": [
-        "Flow", "Inside Out 2", "Memoir of a Snail", "Wallace & Gromit: Vengeance Most Fowl", "The Wild Robot"
+      "Flow", "Inside Out 2", "Memoir of a Snail", "Wallace & Gromit: Vengeance Most Fowl", "The Wild Robot"
     ],
     "Best International Feature Film": [
-        "I'm Still Here", "The Girl With the Needle", "Emilia Pérez", "The Seed of the Sacred Fig", "Flow"
+      "I'm Still Here", "The Girl With the Needle", "Emilia Pérez", "The Seed of the Sacred Fig", "Flow"
     ],
     "Best Documentary Short Film": [
-        "Death by Numbers", "I Am Ready, Warden", "Incident", "Instruments of a Beating Heart", "The Only Girl in the Orchestra"
+      "Death by Numbers", "I Am Ready, Warden", "Incident", "Instruments of a Beating Heart", "The Only Girl in the Orchestra"
     ],
     "Best Documentary Feature Film": [
-        "Black Box Diaries", "No Other Land", "Porcelain War", "Soundtrack to a Coup d'Etat", "Sugarcane"
+      "Black Box Diaries", "No Other Land", "Porcelain War", "Soundtrack to a Coup d'Etat", "Sugarcane"
     ],
     "Best Original Song": [
-        "Emilia Pérez", "The Six Triple Eight", "Sing Sing", "Emilia Pérez", "Elton John: Never Too Late"
+      "Emilia Pérez", "The Six Triple Eight", "Sing Sing", "Emilia Pérez", "Elton John: Never Too Late"
     ],
     "Best Supporting Actress": [
-        "A Complete Unknown", "Wicked", "The Brutalist", "Conclave", "Emilia Pérez"
+      "A Complete Unknown", "Wicked", "The Brutalist", "Conclave", "Emilia Pérez"
     ],
     "Best Original Screenplay": [
-        "Anora", "The Brutalist", "A Real Pain", "September 5", "The Substance"
+      "Anora", "The Brutalist", "A Real Pain", "September 5", "The Substance"
     ],
     "Best Adapted Screenplay": [
-        "A Complete Unknown", "Conclave", "Emilia Pérez", "Nickel Boys", "Sing Sing"
+      "A Complete Unknown", "Conclave", "Emilia Pérez", "Nickel Boys", "Sing Sing"
     ],
     "Best Animated Short Film": [
-        "Beautiful Men", "In the Shadow of the Cypress", "Magic Candies", "Wander to Wonder", "Yuck!"
+      "Beautiful Men", "In the Shadow of the Cypress", "Magic Candies", "Wander to Wonder", "Yuck!"
     ],
     "Best Live Action Short Film": [
-        "A Lien", "Anuja", "I'm Not a Robot", "The Last Ranger", "The Man Who Could Not Remain Silent"
+      "A Lien", "Anuja", "I'm Not a Robot", "The Last Ranger", "The Man Who Could Not Remain Silent"
     ],
     "Best Original Score": [
-        "The Brutalist", "Conclave", "Emilia Pérez", "Wicked", "The Wild Robot"
+      "The Brutalist", "Conclave", "Emilia Pérez", "Wicked", "The Wild Robot"
     ],
     "Best Makeup and Hairstyling": [
-        "A Different Man", "Emilia Pérez", "Nosferatu", "The Substance", "Wicked"
+      "A Different Man", "Emilia Pérez", "Nosferatu", "The Substance", "Wicked"
     ],
     "Best Costume Design": [
-        "A Complete Unknown", "Conclave", "Gladiator II", "Nosferatu", "Wicked"
+      "A Complete Unknown", "Conclave", "Gladiator II", "Nosferatu", "Wicked"
     ],
     "Best Supporting Actor": [
-        "Anora", "A Real Pain", "A Complete Unknown", "The Brutalist", "The Apprentice"
+      "Anora", "A Real Pain", "A Complete Unknown", "The Brutalist", "The Apprentice"
     ]
   };
 
@@ -167,61 +192,89 @@ class _MovieBrowserScreenState extends State<MovieBrowserScreen> {
   void initState() {
     super.initState();
     _initializeEntries();
-    _preloadData();
+    MovieCache.loadCache().then((loadedCache) {
+      setState(() {
+        cache = loadedCache;
+      });
+      _preloadData();
+    }).catchError((error) {
+      print('Error loading cache: $error');
+      _preloadData();
+    });
   }
 
-  void _initializeEntries() {
-    categories.forEach((category, nominees) {
-      for (var nominee in nominees) {
-        entries.add({"category": category, "nominee": nominee});
+void _initializeEntries() {
+    Set<String> uniqueImdbIds = {};
+    imdbIds.forEach((movieTitle, imdbId) {
+      if (!uniqueImdbIds.contains(imdbId)) {
+        String category = categories.entries.firstWhere(
+            (element) => element.value.contains(movieTitle),
+            orElse: () => MapEntry('Uncategorized', [])
+        ).key;
+
+        entries.add({
+          'imdbId': imdbId,
+          'movieTitle': movieTitle,
+          'category': category,
+        });
+        uniqueImdbIds.add(imdbId);
       }
     });
   }
+
 
   Future<void> _preloadData() async {
     final client = http.Client();
     try {
       await Future.wait(
-        entries.asMap().entries.map((entry) => _loadMovieData(entry.key, client)),
+        entries.asMap().entries.map((entry) => _loadMovieData(entry.value['imdbId'], client)),
       );
     } finally {
       client.close();
     }
-    
     setState(() {
       isLoading = false;
       currentIndex = 0;
     });
+    MovieCache.saveCache(cache).catchError((error) => print('Error saving cache: $error'));
   }
 
-  Future<void> _loadMovieData(int index, http.Client client) async {
-    final nominee = entries[index]["nominee"]!;
-    final title = _cleanTitle(nominee);
-    
-    if (!imdbIds.containsKey(title)) return;
-    
-    final movieId = imdbIds[title]!;
-    final response = await client.get(
-      Uri.parse("https://www.imdb.com/title/$movieId/"),
-      headers: {
-        "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36",
-      },
-    );
+  Future<void> _loadMovieData(String movieId, http.Client client) async {
+    if (cache.containsKey(movieId)) {
+      print('Data loaded from cache for $movieId');
+      return;
+    }
 
-    if (response.statusCode != 200) return;
+    try {
+      final response = await client.get(
+        Uri.parse("https://www.imdb.com/title/$movieId/"),
+        headers: {
+          "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36",
+        },
+      ).timeout(Duration(seconds: 10));
 
-    final jsonData = _extractJsonData(response.body);
-    if (jsonData == null) return;
+      if (response.statusCode != 200) return;
 
-    cache[index] = {
-      "imdb_url": "https://www.imdb.com/title/$movieId/",
-      "title": jsonData["name"] ?? title,
-      "rating": jsonData["aggregateRating"]?["ratingValue"] ?? "N/A",
-      "duration": _formatDuration(jsonData["duration"] ?? ""),
-      "genres": (jsonData["genre"] as List<dynamic>?)?.join(", ") ?? "N/A",
-      "plot": jsonData["description"] ?? "Sin sinopsis disponible",
-      "image_url": _extractImageUrl(response.body),
-    };
+      final jsonData = _extractJsonData(response.body);
+      if (jsonData == null) return;
+
+      final movieData = {
+        "imdb_url": "https://www.imdb.com/title/$movieId/",
+        "title": jsonData["name"] ?? movieId,
+        "rating": jsonData["aggregateRating"]?["ratingValue"] ?? "N/A",
+        "duration": _formatDuration(jsonData["duration"] ?? ""),
+        "genres": (jsonData["genre"] as List<dynamic>?)?.join(", ") ?? "N/A",
+        "plot": jsonData["description"] ?? "Sin sinopsis disponible",
+        "image_url": _extractImageUrl(response.body),
+      };
+
+      setState(() {
+        cache[movieId] = movieData;
+      });
+      print('Data loaded from IMDb for $movieId');
+    } catch (e) {
+      print('Error loading data for $movieId: $e');
+    }
   }
 
   String _cleanTitle(String title) {
@@ -260,12 +313,21 @@ class _MovieBrowserScreenState extends State<MovieBrowserScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final currentEntry = entries[currentIndex];
-    final cachedData = cache[currentIndex];
+    final entry = entries[currentIndex];
+    final movieId = entry['imdbId'];
+    final cachedData = cache[movieId];
 
     return Scaffold(
       appBar: AppBar(
-        title: Text("Movie Awards Browser"),
+        title: const Text(
+          "Academy Awards",
+          style: TextStyle(
+            color: Colors.amber,
+            fontSize: 24,
+            fontWeight: FontWeight.bold,
+          ),
+        ),
+        centerTitle: true,
       ),
       body: isLoading
           ? Center(child: CircularProgressIndicator())
@@ -274,7 +336,7 @@ class _MovieBrowserScreenState extends State<MovieBrowserScreen> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
-                  _buildNominationInfo(currentEntry),
+                  _buildNominationInfo(entry),
                   SizedBox(height: 20),
                   _buildNavigationControls(),
                   SizedBox(height: 20),
@@ -287,8 +349,9 @@ class _MovieBrowserScreenState extends State<MovieBrowserScreen> {
     );
   }
 
-  Widget _buildNominationInfo(Map<String, String> entry) {
+ Widget _buildNominationInfo(Map<String, dynamic> entry) {
     return Column(
+      crossAxisAlignment: CrossAxisAlignment.center, // Added to center text
       children: [
         Text(
           "Nominación Actual",
@@ -300,14 +363,14 @@ class _MovieBrowserScreenState extends State<MovieBrowserScreen> {
         ),
         SizedBox(height: 10),
         Text(
-          entry["category"]!,
-          style: TextStyle(color: Colors.white70, fontSize: 16),
+          entry['category'],
+          style: TextStyle(color: Colors.grey, fontSize: 16),
         ),
         SizedBox(height: 10),
         Text(
-          entry["nominee"]!,
+          entry['movieTitle'],
           style: TextStyle(
-            color: Colors.lightBlue,
+            color: Colors.amber,
             fontSize: 18,
             fontWeight: FontWeight.bold,
           ),
@@ -317,43 +380,45 @@ class _MovieBrowserScreenState extends State<MovieBrowserScreen> {
   }
 
   Widget _buildNavigationControls() {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: [
-        _buildControlButton("Anterior", Icons.arrow_back, () => _navigate(-1)),
-        SizedBox(width: 20),
-        _buildControlButton("Aleatorio", Icons.shuffle, _randomEntry),
-        SizedBox(width: 20),
-        _buildControlButton("Siguiente", Icons.arrow_forward, () => _navigate(1)),
-      ],
-    );
+    return Platform.isAndroid
+        ? Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              _buildControlButton("Anterior", Icons.arrow_back, () => _navigate(-1)),
+              SizedBox(height: 10),
+              _buildControlButton("Aleatorio", Icons.shuffle, _randomEntry),
+              SizedBox(height: 10),
+              _buildControlButton("Siguiente", Icons.arrow_forward, () => _navigate(1)),
+            ],
+          )
+        : Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              _buildControlButton("Anterior", Icons.arrow_back, () => _navigate(-1)),
+              SizedBox(width: 20),
+              _buildControlButton("Aleatorio", Icons.shuffle, _randomEntry),
+              SizedBox(width: 20),
+              _buildControlButton("Siguiente", Icons.arrow_forward, () => _navigate(1)),
+            ],
+          );
   }
 
   Widget _buildControlButton(String text, IconData icon, VoidCallback action) {
     return ElevatedButton.icon(
-      icon: Icon(icon),
-      label: Text(text),
+      icon: Icon(icon, color: Colors.amber),
+      label: Text(text, style: TextStyle(color: Colors.white)),
       onPressed: action,
       style: ElevatedButton.styleFrom(
-        backgroundColor: _getButtonColor(text), // Usa backgroundColor en lugar de primary
-        foregroundColor: Colors.white, // Define el color del texto
+        backgroundColor: Colors.grey[800],
+        foregroundColor: Colors.white,
         padding: EdgeInsets.symmetric(horizontal: 20, vertical: 12),
       ),
     );
   }
 
-  Color _getButtonColor(String text) {
-    switch (text) {
-      case "Anterior": return Colors.blue;
-      case "Aleatorio": return Colors.orange;
-      case "Siguiente": return Colors.green;
-      default: return Colors.blue;
-    }
-  }
-
   Widget _buildPoster(Map<String, dynamic>? data) {
     final imageUrl = data?["image_url"] as String?;
-    
+
     return Container(
       width: 250,
       height: 375,
@@ -418,5 +483,51 @@ class _MovieBrowserScreenState extends State<MovieBrowserScreen> {
         ),
       ],
     );
+  }
+}
+
+class MovieCache {
+  static Map<String, dynamic> _cache = {};
+  static const String _cacheFileName = 'movie_cache.json';
+
+  static Future<Map<String, dynamic>> loadCache() async {
+    try {
+      final directory = await getApplicationDocumentsDirectory();
+      final file = File(p.join(directory.path, _cacheFileName));
+      if (await file.exists()) {
+        final jsonString = await file.readAsString();
+        _cache = json.decode(jsonString);
+         print('Cache loaded from file with ${_cache.length} entries.');
+        return _cache;
+      } else {
+        print('Cache file not found, returning empty cache.');
+        return {}; // Return an empty map if the file doesn't exist
+      }
+    } catch (e) {
+      print('Error loading cache: $e');
+      return {}; // Return an empty map on error
+    }
+  }
+
+  static Future<void> saveCache(Map<String, dynamic> cacheData) async {
+     _cache = cacheData; // Update the static cache with the new data
+    try {
+      final directory = await getApplicationDocumentsDirectory();
+      final file = File(p.join(directory.path, _cacheFileName));
+
+      await file.writeAsString(json.encode(cacheData));
+      print('Cache saved to file.');
+    } catch (e) {
+      print('Error saving cache: $e');
+    }
+  }
+
+
+  static dynamic get(String key) {
+    return _cache[key];
+  }
+
+  static void set(String key, dynamic value) {
+    _cache[key] = value;
   }
 }
