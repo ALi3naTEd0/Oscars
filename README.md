@@ -1,5 +1,11 @@
 # The 97th Academy Awards
 
+![Version](https://img.shields.io/badge/version-1.0.0--6-blue)
+![License](https://img.shields.io/badge/license-GPL--3.0-green)
+![Downloads](https://img.shields.io/github/downloads/ALi3naTEd0/oscars/total)
+![Last Commit](https://img.shields.io/github/last-commit/ALi3naTEd0/oscars)
+![Stars](https://img.shields.io/github/stars/ALi3naTEd0/oscars)
+
 ## Descripción
 
 Esta es una aplicación Flutter que permite explorar las nominaciones para los Premios de la Academia número 97. La aplicación muestra información detallada sobre las películas nominadas, incluyendo el título, la categoría, una sinopsis, la calificación de IMDb y enlaces directos a la página de IMDb de cada película.
@@ -20,6 +26,14 @@ _Explora la lista de nominaciones._
 
 ![Captura de pantalla 2](url_de_la_captura_de_pantalla_2.png)
 _Visualiza información detallada de cada película nominada._
+
+<!--
+## Downloads
+| Windows      | MacOS        | Linux        | Android      | iOS          |
+|--------------|--------------|--------------|--------------|--------------|
+| [Installer](https://github.com/ALi3naTEd0/RateMe/releases/download/v0.0.9-6/RateMe.v0.0.9-6_installer.exe)    | Coming soon  | Coming soon  | [APK-armeabi-v7a](https://github.com/ALi3naTEd0/RateMe/releases/download/v0.0.9-6/app-armeabi-v7a-release.apk)       | Maybe?       |
+| [Portable](https://github.com/ALi3naTEd0/RateMe/releases/download/v0.0.9-6/RateMe.v0.0.9-6_portable.zip)     |              |              | [APK-arm64-v8a](https://github.com/ALi3naTEd0/RateMe/releases/download/v0.0.9-6/app-arm64-v8a-release.apk)             |              |
+|              |              |              | [APK-x86_x64](https://github.com/ALi3naTEd0/RateMe/releases/download/v0.0.9-6/app-x86_64-release.apk)              |              |-->
 
 ## Cómo Empezar
 
