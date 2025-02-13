@@ -32,28 +32,23 @@ _Visualiza información detallada de cada película nominada._
 
 1. Clona el repositorio:
 
-git clone [URL del repositorio]
-cd [nombre del repositorio]
-
-text
+`git clone https://github.com/ALi3naTEd0/oscars.git`
+`cd oscars`
 
 2. Obtén las dependencias:
 
-flutter pub get
-
-text
+`flutter pub get`
 
 ### Ejecución
 
 1. Conecta un dispositivo Android o iOS, o utiliza un emulador.
 2. Ejecuta la aplicación:
 
-flutter run
-
-text
+`flutter run`
 
 ## Estructura del Proyecto
 
+```
 movie_awards_app/
 ├── android/ # Archivos de configuración para Android
 ├── ios/ # Archivos de configuración para iOS
@@ -62,8 +57,7 @@ movie_awards_app/
 │ └── ... # Otros archivos .dart
 ├── pubspec.yaml # Archivo de configuración de Flutter
 └── README.md # Este archivo
-
-text
+```
 
 ## Dependencias
 
@@ -83,4 +77,4 @@ Puedes encontrar la lista completa de dependencias en el archivo `pubspec.yaml`.
 
 ## Licencia
 
-Este proyecto está bajo la Licencia MIT. Consulta el archivo [LICENSE](LICENSE) para más detalles.
+This project is licensed under the GNU General Public License v3.0 (GPL-3.0). See the LICENSE file for more details.
