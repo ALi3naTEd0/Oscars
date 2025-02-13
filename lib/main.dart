@@ -204,20 +204,30 @@ class _MovieBrowserScreenState extends State<MovieBrowserScreen> {
   }
 
   void _initializeEntries() {
-    Set<String> uniqueImdbIds = {};
-    imdbIds.forEach((movieTitle, imdbId) {
-      if (!uniqueImdbIds.contains(imdbId)) {
-        String category = categories.entries
-            .firstWhere((element) => element.value.contains(movieTitle),
-                orElse: () => MapEntry('Uncategorized', []))
-            .key;
+    entries.clear();
 
+      categories.forEach((category, movieTitles) {
+      for (String movieTitle in movieTitles) {
+        if (imdbIds.containsKey(movieTitle)) {
+          String imdbId = imdbIds[movieTitle]!;
+          
+          entries.add({
+            'imdbId': imdbId,
+            'movieTitle': movieTitle,
+            'category': category,
+          });
+        }
+      }
+    });
+
+    imdbIds.forEach((movieTitle, imdbId) {
+      bool existsInEntries = entries.any((entry) => entry['movieTitle'] == movieTitle);
+      if (!existsInEntries) {
         entries.add({
           'imdbId': imdbId,
           'movieTitle': movieTitle,
-          'category': category,
+          'category': 'Uncategorized',
         });
-        uniqueImdbIds.add(imdbId);
       }
     });
   }
@@ -287,8 +297,14 @@ class _MovieBrowserScreenState extends State<MovieBrowserScreen> {
 
   void _navigate(int direction) {
     setState(() {
-      currentIndex = (currentIndex + direction) % entries.length;
-      if (currentIndex < 0) currentIndex = entries.length - 1;
+      currentIndex += direction;
+      
+      // Corregimos los límites sin usar módulo
+      if (currentIndex >= entries.length) {
+        currentIndex = entries.length - 1;
+      } else if (currentIndex < 0) {
+        currentIndex = 0;
+      }
     });
   }
 
