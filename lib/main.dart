@@ -9,11 +9,12 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:flutter/foundation.dart';
 import 'package:path/path.dart' as p;
+import 'package:http/io_client.dart';
 
 void main() => runApp(MovieAwardsApp());
 
 class MovieAwardsApp extends StatelessWidget {
-  const MovieAwardsApp({Key? key});
+  const MovieAwardsApp({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -44,14 +45,14 @@ class MovieAwardsApp extends StatelessWidget {
           titleLarge: TextStyle(color: Colors.white),
         ),
       ),
-      home: MovieBrowserScreen(),
+      home: const MovieBrowserScreen(),
       debugShowCheckedModeBanner: false,
     );
   }
 }
 
 class MovieBrowserScreen extends StatefulWidget {
-  const MovieBrowserScreen({Key? key});
+  const MovieBrowserScreen({Key? key}) : super(key: key);
 
   @override
   _MovieBrowserScreenState createState() => _MovieBrowserScreenState();
@@ -193,9 +194,7 @@ class _MovieBrowserScreenState extends State<MovieBrowserScreen> {
     super.initState();
     _initializeEntries();
     MovieCache.loadCache().then((loadedCache) {
-      setState(() {
-        cache = loadedCache;
-      });
+      setState(() => cache = loadedCache);
       _preloadData();
     }).catchError((error) {
       print('Error loading cache: $error');
@@ -205,14 +204,12 @@ class _MovieBrowserScreenState extends State<MovieBrowserScreen> {
 
   void _initializeEntries() {
     entries.clear();
-
-      categories.forEach((category, movieTitles) {
+    
+    categories.forEach((category, movieTitles) {
       for (String movieTitle in movieTitles) {
         if (imdbIds.containsKey(movieTitle)) {
-          String imdbId = imdbIds[movieTitle]!;
-          
           entries.add({
-            'imdbId': imdbId,
+            'imdbId': imdbIds[movieTitle]!,
             'movieTitle': movieTitle,
             'category': category,
           });
@@ -221,8 +218,7 @@ class _MovieBrowserScreenState extends State<MovieBrowserScreen> {
     });
 
     imdbIds.forEach((movieTitle, imdbId) {
-      bool existsInEntries = entries.any((entry) => entry['movieTitle'] == movieTitle);
-      if (!existsInEntries) {
+      if (!entries.any((entry) => entry['movieTitle'] == movieTitle)) {
         entries.add({
           'imdbId': imdbId,
           'movieTitle': movieTitle,
@@ -233,32 +229,38 @@ class _MovieBrowserScreenState extends State<MovieBrowserScreen> {
   }
 
   Future<void> _preloadData() async {
-    final client = http.Client();
+    final client = await _createSecureClient();
     try {
       await Future.wait(
         entries.map((entry) => _loadMovieData(entry['imdbId'], client)),
       );
     } finally {
       client.close();
+      await MovieCache.saveCache(cache);
     }
+    setState(() => isLoading = false);
+  }
 
-    setState(() {
-      isLoading = false;
-      currentIndex = 0;
-    });
+  Future<http.Client> _createSecureClient() async {
+    final httpClient = HttpClient();
+    if (Platform.isWindows) {
+      httpClient.badCertificateCallback = 
+        (X509Certificate cert, String host, int port) => true;
+    }
+    return IOClient(httpClient);
   }
 
   Future<void> _loadMovieData(String movieId, http.Client client) async {
-    if (cache.containsKey(movieId)) {
-      print('Data loaded from cache for $movieId');
-      return;
-    }
+    if (cache.containsKey(movieId)) return;
 
     try {
       final response = await client.get(
         Uri.parse("https://www.imdb.com/title/$movieId/"),
         headers: {
-          "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36",
+          "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) "
+              "AppleWebKit/537.36 (KHTML, like Gecko) "
+              "Chrome/124.0.0.0 Safari/537.36",
+          "Accept-Language": "en-US,en;q=0.9",
         },
       );
 
@@ -271,22 +273,24 @@ class _MovieBrowserScreenState extends State<MovieBrowserScreen> {
         cache[movieId] = {
           "imdb_url": "https://www.imdb.com/title/$movieId/",
           "title": jsonData["name"] ?? movieId,
-          "rating": jsonData["aggregateRating"]?["ratingValue"] ?? "N/A",
-          "duration": _formatDuration(jsonData["duration"] ?? ""),
+          "rating": jsonData["aggregateRating"]?["ratingValue"]?.toString() ?? "N/A",
+          "duration": _formatDuration(jsonData["duration"]?.toString() ?? ""),
           "genres": (jsonData["genre"] as List<dynamic>?)?.join(", ") ?? "N/A",
-          "plot": jsonData["description"] ?? "Sin sinopsis disponible",
+          "plot": jsonData["description"]?.toString() ?? "Sin sinopsis disponible",
           "image_url": _extractImageUrl(response.body),
         };
       });
-
-      print('Data loaded from IMDb for $movieId');
     } catch (e) {
       print('Error loading data for $movieId: $e');
     }
   }
 
   String _formatDuration(String duration) {
-    return duration.replaceAll("PT", "").replaceAll("H", "h ").replaceAll("M", "m");
+    return duration
+        .replaceAll("PT", "")
+        .replaceAll("H", "h ")
+        .replaceAll("M", "m")
+        .trim();
   }
 
   String? _extractImageUrl(String html) {
@@ -295,30 +299,31 @@ class _MovieBrowserScreenState extends State<MovieBrowserScreen> {
     return match?.group(1);
   }
 
+  Map<String, dynamic>? _extractJsonData(String html) {
+    try {
+      final regex = RegExp(r'<script type="application/ld\+json">(.*?)</script>', dotAll: true);
+      final match = regex.firstMatch(html);
+      return match == null ? null : json.decode(match.group(1)!);
+    } catch (e) {
+      print('Error parsing JSON: $e');
+      return null;
+    }
+  }
+
   void _navigate(int direction) {
     setState(() {
-      currentIndex += direction;
-      
-      // Corregimos los límites sin usar módulo
-      if (currentIndex >= entries.length) {
-        currentIndex = entries.length - 1;
-      } else if (currentIndex < 0) {
-        currentIndex = 0;
-      }
+      currentIndex = (currentIndex + direction).clamp(0, entries.length - 1);
     });
   }
 
   void _randomEntry() {
-    setState(() {
-      currentIndex = (entries.length * Random().nextDouble()).floor();
-    });
+    setState(() => currentIndex = Random().nextInt(entries.length));
   }
 
   @override
   Widget build(BuildContext context) {
     final entry = entries[currentIndex];
-    final movieId = entry['imdbId'];
-    final cachedData = cache[movieId];
+    final cachedData = cache[entry['imdbId']];
 
     return Scaffold(
       appBar: AppBar(
@@ -333,18 +338,18 @@ class _MovieBrowserScreenState extends State<MovieBrowserScreen> {
         centerTitle: true,
       ),
       body: isLoading
-          ? Center(child: CircularProgressIndicator())
+          ? const Center(child: CircularProgressIndicator())
           : SingleChildScrollView(
-              padding: EdgeInsets.all(20),
+              padding: const EdgeInsets.all(20),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
                   _buildNominationInfo(entry),
-                  SizedBox(height: 20),
+                  const SizedBox(height: 20),
                   _buildNavigationControls(),
-                  SizedBox(height: 20),
+                  const SizedBox(height: 20),
                   _buildPoster(cachedData),
-                  SizedBox(height: 20),
+                  const SizedBox(height: 20),
                   _buildMovieDetails(cachedData),
                 ],
               ),
@@ -354,7 +359,6 @@ class _MovieBrowserScreenState extends State<MovieBrowserScreen> {
 
   Widget _buildNominationInfo(Map<String, dynamic> entry) {
     return Column(
-      crossAxisAlignment: CrossAxisAlignment.center,
       children: [
         const Text(
           "Nominación Actual",
@@ -384,44 +388,58 @@ class _MovieBrowserScreenState extends State<MovieBrowserScreen> {
 
   Widget _buildNavigationControls() {
     return LayoutBuilder(builder: (context, constraints) {
-      bool isDesktop = constraints.maxWidth > 600;
+      final isDesktop = constraints.maxWidth > 600;
       return Row(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          _buildControlButton("Anterior", Icons.arrow_back, () => _navigate(-1), isDesktop: isDesktop),
+          _buildControlButton(
+            "Anterior", 
+            Icons.arrow_back, 
+            () => _navigate(-1),
+            isDesktop: isDesktop
+          ),
           SizedBox(width: isDesktop ? 20 : 0),
-          _buildControlButton("Aleatorio", Icons.shuffle, _randomEntry, isDesktop: isDesktop),
+          _buildControlButton(
+            "Aleatorio", 
+            Icons.shuffle, 
+            _randomEntry,
+            isDesktop: isDesktop
+          ),
           SizedBox(width: isDesktop ? 20 : 0),
-          _buildControlButton("Siguiente", Icons.arrow_forward, () => _navigate(1), isDesktop: isDesktop),
+          _buildControlButton(
+            "Siguiente", 
+            Icons.arrow_forward, 
+            () => _navigate(1),
+            isDesktop: isDesktop
+          ),
         ],
       );
     });
   }
 
-  Widget _buildControlButton(String text, IconData icon, VoidCallback action, {bool isDesktop = false}) {
-    double fontSize = isDesktop ? 16 : 12;
-    EdgeInsets padding = EdgeInsets.symmetric(horizontal: isDesktop ? 16 : 8, vertical: isDesktop ? 12 : 8);
-
+  Widget _buildControlButton(String text, IconData icon, VoidCallback action, {required bool isDesktop}) {
     return ElevatedButton.icon(
       icon: Icon(icon, color: Colors.amber, size: isDesktop ? 24 : 20),
       label: Text(
         text,
-        style: TextStyle(color: Colors.white, fontSize: fontSize),
+        style: TextStyle(
+          color: Colors.white,
+          fontSize: isDesktop ? 16 : 12,
+        ),
       ),
       onPressed: action,
       style: ElevatedButton.styleFrom(
         backgroundColor: Colors.grey[800],
-        foregroundColor: Colors.white,
-        padding: padding,
-        minimumSize: Size.zero,
-        tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+        padding: EdgeInsets.symmetric(
+          horizontal: isDesktop ? 16 : 8,
+          vertical: isDesktop ? 12 : 8,
+        ),
       ),
     );
   }
 
   Widget _buildPoster(Map<String, dynamic>? data) {
     final imageUrl = data?["image_url"] as String?;
-
     return Container(
       width: 250,
       height: 375,
@@ -433,10 +451,10 @@ class _MovieBrowserScreenState extends State<MovieBrowserScreen> {
           ? CachedNetworkImage(
               imageUrl: imageUrl,
               fit: BoxFit.cover,
-              placeholder: (context, url) => Center(child: CircularProgressIndicator()),
-              errorWidget: (context, url, error) => Icon(Icons.error),
+              placeholder: (context, url) => const Center(child: CircularProgressIndicator()),
+              errorWidget: (context, url, error) => const Icon(Icons.error, color: Colors.red),
             )
-          : const Center(child: Text("Imagen no disponible")),
+          : const Center(child: Text("Imagen no disponible", style: TextStyle(color: Colors.white))),
     );
   }
 
@@ -455,6 +473,7 @@ class _MovieBrowserScreenState extends State<MovieBrowserScreen> {
         const SizedBox(height: 10),
         if (data?["imdb_url"] != null)
           InkWell(
+            onTap: () => launchUrl(Uri.parse(data!["imdb_url"])),
             child: const Text(
               "🔗 Ver en IMDb",
               style: TextStyle(
@@ -463,7 +482,6 @@ class _MovieBrowserScreenState extends State<MovieBrowserScreen> {
                 decoration: TextDecoration.underline,
               ),
             ),
-            onTap: () => launch(data!["imdb_url"]),
           ),
         const SizedBox(height: 10),
         Text(
@@ -487,12 +505,6 @@ class _MovieBrowserScreenState extends State<MovieBrowserScreen> {
       ],
     );
   }
-
-  Map<String, dynamic>? _extractJsonData(String html) {
-    final regex = RegExp(r'<script type="application/ld\+json">(.*?)</script>', dotAll: true);
-    final match = regex.firstMatch(html);
-    return match == null ? null : json.decode(match.group(1)!);
-  }
 }
 
 class MovieCache {
@@ -504,38 +516,22 @@ class MovieCache {
       final directory = await getApplicationDocumentsDirectory();
       final file = File(p.join(directory.path, _cacheFileName));
       if (await file.exists()) {
-        final jsonString = await file.readAsString();
-        _cache = json.decode(jsonString);
-        print('Cache loaded from file with ${_cache.length} entries.');
-        return _cache;
-      } else {
-        print('Cache file not found, returning empty cache.');
-        return {}; // Return an empty map if the file doesn't exist
+        return json.decode(await file.readAsString());
       }
+      return {};
     } catch (e) {
       print('Error loading cache: $e');
-      return {}; // Return an empty map on error
+      return {};
     }
   }
 
   static Future<void> saveCache(Map<String, dynamic> cacheData) async {
-    _cache = cacheData;
     try {
       final directory = await getApplicationDocumentsDirectory();
       final file = File(p.join(directory.path, _cacheFileName));
-
       await file.writeAsString(json.encode(cacheData));
-      print('Cache saved to file.');
     } catch (e) {
       print('Error saving cache: $e');
     }
-  }
-
-  static dynamic get(String key) {
-    return _cache[key];
-  }
-
-  static void set(String key, dynamic value) {
-    _cache[key] = value;
   }
 }
