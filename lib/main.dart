@@ -72,6 +72,7 @@ class _MovieBrowserScreenState extends State<MovieBrowserScreen> {
   Map<String, dynamic> cache = {};
   int currentIndex = 0;
   bool isLoading = true;
+  Set<String> _watchedMovies = {};
 
   final Map<String, String> imdbIds = {
     "A Complete Unknown": "tt11563598",
@@ -202,6 +203,9 @@ class _MovieBrowserScreenState extends State<MovieBrowserScreen> {
   @override
   void initState() {
     super.initState();
+    MovieCache.loadWatchedList().then((watchedList) {
+      setState(() => _watchedMovies = watchedList);
+    });
     _initializeEntries();
     MovieCache.loadCache().then((loadedCache) {
       setState(() => cache = loadedCache);
@@ -327,7 +331,28 @@ class _MovieBrowserScreenState extends State<MovieBrowserScreen> {
   }
 
   void _randomEntry() {
-    setState(() => currentIndex = Random().nextInt(entries.length));
+    final unwatchedEntries = entries.where((entry) => !_watchedMovies.contains(entry['imdbId'])).toList();
+    
+    if (unwatchedEntries.isEmpty) {
+      showDialog(
+        context: context,
+        builder: (context) => AlertDialog(
+          title: const Text('No unwatched movies'),
+          content: const Text('You\'ve watched all available movies!'),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.pop(context),
+              child: const Text('OK'),
+            )
+          ],
+        ),
+      );
+      return;
+    }
+
+    setState(() {
+      currentIndex = entries.indexOf(unwatchedEntries[Random().nextInt(unwatchedEntries.length)]);
+    });
   }
 
   @override
@@ -349,19 +374,24 @@ class _MovieBrowserScreenState extends State<MovieBrowserScreen> {
       ),
       body: isLoading
           ? const Center(child: CircularProgressIndicator())
-          : SingleChildScrollView(
-              padding: const EdgeInsets.all(20),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  _buildNominationInfo(entry),
-                  const SizedBox(height: 20),
-                  _buildNavigationControls(),
-                  const SizedBox(height: 20),
-                  _buildPoster(cachedData),
-                  const SizedBox(height: 20),
-                  _buildMovieDetails(cachedData),
-                ],
+          : Center(
+              child: Container(
+                constraints: const BoxConstraints(maxWidth: 1000),
+                child: SingleChildScrollView(
+                  padding: const EdgeInsets.all(20),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      _buildNominationInfo(entry),
+                      const SizedBox(height: 20),
+                      _buildNavigationControls(),
+                      const SizedBox(height: 20),
+                      _buildPoster(cachedData),
+                      const SizedBox(height: 20),
+                      _buildMovieDetails(cachedData, entry),
+                    ],
+                  ),
+                ),
               ),
             ),
     );
@@ -475,7 +505,9 @@ class _MovieBrowserScreenState extends State<MovieBrowserScreen> {
     );
   }
 
-  Widget _buildMovieDetails(Map<String, dynamic>? data) {
+  Widget _buildMovieDetails(Map<String, dynamic>? data, Map<String, dynamic> entry) {
+    final isWatched = _watchedMovies.contains(entry['imdbId']);
+    
     return Column(
       children: [
         Text(
@@ -515,7 +547,7 @@ class _MovieBrowserScreenState extends State<MovieBrowserScreen> {
           padding: const EdgeInsets.symmetric(horizontal: 20),
           child: Center(
             child: SizedBox(
-              width: 700, // Ancho máximo para desktop
+              width: 700,
               child: Text(
                 _cleanText(data?["plot"]) ?? "No synopsis available",
                 style: const TextStyle(
@@ -527,6 +559,48 @@ class _MovieBrowserScreenState extends State<MovieBrowserScreen> {
             ),
           ),
         ),
+        const SizedBox(height: 20),
+        InkWell(
+          onTap: () {
+            setState(() {
+              if (isWatched) {
+                _watchedMovies.remove(entry['imdbId']);
+              } else {
+                _watchedMovies.add(entry['imdbId']);
+              }
+            });
+            MovieCache.saveWatchedList(_watchedMovies.toList());
+          },
+          child: Container(
+            padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+            decoration: BoxDecoration(
+              color: isWatched ? Colors.amber.withOpacity(0.2) : Colors.grey[800],
+              borderRadius: BorderRadius.circular(20),
+              border: Border.all(
+                color: isWatched ? Colors.amber : Colors.grey[600]!,
+                width: 1
+              )
+            ),
+            child: Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Icon(
+                  isWatched ? Icons.check_circle : Icons.check_circle_outline,
+                  color: isWatched ? Colors.amber : Colors.white70,
+                  size: 20,
+                ),
+                const SizedBox(width: 8),
+                Text(
+                  isWatched ? "Watched" : "Mark as watched",
+                  style: TextStyle(
+                    color: isWatched ? Colors.amber : Colors.white70,
+                    fontSize: 14,
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ),
       ],
     );
   }
@@ -535,11 +609,19 @@ class _MovieBrowserScreenState extends State<MovieBrowserScreen> {
 class MovieCache {
   static Map<String, dynamic> _cache = {};
   static const String _cacheFileName = 'movie_cache.json';
+  static const String _watchedFileName = 'watched_movies.json';
+
+  static Future<String> _getValidDirectory() async {
+    final directory = await getApplicationSupportDirectory();
+    final dirPath = directory.path;
+    await Directory(dirPath).create(recursive: true);
+    return dirPath;
+  }
 
   static Future<Map<String, dynamic>> loadCache() async {
     try {
-      final directory = await getApplicationDocumentsDirectory();
-      final file = File(p.join(directory.path, _cacheFileName));
+      final dirPath = await _getValidDirectory();
+      final file = File(p.join(dirPath, _cacheFileName));
       if (await file.exists()) {
         return json.decode(await file.readAsString());
       }
@@ -552,11 +634,36 @@ class MovieCache {
 
   static Future<void> saveCache(Map<String, dynamic> cacheData) async {
     try {
-      final directory = await getApplicationDocumentsDirectory();
-      final file = File(p.join(directory.path, _cacheFileName));
+      final dirPath = await _getValidDirectory();
+      final file = File(p.join(dirPath, _cacheFileName));
       await file.writeAsString(json.encode(cacheData));
     } catch (e) {
       print('Error saving cache: $e');
+    }
+  }
+
+  static Future<void> saveWatchedList(List<String> watchedIds) async {
+    try {
+      final dirPath = await _getValidDirectory();
+      final file = File(p.join(dirPath, _watchedFileName));
+      await file.writeAsString(json.encode(watchedIds));
+    } catch (e) {
+      print('Error saving watched list: $e');
+    }
+  }
+
+  static Future<Set<String>> loadWatchedList() async {
+    try {
+      final dirPath = await _getValidDirectory();
+      final file = File(p.join(dirPath, _watchedFileName));
+      if (await file.exists()) {
+        final List<dynamic> data = json.decode(await file.readAsString());
+        return data.cast<String>().toSet();
+      }
+      return {};
+    } catch (e) {
+      print('Error loading watched list: $e');
+      return {};
     }
   }
 }
