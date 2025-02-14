@@ -128,73 +128,74 @@ class _MovieBrowserScreenState extends State<MovieBrowserScreen> {
 
   final Map<String, List<String>> categories = {
     "Best Picture": [
-        "Anora", "The Brutalist", "A Complete Unknown", "Conclave", "Dune: Part Two", "Emilia Pérez", "I'm Still Here", "Nickel Boys", "The Substance", "Wicked"
+      "Anora", "The Brutalist", "A Complete Unknown", "Conclave", "Dune: Part Two",
+      "Emilia Pérez", "I'm Still Here", "Nickel Boys", "The Substance", "Wicked"
     ],
     "Best Director": [
-        "Anora", "The Brutalist", "A Complete Unknown", "Emilia Pérez", "The Substance"
+      "Anora", "The Brutalist", "A Complete Unknown", "Emilia Pérez", "The Substance"
     ],
     "Best Actress": [
-        "Wicked", "Emilia Pérez", "Anora", "The Substance", "I'm Still Here"
+      "Wicked", "Emilia Pérez", "Anora", "The Substance", "I'm Still Here"
     ],
     "Best Actor": [
-        "The Brutalist", "A Complete Unknown", "Sing Sing", "Conclave", "The Apprentice"
+      "The Brutalist", "A Complete Unknown", "Sing Sing", "Conclave", "The Apprentice"
     ],
     "Best Cinematography": [
-        "The Brutalist", "Dune: Part Two", "Emilia Pérez", "Maria", "Nosferatu"
+      "The Brutalist", "Dune: Part Two", "Emilia Pérez", "Maria", "Nosferatu"
     ],
     "Best Visual Effects": [
-        "Alien: Romulus", "Better Man", "Dune: Part Two", "Kingdom of the Planet of the Apes", "Wicked"
+      "Alien: Romulus", "Better Man", "Dune: Part Two", "Kingdom of the Planet of the Apes", "Wicked"
     ],
     "Best Sound": [
-        "A Complete Unknown", "Dune: Part Two", "Emilia Pérez", "Wicked", "The Wild Robot"
+      "A Complete Unknown", "Dune: Part Two", "Emilia Pérez", "Wicked", "The Wild Robot"
     ],
     "Best Film Editing": [
-        "Anora", "The Brutalist", "Conclave", "Emilia Pérez", "Wicked"
+      "Anora", "The Brutalist", "Conclave", "Emilia Pérez", "Wicked"
     ],
     "Best Production Design": [
-        "The Brutalist", "Conclave", "Dune: Part Two", "Nosferatu", "Wicked"
+      "The Brutalist", "Conclave", "Dune: Part Two", "Nosferatu", "Wicked"
     ],
     "Best Animated Feature Film": [
-        "Flow", "Inside Out 2", "Memoir of a Snail", "Wallace & Gromit: Vengeance Most Fowl", "The Wild Robot"
+      "Flow", "Inside Out 2", "Memoir of a Snail", "Wallace & Gromit: Vengeance Most Fowl", "The Wild Robot"
     ],
     "Best International Feature Film": [
-        "I'm Still Here", "The Girl With the Needle", "Emilia Pérez", "The Seed of the Sacred Fig", "Flow"
+      "I'm Still Here", "The Girl With the Needle", "Emilia Pérez", "The Seed of the Sacred Fig", "Flow"
     ],
     "Best Documentary Short Film": [
-        "Death by Numbers", "I Am Ready, Warden", "Incident", "Instruments of a Beating Heart", "The Only Girl in the Orchestra"
+      "Death by Numbers", "I Am Ready, Warden", "Incident", "Instruments of a Beating Heart", "The Only Girl in the Orchestra"
     ],
     "Best Documentary Feature Film": [
-        "Black Box Diaries", "No Other Land", "Porcelain War", "Soundtrack to a Coup d'Etat", "Sugarcane"
+      "Black Box Diaries", "No Other Land", "Porcelain War", "Soundtrack to a Coup d'Etat", "Sugarcane"
     ],
     "Best Original Song": [
-        "Emilia Pérez", "The Six Triple Eight", "Sing Sing", "Emilia Pérez", "Elton John: Never Too Late"
+      "Emilia Pérez", "The Six Triple Eight", "Sing Sing", "Emilia Pérez", "Elton John: Never Too Late"
     ],
     "Best Supporting Actress": [
-        "A Complete Unknown", "Wicked", "The Brutalist", "Conclave", "Emilia Pérez"
+      "A Complete Unknown", "Wicked", "The Brutalist", "Conclave", "Emilia Pérez"
     ],
     "Best Original Screenplay": [
-        "Anora", "The Brutalist", "A Real Pain", "September 5", "The Substance"
+      "Anora", "The Brutalist", "A Real Pain", "September 5", "The Substance"
     ],
     "Best Adapted Screenplay": [
-        "A Complete Unknown", "Conclave", "Emilia Pérez", "Nickel Boys", "Sing Sing"
+      "A Complete Unknown", "Conclave", "Emilia Pérez", "Nickel Boys", "Sing Sing"
     ],
     "Best Animated Short Film": [
-        "Beautiful Men", "In the Shadow of the Cypress", "Magic Candies", "Wander to Wonder", "Yuck!"
+      "Beautiful Men", "In the Shadow of the Cypress", "Magic Candies", "Wander to Wonder", "Yuck!"
     ],
     "Best Live Action Short Film": [
-        "A Lien", "Anuja", "I'm Not a Robot", "The Last Ranger", "The Man Who Could Not Remain Silent"
+      "A Lien", "Anuja", "I'm Not a Robot", "The Last Ranger", "The Man Who Could Not Remain Silent"
     ],
     "Best Original Score": [
-        "The Brutalist", "Conclave", "Emilia Pérez", "Wicked", "The Wild Robot"
+      "The Brutalist", "Conclave", "Emilia Pérez", "Wicked", "The Wild Robot"
     ],
     "Best Makeup and Hairstyling": [
-        "A Different Man", "Emilia Pérez", "Nosferatu", "The Substance", "Wicked"
+      "A Different Man", "Emilia Pérez", "Nosferatu", "The Substance", "Wicked"
     ],
     "Best Costume Design": [
-        "A Complete Unknown", "Conclave", "Gladiator II", "Nosferatu", "Wicked"
+      "A Complete Unknown", "Conclave", "Gladiator II", "Nosferatu", "Wicked"
     ],
     "Best Supporting Actor": [
-        "Anora", "A Real Pain", "A Complete Unknown", "The Brutalist", "The Apprentice"
+      "Anora", "A Real Pain", "A Complete Unknown", "The Brutalist", "The Apprentice"
     ]
   };
 
@@ -370,7 +371,7 @@ class _MovieBrowserScreenState extends State<MovieBrowserScreen> {
     return Column(
       children: [
         const Text(
-          "Nominación Actual",
+          "Current Nomination",
           style: TextStyle(
             color: Colors.white,
             fontSize: 20,
@@ -402,21 +403,21 @@ class _MovieBrowserScreenState extends State<MovieBrowserScreen> {
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           _buildControlButton(
-            "Anterior", 
+            "Previous", 
             Icons.arrow_back, 
             () => _navigate(-1),
             isDesktop: isDesktop
           ),
           SizedBox(width: isDesktop ? 20 : 0),
           _buildControlButton(
-            "Aleatorio", 
+            "Random", 
             Icons.shuffle, 
             _randomEntry,
             isDesktop: isDesktop
           ),
           SizedBox(width: isDesktop ? 20 : 0),
           _buildControlButton(
-            "Siguiente", 
+            "Next", 
             Icons.arrow_forward, 
             () => _navigate(1),
             isDesktop: isDesktop
@@ -438,7 +439,7 @@ class _MovieBrowserScreenState extends State<MovieBrowserScreen> {
         style: TextStyle(
           color: Colors.white,
           fontSize: isDesktop ? 16 : 12,
-          height: 1.0, // Ajuste clave para alineación vertical
+          height: 1.0,
         ),
       ),
       onPressed: action,
@@ -446,9 +447,9 @@ class _MovieBrowserScreenState extends State<MovieBrowserScreen> {
         backgroundColor: Colors.grey[800],
         padding: EdgeInsets.symmetric(
           horizontal: isDesktop ? 16 : 8,
-          vertical: isDesktop ? 0 : 4, // Reducción de padding vertical
+          vertical: isDesktop ? 0 : 4,
         ),
-        alignment: Alignment.center, // Alineación central del contenido
+        alignment: Alignment.center,
         tapTargetSize: MaterialTapTargetSize.shrinkWrap,
       ),
     );
@@ -470,7 +471,7 @@ class _MovieBrowserScreenState extends State<MovieBrowserScreen> {
               placeholder: (context, url) => const Center(child: CircularProgressIndicator()),
               errorWidget: (context, url, error) => const Icon(Icons.error, color: Colors.red),
             )
-          : const Center(child: Text("Imagen no disponible", style: TextStyle(color: Colors.white))),
+          : const Center(child: Text("Image unavailable", style: TextStyle(color: Colors.white))),
     );
   }
 
@@ -491,7 +492,7 @@ class _MovieBrowserScreenState extends State<MovieBrowserScreen> {
           InkWell(
             onTap: () => launchUrl(Uri.parse(data!["imdb_url"])),
             child: const Text(
-              "🔗 Ver en IMDb",
+              "🔗 View on IMDb",
               style: TextStyle(
                 color: Colors.lightBlue,
                 fontSize: 16,
@@ -512,10 +513,18 @@ class _MovieBrowserScreenState extends State<MovieBrowserScreen> {
         const SizedBox(height: 20),
         Padding(
           padding: const EdgeInsets.symmetric(horizontal: 20),
-          child: Text(
-            _cleanText(data?["plot"]),
-            style: const TextStyle(color: Colors.white, fontSize: 16),
-            textAlign: TextAlign.justify,
+          child: Center(
+            child: SizedBox(
+              width: 700, // Ancho máximo para desktop
+              child: Text(
+                _cleanText(data?["plot"]) ?? "No synopsis available",
+                style: const TextStyle(
+                  color: Colors.white,
+                  fontSize: 16,
+                ),
+                textAlign: TextAlign.justify,
+              ),
+            ),
           ),
         ),
       ],
