@@ -11,6 +11,15 @@ import 'package:flutter/foundation.dart';
 import 'package:path/path.dart' as p;
 import 'package:http/io_client.dart';
 
+String _cleanText(String? text) {
+  if (text == null) return '';
+  return text
+    .replaceAll('&apos;', "'")
+    .replaceAll('&amp;', '&')
+    .replaceAll('&quot;', '"')
+    .replaceAll('&#39;', "'");
+}
+
 void main() => runApp(MovieAwardsApp());
 
 class MovieAwardsApp extends StatelessWidget {
@@ -259,7 +268,7 @@ class _MovieBrowserScreenState extends State<MovieBrowserScreen> {
         headers: {
           "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) "
               "AppleWebKit/537.36 (KHTML, like Gecko) "
-              "Chrome/124.0.0.0 Safari/537.36",
+              "Chrome/91.0.4472.124 Safari/537.36",
           "Accept-Language": "en-US,en;q=0.9",
         },
       );
@@ -272,11 +281,11 @@ class _MovieBrowserScreenState extends State<MovieBrowserScreen> {
       setState(() {
         cache[movieId] = {
           "imdb_url": "https://www.imdb.com/title/$movieId/",
-          "title": jsonData["name"] ?? movieId,
+          "title": _cleanText(jsonData["name"]?.toString()),
           "rating": jsonData["aggregateRating"]?["ratingValue"]?.toString() ?? "N/A",
           "duration": _formatDuration(jsonData["duration"]?.toString() ?? ""),
           "genres": (jsonData["genre"] as List<dynamic>?)?.join(", ") ?? "N/A",
-          "plot": jsonData["description"]?.toString() ?? "Sin sinopsis disponible",
+          "plot": _cleanText(jsonData["description"]?.toString()),
           "image_url": _extractImageUrl(response.body),
         };
       });
@@ -375,7 +384,7 @@ class _MovieBrowserScreenState extends State<MovieBrowserScreen> {
         ),
         const SizedBox(height: 10),
         Text(
-          entry['movieTitle'],
+          _cleanText(entry['movieTitle']),
           style: const TextStyle(
             color: Colors.amber,
             fontSize: 18,
@@ -419,12 +428,17 @@ class _MovieBrowserScreenState extends State<MovieBrowserScreen> {
 
   Widget _buildControlButton(String text, IconData icon, VoidCallback action, {required bool isDesktop}) {
     return ElevatedButton.icon(
-      icon: Icon(icon, color: Colors.amber, size: isDesktop ? 24 : 20),
+      icon: Icon(
+        icon, 
+        color: Colors.amber, 
+        size: isDesktop ? 24 : 20
+      ),
       label: Text(
         text,
         style: TextStyle(
           color: Colors.white,
           fontSize: isDesktop ? 16 : 12,
+          height: 1.0, // Ajuste clave para alineación vertical
         ),
       ),
       onPressed: action,
@@ -432,8 +446,10 @@ class _MovieBrowserScreenState extends State<MovieBrowserScreen> {
         backgroundColor: Colors.grey[800],
         padding: EdgeInsets.symmetric(
           horizontal: isDesktop ? 16 : 8,
-          vertical: isDesktop ? 12 : 8,
+          vertical: isDesktop ? 0 : 4, // Reducción de padding vertical
         ),
+        alignment: Alignment.center, // Alineación central del contenido
+        tapTargetSize: MaterialTapTargetSize.shrinkWrap,
       ),
     );
   }
@@ -462,7 +478,7 @@ class _MovieBrowserScreenState extends State<MovieBrowserScreen> {
     return Column(
       children: [
         Text(
-          data?["title"] ?? "N/A",
+          _cleanText(data?["title"]),
           style: const TextStyle(
             color: Colors.white,
             fontSize: 20,
@@ -497,7 +513,7 @@ class _MovieBrowserScreenState extends State<MovieBrowserScreen> {
         Padding(
           padding: const EdgeInsets.symmetric(horizontal: 20),
           child: Text(
-            data?["plot"] ?? "Sin sinopsis disponible",
+            _cleanText(data?["plot"]),
             style: const TextStyle(color: Colors.white, fontSize: 16),
             textAlign: TextAlign.justify,
           ),
