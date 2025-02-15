@@ -11,7 +11,8 @@ depends=(
     'libglvnd'
     'pcre2'
     'openssl'
-    'libayatana-appindicator'  # Necesario para algunos plugins
+    'libayatana-appindicator'
+    'libsecret'
 )
 makedepends=(
     'git'
@@ -19,7 +20,7 @@ makedepends=(
     'clang'
     'cmake'
     'ninja'
-    'patchelf'  # Requerido para ajustar las dependencias
+    'patchelf'
 )
 source=("git+$url.git")
 sha256sums=('SKIP')
@@ -27,45 +28,31 @@ sha256sums=('SKIP')
 build() {
     cd "$srcdir/oscars"
     
-    # Generar archivo .desktop si no existe
-    [ ! -f "linux/runner/oscars.desktop" ] && \
-    cat > linux/runner/oscars.desktop <<EOF
-[Desktop Entry]
-Name=Oscars
-Comment=Gestión de premios Oscar
-Exec=oscars
-Icon=oscars
-Terminal=false
-Type=Application
-Categories=Utility;
-StartupWMClass=Oscars
-EOF
-
+    # Compilación con plugins
     flutter clean
     flutter pub get
-    flutter build linux --release
+    flutter build linux --release --dart-define=CI=true
 }
 
 package() {
-    # Directorio base de instalación
+    # Directorio de instalación principal
     INSTALL_DIR="$pkgdir/usr/lib/oscars"
-    
-    # Copiar todo el bundle
-    mkdir -p "$INSTALL_DIR"
+    install -d "$INSTALL_DIR"
+
+    # Copiar todo el bundle incluyendo plugins
     cp -r "$srcdir/oscars/build/linux/x64/release/bundle/"* "$INSTALL_DIR"
-    
-    # Enlace simbólico al ejecutable
-    mkdir -p "$pkgdir/usr/bin"
+
+    # Enlace simbólico ejecutable
+    install -d "$pkgdir/usr/bin"
     ln -s /usr/lib/oscars/oscars "$pkgdir/usr/bin/oscars"
 
-    # Ajustar las bibliotecas con patchelf
+    # Ajustar RPATH para todas las bibliotecas
+    find "$INSTALL_DIR/lib" -name '*.so' -exec patchelf --set-rpath '$ORIGIN' {} \;
     patchelf --set-rpath '/usr/lib/oscars/lib' "$INSTALL_DIR/oscars"
 
-    # Archivo .desktop
+    # Archivos adicionales
     install -Dm644 "$srcdir/oscars/linux/runner/oscars.desktop" \
         "$pkgdir/usr/share/applications/oscars.desktop"
-
-    # Ícono
-    install -Dm644 "$srcdir/oscars/linux/runner/resources/oscars.png" \
+    install -Dm644 "$srcdir/oscars/assets/oscars.png" \
         "$pkgdir/usr/share/icons/hicolor/512x512/apps/oscars.png"
 }
