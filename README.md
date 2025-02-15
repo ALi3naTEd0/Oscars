@@ -1,4 +1,5 @@
 <img src="https://github.com/ALi3naTEd0/oscars/blob/main/assets/app-icon.png" width="200">
+
 # The 97th Academy Awards
 
 ![Version](https://img.shields.io/badge/version-1.0.0--1-blue)
