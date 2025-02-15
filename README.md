@@ -21,13 +21,14 @@ Esta es una aplicación Flutter que permite explorar las nominaciones para los P
 - **Imágenes de Póster:** Muestra las imágenes de los pósters de las películas para una experiencia visual atractiva.
 - **Carga en Caché:** Optimiza la experiencia del usuario cargando la información de las películas en caché para un acceso más rápido.
 
+<!--
 ## Capturas de Pantalla
 
 ![Captura de pantalla 1](url_de_la_captura_de_pantalla_1.png)
 _Explora la lista de nominaciones._
 
 ![Captura de pantalla 2](url_de_la_captura_de_pantalla_2.png)
-_Visualiza información detallada de cada película nominada._
+_Visualiza información detallada de cada película nominada._ -->
 
 ## Downloads
 | Windows      | MacOS        | Linux        | Android      | iOS          |
