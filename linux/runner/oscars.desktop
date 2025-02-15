@@ -1,0 +1,9 @@
+[Desktop Entry]
+Name=Oscars
+Comment=Oscar Awards Management
+Exec=oscars
+Icon=oscars
+Terminal=false
+Type=Application
+Categories=Utility;
+StartupWMClass=Oscars
