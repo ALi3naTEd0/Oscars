@@ -29,13 +29,13 @@ _Explora la lista de nominaciones._
 ![Captura de pantalla 2](url_de_la_captura_de_pantalla_2.png)
 _Visualiza información detallada de cada película nominada._
 
-<!--
 ## Downloads
 | Windows      | MacOS        | Linux        | Android      | iOS          |
 |--------------|--------------|--------------|--------------|--------------|
-| [Installer](https://github.com/ALi3naTEd0/RateMe/releases/download/v0.0.9-6/RateMe.v0.0.9-6_installer.exe)    | Coming soon  | Coming soon  | [APK-armeabi-v7a](https://github.com/ALi3naTEd0/oscars/releases/download/v1.0.0/oscars-armeabi-v7a-release.apk)       | Maybe?       |
-| [Portable](https://github.com/ALi3naTEd0/RateMe/releases/download/v0.0.9-6/RateMe.v0.0.9-6_portable.zip)     |              |              | [APK-arm64-v8a](https://github.com/ALi3naTEd0/oscars/releases/download/v1.0.0/oscars-arm64-v8a-release.apk)             |              |
-|              |              |              | [APK-x86_x64](https://github.com/ALi3naTEd0/oscars/releases/download/v1.0.0/oscars-x86_64-release.apk)              |              |-->
+| [Installer](https://github.com/ALi3naTEd0/oscars/releases/download/v1.0.0/oscars-v1.0.0.exe)    | Maybe?  | Coming soon  | [APK-Universal](https://github.com/ALi3naTEd0/oscars/releases/download/v1.0.0/oscars-release.apk)       | Maybe?       |
+| [Portable](https://github.com/ALi3naTEd0/oscars/releases/download/v1.0.0/Oscars-v1.0.0.zip)     |              |              | [APK-arm64-v8a](https://github.com/ALi3naTEd0/oscars/releases/download/v1.0.0/oscars-arm64-v8a-release.apk)             |              |
+|              |              |              | [APK-armeabi-v7a](https://github.com/ALi3naTEd0/oscars/releases/download/v1.0.0/oscars-armeabi-v7a-release.apk)      |              |
+|              |              |              | [APK-x86_x64](https://github.com/ALi3naTEd0/oscars/releases/download/v1.0.0/oscars-x86_64-release.apk)               |              |
 
 ## Cómo Empezar
 
