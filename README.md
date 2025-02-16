@@ -40,8 +40,8 @@ _Visualiza información detallada de cada película nominada._ -->
 
 ### Instalar en Arch
 ```
-git clone https://github.com/ALi3naTEd0/oscars.git
-cd oscars
+git clone https://github.com/ALi3naTEd0/Oscars.git
+cd Oscars
 makepkg -si
 ```
 
