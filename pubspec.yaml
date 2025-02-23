@@ -31,7 +31,7 @@ dependencies:
   flutter:
     sdk: flutter
   http: ^1.1.2
-  url_launcher: ^6.2.2
+  url_launcher: ^6.1.14  # Change to a more stable version for Linux
   cached_network_image: ^3.3.0
   flutter_launcher_icons: ^0.14.3
 
