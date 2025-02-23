@@ -32,6 +32,9 @@ jobs:
         run: |
           flutter config --enable-linux-desktop
           flutter pub get
+          flutter build linux --release --verbose
+          # Add compiler flags to handle warnings as warnings, not errors
+          export CXXFLAGS="-Wno-error=switch"
           flutter build linux --release
 
       # AppImage creation
