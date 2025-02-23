@@ -32,7 +32,7 @@ DisableProgramGroupPage=yes
 ; Uncomment the following line to run in non administrative install mode (install for current user only).
 ;PrivilegesRequired=lowest
 OutputDir=.\Output
-OutputBaseFilename=oscars-v1.0.0
+OutputBaseFilename=oscars_1.0.0-1_setup
 SetupIconFile=..\assets\app-icon.ico
 SolidCompression=yes
 WizardStyle=modern

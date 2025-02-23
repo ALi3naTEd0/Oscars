@@ -78,7 +78,7 @@ jobs:
       - name: Build AppImage
         run: |
           ARCH=x86_64 ./appimagetool AppDir
-          mv Oscars-x86_64.AppImage oscars.AppImage
+          mv Oscars-x86_64.AppImage oscars_1.0.0-1.AppImage
 
       # DEB package creation
       - name: Create DEB Package
@@ -116,6 +116,7 @@ jobs:
           
           # Build DEB package
           dpkg-deb --build $APP_NAME-$VERSION
+          mv ${APP_NAME}-${VERSION}.deb oscars_1.0.0-1.deb
 
       # RPM package creation
       - name: Create RPM Package
@@ -161,12 +162,13 @@ jobs:
           
           # Build RPM
           rpmbuild --define "_topdir $(pwd)/rpmbuild" -bb rpmbuild/SPECS/$APP_NAME.spec
+          mv rpmbuild/RPMS/x86_64/oscars-1.0.0-1.*.x86_64.rpm oscars_1.0.0-1.rpm
 
       - name: Upload Linux Packages
         uses: actions/upload-artifact@v4
         with:
           name: oscars-linux
           path: |
-            oscars.AppImage
-            oscars-1.0.0.deb
-            rpmbuild/RPMS/x86_64/oscars-1.0.0-1.*.x86_64.rpm
+            oscars_1.0.0-1.AppImage
+            oscars_1.0.0-1.deb
+            oscars_1.0.0-1.rpm

@@ -39,13 +39,13 @@ jobs:
           Copy-Item "build\windows\x64\runner\Release\*" -Destination "$appDir\" -Recurse
           
           # Create ZIP preserving directory structure
-          Compress-Archive -Path "oscars" -DestinationPath "oscars-portable.zip"
+          Compress-Archive -Path "oscars" -DestinationPath "oscars_1.0.0-1_portable.zip"
 
       - name: Upload Portable Package
         uses: actions/upload-artifact@v4
         with:
           name: oscars-portable
-          path: oscars-portable.zip
+          path: oscars_1.0.0-1_portable.zip
 
       # Create and upload installer version
       - name: Install Inno Setup
@@ -62,4 +62,4 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: oscars-Setup
-          path: installers/Output/oscars-v1.0.0.exe
+          path: installers/Output/oscars_1.0.0-1_setup.exe

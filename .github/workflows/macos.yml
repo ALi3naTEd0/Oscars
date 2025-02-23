@@ -67,7 +67,7 @@ jobs:
           APP_NAME="oscars"
           APP_DIR="build/macos/Build/Products/Release/$APP_NAME.app"
           DMG_DIR="$HOME/$APP_NAME-dmg"
-          DMG_NAME="$APP_NAME.dmg"
+          DMG_NAME="oscars_1.0.0-1.dmg"
 
           mkdir -p "$DMG_DIR"
           cp -r "$APP_DIR" "$DMG_DIR/"
@@ -81,4 +81,4 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: oscars-DMG
-          path: ~/oscars.dmg
+          path: ~/oscars_1.0.0-1.dmg
