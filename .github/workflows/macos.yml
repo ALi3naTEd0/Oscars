@@ -28,7 +28,7 @@ jobs:
           brew install create-dmg
           
           APP_NAME="oscars"
-          APP_PATH="build/macos/Build/Products/Release/Oscars.app"
+          APP_PATH="build/macos/Build/Products/Release/oscars.app"
           DMG_PATH="$APP_NAME.dmg"
           
           create-dmg \
