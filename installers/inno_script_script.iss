@@ -33,7 +33,7 @@ DisableProgramGroupPage=yes
 ;PrivilegesRequired=lowest
 OutputDir=C:\Users\x\Desktop\oscars\installers
 OutputBaseFilename=oscars-v1.0.0
-SetupIconFile=C:\Users\x\Desktop\oscars\assets\app-icon.ico
+SetupIconFile=..\assets\app-icon.ico
 SolidCompression=yes
 WizardStyle=modern
 

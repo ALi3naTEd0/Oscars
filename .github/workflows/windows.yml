@@ -1,0 +1,65 @@
+name: Windows Build
+
+on:
+  workflow_dispatch:  # Manual trigger
+
+jobs:
+  build:
+    runs-on: windows-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          flutter-version: '3.19.3'
+          channel: 'stable'
+          cache: true
+
+      - name: Build Windows
+        run: |
+          flutter config --enable-windows-desktop
+          flutter pub get
+          flutter build windows --release
+
+      # Create and upload portable version
+      - name: Create Portable Package
+        shell: pwsh
+        run: |
+          # Create directory structure
+          $appDir = "oscars"
+          New-Item -ItemType Directory -Path $appDir
+          Copy-Item "build\windows\x64\runner\Release\*" -Destination "$appDir\" -Recurse
+          
+          # Create ZIP preserving directory structure
+          Compress-Archive -Path "oscars" -DestinationPath "oscars-portable.zip"
+
+      - name: Upload Portable Package
+        uses: actions/upload-artifact@v4
+        with:
+          name: oscars-portable
+          path: oscars-portable.zip
+
+      # Create and upload installer version
+      - name: Install Inno Setup
+        run: |
+          choco install innosetup -y
+
+      - name: Download Icon
+        run: |
+          $iconUrl = "https://raw.githubusercontent.com/ALi3naTEd0/Oscars/main/assets/app-icon.ico"
+          New-Item -ItemType Directory -Path "assets" -Force
+          Invoke-WebRequest -Uri $iconUrl -OutFile "assets/app-icon.ico"
+
+      - name: Create Installer
+        shell: pwsh
+        run: |
+          New-Item -ItemType Directory -Path "installers" -Force
+          & 'C:\Program Files (x86)\Inno Setup 6\ISCC.exe' installers\inno_script_script.iss
+
+      - name: Upload Setup Package
+        uses: actions/upload-artifact@v4
+        with:
+          name: oscars-Setup
+          path: installers/oscars-v1.0.0.exe
