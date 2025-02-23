@@ -52,6 +52,7 @@ jobs:
       - name: Create AppDir
         run: |
           APP_NAME="oscars"
+          VERSION="1.0.0"
           mkdir -p AppDir/usr/bin
           mkdir -p AppDir/usr/share/applications
           mkdir -p AppDir/usr/share/icons/hicolor/256x256/apps
@@ -59,14 +60,18 @@ jobs:
           # Copy application
           cp -r build/linux/x64/release/bundle/* AppDir/usr/bin/
           
-          # Download icon
+          # Download and setup icons
           curl -o AppDir/usr/share/icons/hicolor/256x256/apps/$APP_NAME.png \
             https://raw.githubusercontent.com/ALi3naTEd0/Oscars/main/assets/oscars.png
+          
+          # Copy icon to root of AppDir (required by AppImage)
+          cp AppDir/usr/share/icons/hicolor/256x256/apps/$APP_NAME.png AppDir/$APP_NAME.png
           
           # Create desktop file in correct location
           cat > AppDir/$APP_NAME.desktop << EOL
           [Desktop Entry]
           Name=Oscars
+          Version=$VERSION
           Exec=oscars
           Icon=oscars
           Type=Application
