@@ -133,51 +133,12 @@ jobs:
           dpkg-deb --build $APP_NAME-$VERSION
           mv ${APP_NAME}-${VERSION}.deb oscars_1.0.0-1.deb
 
-      # RPM package creation
+      # RPM package creation using alien
       - name: Create RPM Package
         run: |
-          APP_NAME="oscars"
-          VERSION="1.0.0"
-          
-          mkdir -p rpmbuild/{SPECS,SOURCES,BUILD,RPMS,SRPMS}
-          
-          # Create spec file
-          cat > rpmbuild/SPECS/$APP_NAME.spec << EOL
-          Name:           oscars
-          Version:        $VERSION
-          Release:        1%{?dist}
-          Summary:        Oscar Awards app
-          License:        Proprietary
-          
-          %description
-          A Flutter desktop application for Oscar Awards information.
-          
-          %prep
-          # No source unpacking needed
-          
-          %install
-          mkdir -p %{buildroot}/usr/bin
-          mkdir -p %{buildroot}/usr/share/applications
-          mkdir -p %{buildroot}/usr/share/icons/hicolor/256x256/apps
-          cp -r %{_sourcedir}/usr/bin/* %{buildroot}/usr/bin/
-          cp %{_sourcedir}/usr/share/applications/* %{buildroot}/usr/share/applications/
-          cp %{_sourcedir}/usr/share/icons/hicolor/256x256/apps/* %{buildroot}/usr/share/icons/hicolor/256x256/apps/
-          
-          %files
-          /usr/bin/*
-          /usr/share/applications/*
-          /usr/share/icons/hicolor/256x256/apps/*
-          EOL
-          
-          # Copy files to SOURCE
-          mkdir -p rpmbuild/SOURCES/usr/{bin,share/applications,share/icons/hicolor/256x256/apps}
-          cp -r build/linux/x64/release/bundle/* rpmbuild/SOURCES/usr/bin/
-          cp AppDir/usr/share/applications/$APP_NAME.desktop rpmbuild/SOURCES/usr/share/applications/
-          cp AppDir/usr/share/icons/hicolor/256x256/apps/$APP_NAME.png rpmbuild/SOURCES/usr/share/icons/hicolor/256x256/apps/
-          
-          # Build RPM
-          rpmbuild --define "_topdir $(pwd)/rpmbuild" -bb rpmbuild/SPECS/$APP_NAME.spec
-          mv rpmbuild/RPMS/x86_64/oscars-1.0.0-1.*.x86_64.rpm oscars_1.0.0-1.rpm
+          sudo apt-get install -y alien
+          sudo alien --to-rpm --scripts oscars_1.0.0-1.deb
+          mv oscars-1.0.0-2.x86_64.rpm oscars_1.0.0-1.rpm
 
       - name: Upload Linux Packages
         uses: actions/upload-artifact@v4
