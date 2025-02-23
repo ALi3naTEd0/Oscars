@@ -71,7 +71,6 @@ jobs:
           cat > AppDir/$APP_NAME.desktop << EOL
           [Desktop Entry]
           Name=Oscars
-          Version=$VERSION
           Exec=oscars
           Icon=oscars
           Type=Application
