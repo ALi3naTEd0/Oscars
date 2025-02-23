@@ -55,8 +55,9 @@ jobs:
       - name: Create Installer
         shell: pwsh
         run: |
+          Set-Location $env:GITHUB_WORKSPACE
           New-Item -ItemType Directory -Path "installers\Output" -Force
-          & 'C:\Program Files (x86)\Inno Setup 6\ISCC.exe' installers\inno_script_script.iss
+          & 'C:\Program Files (x86)\Inno Setup 6\ISCC.exe' /DMyAppRoot="$env:GITHUB_WORKSPACE" installers\inno_script_script.iss
 
       - name: Upload Setup Package
         uses: actions/upload-artifact@v4
