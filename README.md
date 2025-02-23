@@ -33,8 +33,8 @@ _Visualiza información detallada de cada película nominada._ -->
 ## Downloads
 | Windows      | MacOS        | Linux        | Android      | iOS          |
 |--------------|--------------|--------------|--------------|--------------|
-| [Installer](https://github.com/ALi3naTEd0/oscars/releases/download/v1.0.0/oscars-v1.0.0.exe)    | [DMG](https://github.com/ALi3naTEd0/Oscars/releases/download/v1.0.0/oscars_1.0.0-1.dmg)  | [Arch](#instalar-en-arch)  | [APK-Universal](https://github.com/ALi3naTEd0/oscars/releases/download/v1.0.0/oscars-release.apk)       | Maybe?       |
-| [Portable](https://github.com/ALi3naTEd0/oscars/releases/download/v1.0.0/Oscars-v1.0.0.zip)     |              |              | [APK-arm64-v8a](https://github.com/ALi3naTEd0/oscars/releases/download/v1.0.0/oscars-arm64-v8a-release.apk)             |              |
+| [Installer](https://github.com/ALi3naTEd0/Oscars/releases/download/v1.0.0/oscars_1.0.0-1_setup.exe)    | [DMG](https://github.com/ALi3naTEd0/Oscars/releases/download/v1.0.0/oscars_1.0.0-1.dmg)  | [Arch](#instalar-en-arch)  | [APK-Universal](https://github.com/ALi3naTEd0/oscars/releases/download/v1.0.0/oscars-release.apk)       | Maybe?       |
+| [Portable](https://github.com/ALi3naTEd0/Oscars/releases/download/v1.0.0/oscars_1.0.0-1_portable.zip)     |              |              | [APK-arm64-v8a](https://github.com/ALi3naTEd0/oscars/releases/download/v1.0.0/oscars-arm64-v8a-release.apk)             |              |
 |              |              |              | [APK-armeabi-v7a](https://github.com/ALi3naTEd0/oscars/releases/download/v1.0.0/oscars-armeabi-v7a-release.apk)      |              |
 |              |              |              | [APK-x86_x64](https://github.com/ALi3naTEd0/oscars/releases/download/v1.0.0/oscars-x86_64-release.apk)               |              |
 
