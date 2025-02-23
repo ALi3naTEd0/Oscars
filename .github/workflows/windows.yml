@@ -13,9 +13,15 @@ jobs:
       - name: Setup Flutter
         uses: subosito/flutter-action@v2
         with:
-          flutter-version: '3.19.3'
+          flutter-version: '3.29.0'
           channel: 'stable'
           cache: true
+
+      - name: Download Icon
+        run: |
+          $iconUrl = "https://raw.githubusercontent.com/ALi3naTEd0/Oscars/main/assets/app-icon.ico"
+          $outputPath = "assets/app-icon.ico"
+          Invoke-WebRequest -Uri $iconUrl -OutFile $outputPath
 
       - name: Build Windows
         run: |
@@ -46,18 +52,11 @@ jobs:
         run: |
           choco install innosetup -y
 
-      - name: Download Icon
-        run: |
-          $iconUrl = "https://raw.githubusercontent.com/ALi3naTEd0/Oscars/main/assets/app-icon.ico"
-          New-Item -ItemType Directory -Path "assets" -Force
-          Invoke-WebRequest -Uri $iconUrl -OutFile "assets/app-icon.ico"
-
       - name: Create Installer
         shell: pwsh
         run: |
-          Set-Location $env:GITHUB_WORKSPACE
           New-Item -ItemType Directory -Path "installers\Output" -Force
-          & 'C:\Program Files (x86)\Inno Setup 6\ISCC.exe' /DMyAppRoot="$env:GITHUB_WORKSPACE" installers\inno_script_script.iss
+          & 'C:\Program Files (x86)\Inno Setup 6\ISCC.exe' installers\inno_script_script.iss
 
       - name: Upload Setup Package
         uses: actions/upload-artifact@v4
