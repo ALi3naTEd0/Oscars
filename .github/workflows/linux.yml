@@ -31,11 +31,15 @@ jobs:
 
       - name: Build Linux App
         env:
-          CFLAGS: "-Wno-error"
-          CXXFLAGS: "-Wno-error"
+          CFLAGS: "-Wno-error -Wno-error=switch"
+          CXXFLAGS: "-Wno-error -Wno-error=switch"
+          CC: clang
+          CXX: clang++
         run: |
           flutter config --enable-linux-desktop
           flutter clean
+          rm -rf build
+          flutter pub cache repair
           flutter pub get
           flutter build linux --release
 
