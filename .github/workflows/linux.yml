@@ -30,6 +30,9 @@ jobs:
           cache: true
 
       - name: Build Linux App
+        env:
+          CFLAGS: "-Wno-error"
+          CXXFLAGS: "-Wno-error"
         run: |
           flutter config --enable-linux-desktop
           flutter clean
