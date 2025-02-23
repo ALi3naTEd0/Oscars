@@ -63,8 +63,8 @@ jobs:
           curl -o AppDir/usr/share/icons/hicolor/256x256/apps/$APP_NAME.png \
             https://raw.githubusercontent.com/ALi3naTEd0/Oscars/main/assets/oscars.png
           
-          # Create desktop file
-          cat > AppDir/usr/share/applications/$APP_NAME.desktop << EOL
+          # Create desktop file in correct location
+          cat > AppDir/$APP_NAME.desktop << EOL
           [Desktop Entry]
           Name=Oscars
           Exec=oscars
@@ -72,6 +72,8 @@ jobs:
           Type=Application
           Categories=Utility;
           EOL
+          
+          cp AppDir/$APP_NAME.desktop AppDir/usr/share/applications/
           
           # Create AppRun
           cat > AppDir/AppRun << EOL
