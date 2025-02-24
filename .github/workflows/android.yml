@@ -47,19 +47,8 @@ jobs:
       # First build universal APK
       - name: Build Universal APK
         run: |
-          flutter clean
           flutter pub get
-          # Show Gradle version and info for debugging
-          cd android
-          ./gradlew --version
-          cd ..
-          # Build with verbose output for debugging
-          flutter build apk --release --verbose
-          # If build fails, show the Gradle logs
-          if [ $? -ne 0 ]; then
-            echo "Showing Gradle logs..."
-            cat android/app/build/outputs/logs/build-log.txt || true
-          fi
+          flutter build apk --release
           
       - name: Upload Universal APK
         uses: actions/upload-artifact@v4
