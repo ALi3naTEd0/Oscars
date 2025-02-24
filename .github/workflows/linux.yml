@@ -3,95 +3,74 @@ name: Linux Build
 on:
   workflow_dispatch:
 
+env:
+  FLUTTER_VERSION: '3.19.3'
+
 jobs:
   build-linux:
-    runs-on: ubuntu-20.04
-
+    runs-on: ubuntu-22.04
     steps:
       - uses: actions/checkout@v4
-
-      - name: Install Flutter
-        uses: subosito/flutter-action@v2
-        with:
-          flutter-version: '3.19.3'
-          channel: 'stable'
 
       - name: Install Dependencies
         run: |
           sudo apt-get update
-          sudo apt-get install -y cmake ninja-build clang libgtk-3-dev
+          sudo apt-get install -y \
+            cmake \
+            ninja-build \
+            clang \
+            pkg-config \
+            libgtk-3-dev \
+            libsecret-1-dev \
+            liblzma-dev \
+            libglib2.0-dev \
+            fuse \
+            appstream
 
-      - name: Build Linux
+      - name: Setup Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          flutter-version: ${{ env.FLUTTER_VERSION }}
+          channel: 'stable'
+          cache: true
+
+      - name: Build App
         run: |
           flutter config --enable-linux-desktop
+          flutter pub get
           flutter build linux --release
 
-      - name: Create AppDir
+      # AppImage build
+      - name: Create AppImage Structure
         run: |
-          mkdir -p AppDir/usr/bin
-          mkdir -p AppDir/usr/share/applications
-          mkdir -p AppDir/usr/share/icons/hicolor/256x256/apps
-          cp -r build/linux/x64/release/bundle/* AppDir/usr/bin/
-          curl -o AppDir/usr/share/icons/hicolor/256x256/apps/oscars.png \
-            https://raw.githubusercontent.com/ALi3naTEd0/Oscars/main/assets/oscars.png
-          cp AppDir/usr/share/icons/hicolor/256x256/apps/oscars.png AppDir/oscars.png
-          cat > AppDir/oscars.desktop << EOL
+          mkdir -p AppDir
+          cp -r build/linux/x64/release/bundle/* AppDir/
+          cp assets/oscars.png AppDir/oscars.png
+          
+          cat > AppDir/AppRun << 'EOF'
+          #!/bin/sh
+          cd "$(dirname "$0")"
+          exec ./oscars "$@"
+          EOF
+          chmod +x AppDir/AppRun
+          
+          cat > AppDir/oscars.desktop << EOF
           [Desktop Entry]
           Name=Oscars
           Exec=oscars
           Icon=oscars
           Type=Application
           Categories=Utility;
-          EOL
-          cp AppDir/oscars.desktop AppDir/usr/share/applications/
-          cat > AppDir/AppRun << EOL
-          #!/bin/bash
-          HERE=\$(dirname \$(readlink -f "\${0}"))
-          export PATH="\${HERE}/usr/bin:\${PATH}"
-          export LD_LIBRARY_PATH="\${HERE}/usr/bin/lib:\${LD_LIBRARY_PATH}"
-          exec "\${HERE}/usr/bin/oscars" "\$@"
-          EOL
-          chmod +x AppDir/AppRun
+          EOF
 
       - name: Get AppImage Tool
         run: |
-          wget -O appimagetool "https://github.com/AppImage/AppImageKit/releases/download/continuous/appimagetool-x86_64.AppImage"
-          chmod +x appimagetool
+          wget https://github.com/AppImage/AppImageKit/releases/download/continuous/appimagetool-x86_64.AppImage
+          chmod +x appimagetool-x86_64.AppImage
 
       - name: Build AppImage
         run: |
-          ARCH=x86_64 ./appimagetool AppDir
-          mv Oscars-x86_64.AppImage oscars_1.0.0-1.AppImage
-
-      - name: Create DEB Package
-        run: |
-          rm -rf oscars-1.0.0
-          mkdir -p oscars-1.0.0/DEBIAN
-          mkdir -p oscars-1.0.0/usr/bin
-          mkdir -p oscars-1.0.0/usr/share/applications
-          mkdir -p oscars-1.0.0/usr/share/icons/hicolor/256x256/apps
-          cp -r build/linux/x64/release/bundle/* oscars-1.0.0/usr/bin/
-          cp AppDir/usr/share/icons/hicolor/256x256/apps/oscars.png \
-            oscars-1.0.0/usr/share/icons/hicolor/256x256/apps/
-          cp AppDir/usr/share/applications/oscars.desktop \
-            oscars-1.0.0/usr/share/applications/
-          cat > oscars-1.0.0/DEBIAN/control << EOL
-          Package: oscars
-          Version: 1.0.0
-          Section: x11
-          Priority: optional
-          Architecture: amd64
-          Maintainer: ALi3naTEd0 <your@email.com>
-          Description: Oscar Awards app
-           A Flutter desktop application for Oscar Awards information.
-          EOL
-          dpkg-deb --build oscars-1.0.0
-          mv oscars-1.0.0.deb oscars_1.0.0-1.deb
-
-      - name: Create RPM Package
-        run: |
-          sudo apt-get install -y alien
-          sudo alien --to-rpm oscars_1.0.0-1.deb
+          ARCH=x86_64 ./appimagetool-x86_64.AppImage AppDir oscars_1.0.0-1.AppImage
 
       - name: Upload AppImage
         uses: actions/upload-artifact@v4
@@ -99,14 +78,78 @@ jobs:
           name: oscars-AppImage
           path: oscars_1.0.0-1.AppImage
 
+      # DEB build
+      - name: Build DEB Package
+        run: |
+          PKGDIR=oscars_1.0.0-1_amd64
+          
+          # Create directory structure
+          mkdir -p $PKGDIR/DEBIAN
+          mkdir -p $PKGDIR/usr/bin
+          mkdir -p $PKGDIR/usr/lib/oscars
+          mkdir -p $PKGDIR/usr/share/applications
+          mkdir -p $PKGDIR/usr/share/icons/hicolor/256x256/apps
+          
+          # Copy files
+          cp -r build/linux/x64/release/bundle/* $PKGDIR/usr/lib/oscars/
+          cp assets/oscars.png $PKGDIR/usr/share/icons/hicolor/256x256/apps/oscars.png
+          
+          # Create launcher
+          cat > $PKGDIR/usr/bin/oscars << 'EOF'
+          #!/bin/sh
+          cd /usr/lib/oscars
+          exec ./oscars "$@"
+          EOF
+          chmod 755 $PKGDIR/usr/bin/oscars
+
+          # Create control file
+          cat > $PKGDIR/DEBIAN/control << EOF
+          Package: oscars
+          Version: 1.0.0-1
+          Architecture: amd64
+          Maintainer: ALi3naTEd0 <your@email.com>
+          Depends: libgtk-3-0, libsecret-1-0
+          Section: utils
+          Priority: optional
+          Description: The 97th Academy Awards app
+           A Flutter application for exploring Oscar nominated movies.
+          EOF
+          
+          # Create desktop entry
+          cat > $PKGDIR/usr/share/applications/oscars.desktop << EOF
+          [Desktop Entry]
+          Name=Oscars
+          Exec=/usr/bin/oscars
+          Icon=oscars
+          Type=Application
+          Categories=Utility;
+          EOF
+          chmod 644 $PKGDIR/usr/share/applications/oscars.desktop
+
+          # Set permissions
+          chmod 755 -R $PKGDIR/usr/lib/oscars
+          
+          # Build DEB
+          dpkg-deb --build $PKGDIR
+
       - name: Upload DEB
         uses: actions/upload-artifact@v4
         with:
           name: oscars-DEB
-          path: oscars_1.0.0-1.deb
+          path: oscars_1.0.0-1_amd64.deb
+
+      # RPM build
+      - name: Build RPM Package
+        run: |
+          # Install alien for DEB to RPM conversion
+          sudo apt-get install -y alien rpm
+
+          # Convert DEB to RPM and rename to match convention
+          sudo alien --scripts --to-rpm oscars_1.0.0-1_amd64.deb
+          mv oscars-*.rpm oscars_1.0.0-1_x86_64.rpm
 
       - name: Upload RPM
         uses: actions/upload-artifact@v4
         with:
           name: oscars-RPM
-          path: oscars-1.0.0-2.x86_64.rpm
+          path: oscars_1.0.0-1_x86_64.rpm
