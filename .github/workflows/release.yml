@@ -39,29 +39,66 @@ jobs:
               }
             });
             console.log(`Triggered ${workflow.status}`);
-            return workflow.status;
+            
+            // Monitor build progress
+            let buildComplete = false;
+            while (!buildComplete) {
+              const runs = await github.rest.actions.listWorkflowRuns({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                workflow_id: '${{ matrix.platform }}.yml',
+                branch: context.ref,
+                per_page: 1
+              });
+              
+              if (runs.data.workflow_runs.length > 0) {
+                const run = runs.data.workflow_runs[0];
+                console.log(`${run.name} status: ${run.status} (${run.conclusion || 'in progress'})`);
+                
+                if (run.status === 'completed') {
+                  buildComplete = true;
+                  if (run.conclusion !== 'success') {
+                    throw new Error(`${run.name} build failed!`);
+                  }
+                }
+              }
+              
+              if (!buildComplete) {
+                await new Promise(resolve => setTimeout(resolve, 10000)); // Wait 10 seconds
+              }
+            }
+            
+            return 'success';
 
-      - name: Wait for build
-        run: sleep 30  # Give time for builds to start
-
-  # Wait for all artifacts and create release
   create-release:
     needs: trigger-builds
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      
-      - name: Wait for artifacts
-        run: |
-          echo "Waiting for builds to complete..."
-          sleep 300  # Wait 5 minutes for builds to finish
 
-      - name: Download all artifacts
+      - name: Wait for workflows to complete
+        run: sleep 120  # Give time for artifacts to be available
+
+      - name: Download Artifacts
         uses: actions/download-artifact@v4
         with:
-          pattern: oscars-*
-          path: dist
-          merge-multiple: true
+          path: artifacts
+          pattern: |
+            oscars-universal
+            oscars-arm64-v8a
+            oscars-armeabi-v7a
+            oscars-x86_64
+            oscars-AppImage
+            oscars-DEB
+            oscars-RPM
+            oscars-DMG
+            oscars-portable
+            oscars-Setup
+
+      - name: List downloaded artifacts
+        run: |
+          echo "Downloaded artifacts:"
+          ls -R artifacts/
 
       - name: Create Release
         uses: softprops/action-gh-release@v1
@@ -70,4 +107,4 @@ jobs:
           name: Release ${{ github.event.inputs.version }}
           draft: true
           files: |
-            dist/**/*
+            artifacts/**/*
