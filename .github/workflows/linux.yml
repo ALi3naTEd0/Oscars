@@ -136,11 +136,11 @@ jobs:
       # RPM package creation using alien
       - name: Create RPM Package
         run: |
-          cd ${{ github.workspace }}
           sudo apt-get install -y alien
-          rm -f *.rpm
-          sudo alien --to-rpm oscars_1.0.0-1.deb
-          mv *.rpm oscars_1.0.0-1.rpm
+          rm -rf *.rpm oscars-1.0.0
+          cd ${{ github.workspace }}
+          sudo alien --keep-version --scripts oscars_1.0.0-1.deb
+          mv oscars-1.0.0-1.x86_64.rpm oscars_1.0.0-1.rpm
 
       - name: Upload Linux Packages
         uses: actions/upload-artifact@v4
