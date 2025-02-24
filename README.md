@@ -43,10 +43,10 @@ Coming soon...
 ## Downloads
 | Windows      | MacOS        | Linux        | Android      | iOS          |
 |--------------|--------------|--------------|--------------|--------------|
-| [Installer](https://github.com/ALi3naTEd0/Oscars/releases/download/v1.0.0/oscars_1.0.0-1_setup.exe)    | [DMG](https://github.com/ALi3naTEd0/Oscars/releases/download/v1.0.0/oscars_1.0.0-1.dmg)  | [DEB](https://github.com/ALi3naTEd0/Oscars/releases/download/v1.0.0/oscars_1.0.0-1_amd64.deb)  | [APK-Universal](https://github.com/ALi3naTEd0/oscars/releases/download/v1.0.0/oscars-release.apk)       | Maybe?       |
-| [Portable](https://github.com/ALi3naTEd0/Oscars/releases/download/v1.0.0/oscars_1.0.0-1_portable.zip)     |              | [RPM](https://github.com/ALi3naTEd0/Oscars/releases/download/v1.0.0/oscars_1.0.0-1_x86_64.rpm)  | [APK-arm64-v8a](https://github.com/ALi3naTEd0/oscars/releases/download/v1.0.0/oscars-arm64-v8a-release.apk)             |              |
-|              |              | [Arch](#arch-linux)  | [APK-armeabi-v7a](https://github.com/ALi3naTEd0/oscars/releases/download/v1.0.0/oscars-armeabi-v7a-release.apk)      |              |
-|              |              | [AppImage](#appimage)  | [APK-x86_64](https://github.com/ALi3naTEd0/oscars/releases/download/v1.0.0/oscars-x86_64-release.apk)               |              |
+| [Installer](https://github.com/ALi3naTEd0/Oscars/releases/download/v1.0.0/oscars_1.0.0-1_setup.exe)    | [DMG](https://github.com/ALi3naTEd0/Oscars/releases/download/v1.0.0/oscars_1.0.0-1.dmg)  | [DEB](https://github.com/ALi3naTEd0/Oscars/releases/download/v1.0.0/oscars_1.0.0-1_amd64.deb)  | [APK-Universal](https://github.com/ALi3naTEd0/Oscars/releases/download/v1.0.0/oscars-1.0.0-1.apk)       | Maybe?       |
+| [Portable](https://github.com/ALi3naTEd0/Oscars/releases/download/v1.0.0/oscars_1.0.0-1_portable.zip)     |              | [RPM](https://github.com/ALi3naTEd0/Oscars/releases/download/v1.0.0/oscars_1.0.0-1_x86_64.rpm)  | [APK-arm64-v8a](https://github.com/ALi3naTEd0/Oscars/releases/download/v1.0.0/oscars-arm64-v8a-1.0.0-1.apk)             |              |
+|              |              | [Arch](#arch-linux)  | [APK-armeabi-v7a](https://github.com/ALi3naTEd0/Oscars/releases/download/v1.0.0/oscars-armeabi-v7a-1.0.0-1.apk)      |              |
+|              |              | [AppImage](https://github.com/ALi3naTEd0/Oscars/releases/download/v1.0.0/oscars_1.0.0-1.AppImage)  | [APK-x86_64](https://github.com/ALi3naTEd0/Oscars/releases/download/v1.0.0/oscars-x86_64-1.0.0-1.apk)               |              |
 
 ## Installation
 
