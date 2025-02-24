@@ -6,12 +6,14 @@ on:
       version:
         description: 'Version number'
         required: true
+        type: string
         default: '1.0.0-1'
   workflow_call:
     inputs:
       version:
         required: true
         type: string
+        description: 'Version number'
 
 jobs:
   build:
@@ -46,13 +48,13 @@ jobs:
           $appDir = "oscars"
           New-Item -ItemType Directory -Path $appDir
           Copy-Item "build\windows\x64\runner\Release\*" -Destination "$appDir\" -Recurse
-          Compress-Archive -Path "oscars" -DestinationPath "oscars_${{ github.event.inputs.version }}_portable.zip"
+          Compress-Archive -Path "oscars" -DestinationPath "oscars_${{ inputs.version || github.event.inputs.version }}_portable.zip"
 
       - name: Upload Portable Package
         uses: actions/upload-artifact@v4
         with:
           name: oscars-portable
-          path: oscars_${{ github.event.inputs.version }}_portable.zip
+          path: oscars_${{ inputs.version || github.event.inputs.version }}_portable.zip
 
       # Create and upload installer version
       - name: Install Inno Setup
@@ -69,4 +71,4 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: oscars-Setup
-          path: installers/Output/oscars_${{ github.event.inputs.version }}_setup.exe
+          path: installers/Output/oscars_${{ inputs.version || github.event.inputs.version }}_setup.exe

@@ -9,34 +9,30 @@ on:
         default: "1.0.0-1"
 
 jobs:
-  android:
-    uses: ./.github/workflows/android.yml
-    with:
-      version: ${{ github.event.inputs.version }}
-
-  linux:
-    uses: ./.github/workflows/linux.yml
-    with:
-      version: ${{ github.event.inputs.version }}
-
-  windows:
-    uses: ./.github/workflows/windows.yml
-    with:
-      version: ${{ github.event.inputs.version }}
-
-  macos:
-    uses: ./.github/workflows/macos.yml
-    with:
-      version: ${{ github.event.inputs.version }}
+  compile:
+    strategy:
+      matrix:
+        platform: [android, linux, windows, macos]
+    runs-on: ubuntu-latest
+    steps:
+      - name: Run workflow
+        run: |
+          gh workflow run ${{ matrix.platform }}.yml -f version=${{ github.event.inputs.version }}
+          sleep 30
+        env:
+          GH_TOKEN: ${{ github.token }}
 
   release:
-    needs: [android, linux, windows, macos]
+    needs: compile
     runs-on: ubuntu-latest
+    permissions:
+      contents: write
     steps:
       - uses: actions/checkout@v4
       - uses: actions/download-artifact@v4
         with:
           path: dist
+          merge-multiple: true
       - run: ls -R dist/
       - uses: softprops/action-gh-release@v1
         with:
