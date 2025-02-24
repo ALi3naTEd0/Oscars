@@ -7,36 +7,47 @@ on:
         description: "Version to build"
         required: true
         default: "1.0.0-1"
+        type: string
+
+permissions:
+  contents: write
+  actions: read
 
 jobs:
-  compile:
+  build:
     strategy:
       matrix:
-        platform: [android, linux, windows, macos]
-    runs-on: ubuntu-latest
+        include:
+          - os: ubuntu-latest
+            workflow: android
+          - os: ubuntu-latest
+            workflow: linux
+          - os: windows-latest
+            workflow: windows
+          - os: macos-latest
+            workflow: macos
+      fail-fast: false
+    
+    runs-on: ${{ matrix.os }}
     steps:
-      - name: Run workflow
-        run: |
-          gh workflow run ${{ matrix.platform }}.yml -f version=${{ github.event.inputs.version }}
-          sleep 30
+      - uses: actions/checkout@v4
+      - run: |
+          gh workflow run ${{ matrix.workflow }}.yml \
+            -f version=${{ inputs.version }} \
+            --ref ${{ github.ref_name }}
         env:
-          GH_TOKEN: ${{ github.token }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
   release:
-    needs: compile
+    needs: build
     runs-on: ubuntu-latest
-    permissions:
-      contents: write
     steps:
       - uses: actions/checkout@v4
       - uses: actions/download-artifact@v4
         with:
           path: dist
-          merge-multiple: true
-      - run: ls -R dist/
       - uses: softprops/action-gh-release@v1
         with:
-          tag_name: v${{ github.event.inputs.version }}
-          name: Release ${{ github.event.inputs.version }}
+          tag_name: v${{ inputs.version }}
           draft: true
           files: dist/**/*
