@@ -12,10 +12,10 @@
 
 ## Table of Contents
 - [Introduction](#introduction)
+- [Features](#features)
 - [Screenshots](#screenshots)
 - [Downloads](#downloads)
 - [Installation](#installation)
-- [Features](#features)
 - [Technologies Used](#technologies-used)
 - [Getting Started](#getting-started)
 - [Project Architecture](#project-architecture)
@@ -26,10 +26,20 @@
 ## Introduction
 
 Welcome to **The 97th Academy Awards** app, your digital companion for exploring Oscar-nominated movies. Browse through nominations, view movie details, check IMDb ratings, and access direct links to IMDb pages - all in one place.
+
+## Features
+- 🎬 Browse Oscar nominated movies
+- ⭐ View IMDb ratings and details
+- 🔗 Direct links to IMDb pages
+- 🎲 Random movie selection
+- 🖼️ Movie poster visualization
+- 💾 Cached images for faster loading
+
 <!---
 ## Screenshots
 Coming soon...
 --->
+
 ## Downloads
 | Windows      | MacOS        | Linux        | Android      | iOS          |
 |--------------|--------------|--------------|--------------|--------------|
@@ -101,14 +111,6 @@ git clone https://github.com/ALi3naTEd0/Oscars.git
 cd Oscars
 makepkg -si
 ```
-
-## Features
-- 🎬 Browse Oscar nominated movies
-- ⭐ View IMDb ratings and details
-- 🔗 Direct links to IMDb pages
-- 🎲 Random movie selection
-- 🖼️ Movie poster visualization
-- 💾 Cached images for faster loading
 
 ## Technologies Used
 - [Flutter](https://flutter.dev/): Cross-platform UI development
