@@ -139,8 +139,9 @@ jobs:
           sudo apt-get install -y alien
           rm -rf *.rpm oscars-1.0.0
           cd ${{ github.workspace }}
-          sudo alien --keep-version --scripts oscars_1.0.0-1.deb
-          mv oscars-1.0.0-1.x86_64.rpm oscars_1.0.0-1.rpm
+          sudo alien --to-rpm oscars_1.0.0-1.deb
+          # Use find to locate and rename the generated RPM
+          find . -name "*.rpm" -exec mv {} oscars_1.0.0-1.rpm \;
 
       - name: Upload Linux Packages
         uses: actions/upload-artifact@v4
