@@ -1,4 +1,4 @@
-<img src="https://github.com/ALi3naTEd0/oscars/blob/main/assets/oscars.png" width="200">
+<img src="assets/oscars.png" width="200">
 
 # The 97th Academy Awards
 
@@ -8,99 +8,143 @@
 ![Last Commit](https://img.shields.io/github/last-commit/ALi3naTEd0/oscars)
 ![Stars](https://img.shields.io/github/stars/ALi3naTEd0/oscars)
 
-## Descripción
+[Discord](https://discordapp.com/channels/@me/343448030986371072/)
 
-Esta es una aplicación Flutter que permite explorar las nominaciones para los Premios de la Academia número 97. La aplicación muestra información detallada sobre las películas nominadas, incluyendo el título, la categoría, una sinopsis, la calificación de IMDb y enlaces directos a la página de IMDb de cada película.
+## Table of Contents
+- [Introduction](#introduction)
+- [Screenshots](#screenshots)
+- [Downloads](#downloads)
+- [Installation](#installation)
+- [Features](#features)
+- [Technologies Used](#technologies-used)
+- [Getting Started](#getting-started)
+- [Project Architecture](#project-architecture)
+- [Development](#development)
+- [License](#license)
+- [Contact](#contact)
 
-## Características
+## Introduction
 
-- **Navegación Sencilla:** Explora las nominaciones utilizando los botones "Anterior" y "Siguiente", que permiten navegar secuencialmente por la lista.
-- **Selección Aleatoria:** Utiliza el botón "Aleatorio" para descubrir películas nominadas al azar.
-- **Información Detallada:** Visualiza el título, la categoría de nominación, la calificación de IMDb, la duración, los géneros y la sinopsis de cada película.
-- **Enlaces a IMDb:** Accede directamente a la página de IMDb de cada película con un solo toque.
-- **Imágenes de Póster:** Muestra las imágenes de los pósters de las películas para una experiencia visual atractiva.
-- **Carga en Caché:** Optimiza la experiencia del usuario cargando la información de las películas en caché para un acceso más rápido.
-
-<!--
-## Capturas de Pantalla
-
-![Captura de pantalla 1](url_de_la_captura_de_pantalla_1.png)
-_Explora la lista de nominaciones._
-
-![Captura de pantalla 2](url_de_la_captura_de_pantalla_2.png)
-_Visualiza información detallada de cada película nominada._ -->
-
+Welcome to **The 97th Academy Awards** app, your digital companion for exploring Oscar-nominated movies. Browse through nominations, view movie details, check IMDb ratings, and access direct links to IMDb pages - all in one place.
+<!---
+## Screenshots
+Coming soon...
+--->
 ## Downloads
 | Windows      | MacOS        | Linux        | Android      | iOS          |
 |--------------|--------------|--------------|--------------|--------------|
-| [Installer](https://github.com/ALi3naTEd0/Oscars/releases/download/v1.0.0/oscars_1.0.0-1_setup.exe)    | [DMG](https://github.com/ALi3naTEd0/Oscars/releases/download/v1.0.0/oscars_1.0.0-1.dmg)  | [Arch](#instalar-en-arch)  | [APK-Universal](https://github.com/ALi3naTEd0/oscars/releases/download/v1.0.0/oscars-release.apk)       | Maybe?       |
-| [Portable](https://github.com/ALi3naTEd0/Oscars/releases/download/v1.0.0/oscars_1.0.0-1_portable.zip)     |              |              | [APK-arm64-v8a](https://github.com/ALi3naTEd0/oscars/releases/download/v1.0.0/oscars-arm64-v8a-release.apk)             |              |
-|              |              |              | [APK-armeabi-v7a](https://github.com/ALi3naTEd0/oscars/releases/download/v1.0.0/oscars-armeabi-v7a-release.apk)      |              |
-|              |              |              | [APK-x86_x64](https://github.com/ALi3naTEd0/oscars/releases/download/v1.0.0/oscars-x86_64-release.apk)               |              |
+| [Installer](https://github.com/ALi3naTEd0/Oscars/releases/download/v1.0.0/oscars_1.0.0-1_setup.exe)    | [DMG](https://github.com/ALi3naTEd0/Oscars/releases/download/v1.0.0/oscars_1.0.0-1.dmg)  | [DEB](https://github.com/ALi3naTEd0/Oscars/releases/download/v1.0.0/oscars_1.0.0-1_amd64.deb)  | [APK-Universal](https://github.com/ALi3naTEd0/oscars/releases/download/v1.0.0/oscars-release.apk)       | Maybe?       |
+| [Portable](https://github.com/ALi3naTEd0/Oscars/releases/download/v1.0.0/oscars_1.0.0-1_portable.zip)     |              | [RPM](https://github.com/ALi3naTEd0/Oscars/releases/download/v1.0.0/oscars_1.0.0-1_x86_64.rpm)  | [APK-arm64-v8a](https://github.com/ALi3naTEd0/oscars/releases/download/v1.0.0/oscars-arm64-v8a-release.apk)             |              |
+|              |              | [Arch](#arch-linux)  | [APK-armeabi-v7a](https://github.com/ALi3naTEd0/oscars/releases/download/v1.0.0/oscars-armeabi-v7a-release.apk)      |              |
+|              |              | [AppImage](#appimage)  | [APK-x86_64](https://github.com/ALi3naTEd0/oscars/releases/download/v1.0.0/oscars-x86_64-release.apk)               |              |
 
-### Instalar en Arch
+## Installation
+
+### Windows
+1. Installer: Run `oscars_1.0.0-1_setup.exe` and follow the installation wizard
+   - Or -
+2. Portable: Extract `oscars_1.0.0-1_portable.zip` and run `oscars.exe`
+
+### Android
+1. Choose the correct version:
+   - APK-Universal: Works on most devices
+   - APK-arm64-v8a: Modern phones (2017+)
+   - APK-armeabi-v7a: Older phones
+   - APK-x86_64: Some tablets/ChromeOS
+
+2. Installation steps:
+   - Download your chosen APK
+   - Enable "Install from unknown sources" if prompted
+   - Open the APK and follow installation steps
+
+### macOS
+1. Download `oscars_1.0.0-1.dmg`
+2. Open the DMG file
+3. Drag Oscars to Applications
+4. First launch:
+   - Right-click Oscars in Applications
+   - Select "Open"
+   - If blocked: System Settings -> Privacy & Security -> "Open Anyway"
+   - Click "Open" in final dialog
+
+Note: If you see "app is damaged", open Terminal and run:
+```bash
+xattr -cr /Applications/Oscars.app
 ```
+
+### Linux
+
+#### AppImage
+1. Download the AppImage
+2. Make executable:
+```bash
+chmod +x oscars_1.0.0-1.AppImage
+```
+3. Run:
+```bash
+./oscars_1.0.0-1.AppImage
+```
+
+#### DEB Package (Ubuntu/Debian)
+```bash
+sudo apt install ./oscars_1.0.0-1_amd64.deb
+```
+
+#### RPM Package (Fedora/RHEL)
+```bash
+sudo rpm -i oscars_1.0.0-1_x86_64.rpm
+```
+
+#### Arch Linux
+```bash
 git clone https://github.com/ALi3naTEd0/Oscars.git
 cd Oscars
 makepkg -si
 ```
 
-## Cómo Empezar
+## Features
+- 🎬 Browse Oscar nominated movies
+- ⭐ View IMDb ratings and details
+- 🔗 Direct links to IMDb pages
+- 🎲 Random movie selection
+- 🖼️ Movie poster visualization
+- 💾 Cached images for faster loading
 
-### Requisitos
+## Technologies Used
+- [Flutter](https://flutter.dev/): Cross-platform UI development
+- [Dart](https://dart.dev/): Programming language
+- [IMDb API](https://imdb-api.com/): Movie data and ratings
+- HTTP Client: API requests and data fetching
 
-- Flutter SDK instalado en tu máquina. Puedes descargarlo desde [flutter.dev](https://flutter.dev/docs/get-started/install).
-- Android Studio o VS Code con el plugin de Flutter para desarrollo.
+## Project Architecture
+- **MoviesApp**: Main widget handling state
+- **MovieList**: Movie browsing interface
+- **MovieDetail**: Detailed movie information
+- **CachedImages**: Image loading and caching
+- **URLHandler**: External link management
 
-### Instalación
-
-1. Clona el repositorio:
-
+## Development
+1. Clone the repository:
+```bash
+git clone https://github.com/ALi3naTEd0/Oscars.git
+cd Oscars
 ```
-git clone https://github.com/ALi3naTEd0/oscars.git
-cd oscars
+2. Install dependencies:
+```bash
+flutter pub get
 ```
-
-2. Obtén las dependencias:
-
-`flutter pub get`
-
-### Ejecución
-
-1. Conecta un dispositivo Android o iOS, o utiliza un emulador.
-2. Ejecuta la aplicación:
-
-`flutter run`
-
-## Estructura del Proyecto
-
-```
-movie_awards_app/
-├── android/ # Archivos de configuración para Android
-├── ios/ # Archivos de configuración para iOS
-├── lib/ # Código fuente de la aplicación
-│ ├── main.dart # Punto de entrada de la aplicación
-│ └── ... # Otros archivos .dart
-├── pubspec.yaml # Archivo de configuración de Flutter
-└── README.md # Este archivo
+3. Run the app:
+```bash
+flutter run
 ```
 
-## Dependencias
+## License
+This project is licensed under the GNU General Public License v3.0 (GPL-3.0). See the [LICENSE](LICENSE) file for details.
 
-La aplicación utiliza las siguientes dependencias:
+## Contact
+[Discord](https://discordapp.com/channels/@me/343448030986371072/)
 
-- `http`: Para realizar solicitudes HTTP a IMDb y obtener la información de las películas.
-- `url_launcher`: Para abrir las URL de IMDb en el navegador.
-- `cached_network_image`: Para cargar y almacenar en caché las imágenes de los pósters de las películas.
-- `path_provider`: Para acceder a las ubicaciones de los directorios en el dispositivo.
-- `path`: Para manipular las rutas de los archivos.
+Project Link: [https://github.com/ALi3naTEd0/Oscars](https://github.com/ALi3naTEd0/Oscars)
 
-Puedes encontrar la lista completa de dependencias en el archivo `pubspec.yaml`.
-
-## Contribución
-
-¡Las contribuciones son bienvenidas! Si encuentras algún error o tienes alguna sugerencia de mejora, no dudes en abrir un "issue" o enviar un "pull request".
-
-## Licencia
-
-This project is licensed under the GNU General Public License v3.0 (GPL-3.0). See the LICENSE file for more details.
+---
+Developed with ♥ by [X](https://github.com/ALi3naTEd0)
