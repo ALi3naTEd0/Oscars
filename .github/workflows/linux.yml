@@ -2,6 +2,11 @@ name: Linux Build
 
 on:
   workflow_dispatch:
+    inputs:
+      version:
+        description: 'Version number'
+        required: true
+        default: '1.0.0-1'
 
 env:
   FLUTTER_VERSION: '3.19.3'
@@ -70,18 +75,18 @@ jobs:
 
       - name: Build AppImage
         run: |
-          ARCH=x86_64 ./appimagetool-x86_64.AppImage AppDir oscars_1.0.0-1.AppImage
+          ARCH=x86_64 ./appimagetool-x86_64.AppImage AppDir oscars_${{ github.event.inputs.version }}.AppImage
 
       - name: Upload AppImage
         uses: actions/upload-artifact@v4
         with:
           name: oscars-AppImage
-          path: oscars_1.0.0-1.AppImage
+          path: oscars_${{ github.event.inputs.version }}.AppImage
 
       # DEB build
       - name: Build DEB Package
         run: |
-          PKGDIR=oscars_1.0.0-1_amd64
+          PKGDIR=oscars_${{ github.event.inputs.version }}_amd64
           
           # Create directory structure
           mkdir -p $PKGDIR/DEBIAN
@@ -136,7 +141,7 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: oscars-DEB
-          path: oscars_1.0.0-1_amd64.deb
+          path: oscars_${{ github.event.inputs.version }}_amd64.deb
 
       # RPM build
       - name: Build RPM Package
@@ -145,11 +150,11 @@ jobs:
           sudo apt-get install -y alien rpm
 
           # Convert DEB to RPM and rename to match convention
-          sudo alien --scripts --to-rpm oscars_1.0.0-1_amd64.deb
-          mv oscars-*.rpm oscars_1.0.0-1_x86_64.rpm
+          sudo alien --scripts --to-rpm oscars_${{ github.event.inputs.version }}_amd64.deb
+          mv oscars-*.rpm oscars_${{ github.event.inputs.version }}_x86_64.rpm
 
       - name: Upload RPM
         uses: actions/upload-artifact@v4
         with:
           name: oscars-RPM
-          path: oscars_1.0.0-1_x86_64.rpm
+          path: oscars_${{ github.event.inputs.version }}_x86_64.rpm

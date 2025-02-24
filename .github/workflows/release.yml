@@ -1,0 +1,56 @@
+name: Release Build
+
+on:
+  workflow_dispatch:
+    inputs:
+      version:
+        description: 'Version number (This will be used in ALL platform builds)'
+        required: true
+        default: '1.0.0-1'
+
+jobs:
+  # Trigger all platform builds in parallel
+  trigger-builds:
+    strategy:
+      matrix:
+        platform: [android, linux, windows, macos]
+      fail-fast: false  # Continue with other platforms if one fails
+      
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      
+      - name: Trigger ${{ matrix.platform }} build
+        uses: actions/github-script@v7
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          script: |
+            await github.rest.actions.createWorkflowDispatch({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              workflow_id: '${{ matrix.platform }}.yml',
+              ref: context.ref,
+              inputs: {
+                version: '${{ github.event.inputs.version }}'
+              }
+            })
+
+  # Wait for all builds and create release
+  create-release:
+    needs: trigger-builds
+    runs-on: ubuntu-latest
+    steps:
+      - name: Create Release
+        uses: softprops/action-gh-release@v1
+        with:
+          tag_name: v${{ github.event.inputs.version }}
+          name: Release ${{ github.event.inputs.version }}
+          draft: true  # Create as draft to review before publishing
+          files: |
+            **/*.AppImage
+            **/*.deb
+            **/*.rpm
+            **/*.dmg
+            **/*.exe
+            **/*.zip
+            **/*.apk

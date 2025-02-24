@@ -2,6 +2,11 @@ name: Windows Build
 
 on:
   workflow_dispatch:  # Manual trigger
+    inputs:
+      version:
+        description: 'Version number'
+        required: true
+        default: '1.0.0-1'
 
 jobs:
   build:
@@ -33,19 +38,16 @@ jobs:
       - name: Create Portable Package
         shell: pwsh
         run: |
-          # Create directory structure
           $appDir = "oscars"
           New-Item -ItemType Directory -Path $appDir
           Copy-Item "build\windows\x64\runner\Release\*" -Destination "$appDir\" -Recurse
-          
-          # Create ZIP preserving directory structure
-          Compress-Archive -Path "oscars" -DestinationPath "oscars_1.0.0-1_portable.zip"
+          Compress-Archive -Path "oscars" -DestinationPath "oscars_${{ github.event.inputs.version }}_portable.zip"
 
       - name: Upload Portable Package
         uses: actions/upload-artifact@v4
         with:
           name: oscars-portable
-          path: oscars_1.0.0-1_portable.zip
+          path: oscars_${{ github.event.inputs.version }}_portable.zip
 
       # Create and upload installer version
       - name: Install Inno Setup
@@ -62,4 +64,4 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: oscars-Setup
-          path: installers/Output/oscars_1.0.0-1_setup.exe
+          path: installers/Output/oscars_${{ github.event.inputs.version }}_setup.exe
