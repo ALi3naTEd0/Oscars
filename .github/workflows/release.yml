@@ -40,38 +40,56 @@ jobs:
             });
             console.log(`Triggered ${workflow.status}`);
             
-            // Monitor build progress
-            let buildComplete = false;
-            while (!buildComplete) {
+  monitor-builds:
+    needs: trigger-builds
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        platform: [android, linux, windows, macos]
+    steps:
+      - name: Monitor ${{ matrix.platform }} build
+        uses: actions/github-script@v7
+        with:
+          script: |
+            let complete = false;
+            let attempts = 0;
+            const maxAttempts = 60; // 30 minutes maximum wait
+            
+            while (!complete && attempts < maxAttempts) {
               const runs = await github.rest.actions.listWorkflowRuns({
                 owner: context.repo.owner,
                 repo: context.repo.repo,
                 workflow_id: '${{ matrix.platform }}.yml',
-                branch: context.ref,
+                status: 'completed',
                 per_page: 1
               });
               
               if (runs.data.workflow_runs.length > 0) {
                 const run = runs.data.workflow_runs[0];
-                console.log(`${run.name} status: ${run.status} (${run.conclusion || 'in progress'})`);
+                console.log(`${run.name} status: ${run.status} (${run.conclusion})`);
+                console.log(`Build URL: ${run.html_url}`);
                 
-                if (run.status === 'completed') {
-                  buildComplete = true;
-                  if (run.conclusion !== 'success') {
-                    throw new Error(`${run.name} build failed!`);
-                  }
+                if (run.conclusion === 'success') {
+                  complete = true;
+                } else if (run.conclusion === 'failure') {
+                  throw new Error(`${run.name} build failed! Check ${run.html_url}`);
                 }
+              } else {
+                console.log(`Waiting for ${matrix.platform} build... (${attempts + 1}/${maxAttempts})`);
               }
               
-              if (!buildComplete) {
-                await new Promise(resolve => setTimeout(resolve, 10000)); // Wait 10 seconds
+              if (!complete) {
+                await new Promise(r => setTimeout(r, 30000)); // Check every 30 seconds
+                attempts++;
               }
             }
             
-            return 'success';
+            if (!complete) {
+              throw new Error(`Timeout waiting for ${matrix.platform} build`);
+            }
 
   create-release:
-    needs: trigger-builds
+    needs: monitor-builds
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
