@@ -3,42 +3,28 @@ name: Linux Build
 on:
   workflow_dispatch:
 
-env:
-  FLUTTER_VERSION: '3.19.3'
-
 jobs:
   build-linux:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-20.04
 
     steps:
-      - name: Checkout Code
-        uses: actions/checkout@v4
+      - uses: actions/checkout@v4
+      
+      - uses: subosito/flutter-action@v2
+        with:
+          flutter-version: '3.19.3'
+          channel: 'stable'
 
-      - name: Install Linux Dependencies
+      - name: Install Dependencies
         run: |
           sudo apt-get update
           sudo apt-get install -y cmake ninja-build clang libgtk-3-dev
           sudo apt-get install -y python3-pip python3-setuptools patchelf desktop-file-utils libgdk-pixbuf2.0-dev fakeroot strace fuse
 
-      - name: Setup Flutter
-        uses: subosito/flutter-action@v2
-        with:
-          flutter-version: ${{ env.FLUTTER_VERSION }}
-          channel: 'stable'
-          cache: true
-
-      - name: Build Linux App
+      - name: Build Linux
         run: |
           flutter config --enable-linux-desktop
-          flutter clean
-          flutter pub get
           flutter build linux --release
-
-      # AppImage creation
-      - name: Download AppImage Tool
-        run: |
-          wget -O appimagetool "https://github.com/AppImage/AppImageKit/releases/download/continuous/appimagetool-x86_64.AppImage"
-          chmod +x appimagetool
 
       - name: Create AppDir
         run: |
@@ -67,12 +53,16 @@ jobs:
           EOL
           chmod +x AppDir/AppRun
 
+      - name: Get AppImage Tool
+        run: |
+          wget -O appimagetool "https://github.com/AppImage/AppImageKit/releases/download/continuous/appimagetool-x86_64.AppImage"
+          chmod +x appimagetool
+
       - name: Build AppImage
         run: |
           ARCH=x86_64 ./appimagetool AppDir
           mv Oscars-x86_64.AppImage oscars_1.0.0-1.AppImage
 
-      # DEB package creation
       - name: Create DEB Package
         run: |
           mkdir -p oscars-1.0.0/DEBIAN
@@ -97,11 +87,11 @@ jobs:
           dpkg-deb --build oscars-1.0.0
           mv oscars-1.0.0.deb oscars_1.0.0-1.deb
 
-      # RPM package creation
       - name: Create RPM Package
         run: |
-          sudo apt-get install -y alien
+          sudo apt-get install -y alien rpm
           sudo alien --keep-version --to-rpm oscars_1.0.0-1.deb
+          mv oscars-1.0.0-1.x86_64.rpm oscars_1.0.0-1.rpm
 
       - name: Upload AppImage
         uses: actions/upload-artifact@v4
@@ -119,4 +109,4 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: oscars-RPM
-          path: oscars-1.0.0-1.*.rpm
+          path: oscars_1.0.0-1.rpm
