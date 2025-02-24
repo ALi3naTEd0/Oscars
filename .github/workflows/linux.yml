@@ -17,10 +17,8 @@ jobs:
       - name: Install Linux Dependencies
         run: |
           sudo apt-get update
-          sudo apt-get install -y cmake pkg-config ninja-build clang libgtk-3-dev
-          sudo apt-get install -y libgtk-3-0 libgtk-3-dev libgtkmm-3.0-dev
+          sudo apt-get install -y cmake ninja-build clang libgtk-3-dev
           sudo apt-get install -y python3-pip python3-setuptools patchelf desktop-file-utils libgdk-pixbuf2.0-dev fakeroot strace fuse
-          sudo apt-get install -y rpm file
 
       - name: Setup Flutter
         uses: subosito/flutter-action@v2
@@ -30,16 +28,9 @@ jobs:
           cache: true
 
       - name: Build Linux App
-        env:
-          CFLAGS: "-Wno-error -Wno-error=switch"
-          CXXFLAGS: "-Wno-error -Wno-error=switch"
-          CC: clang
-          CXX: clang++
         run: |
           flutter config --enable-linux-desktop
           flutter clean
-          rm -rf build
-          flutter pub cache repair
           flutter pub get
           flutter build linux --release
 
@@ -51,24 +42,14 @@ jobs:
 
       - name: Create AppDir
         run: |
-          APP_NAME="oscars"
-          VERSION="1.0.0"
           mkdir -p AppDir/usr/bin
           mkdir -p AppDir/usr/share/applications
           mkdir -p AppDir/usr/share/icons/hicolor/256x256/apps
-          
-          # Copy application
           cp -r build/linux/x64/release/bundle/* AppDir/usr/bin/
-          
-          # Download and setup icons
-          curl -o AppDir/usr/share/icons/hicolor/256x256/apps/$APP_NAME.png \
+          curl -o AppDir/usr/share/icons/hicolor/256x256/apps/oscars.png \
             https://raw.githubusercontent.com/ALi3naTEd0/Oscars/main/assets/oscars.png
-          
-          # Copy icon to root of AppDir (required by AppImage)
-          cp AppDir/usr/share/icons/hicolor/256x256/apps/$APP_NAME.png AppDir/$APP_NAME.png
-          
-          # Create desktop file in correct location
-          cat > AppDir/$APP_NAME.desktop << EOL
+          cp AppDir/usr/share/icons/hicolor/256x256/apps/oscars.png AppDir/oscars.png
+          cat > AppDir/oscars.desktop << EOL
           [Desktop Entry]
           Name=Oscars
           Exec=oscars
@@ -76,10 +57,7 @@ jobs:
           Type=Application
           Categories=Utility;
           EOL
-          
-          cp AppDir/$APP_NAME.desktop AppDir/usr/share/applications/
-          
-          # Create AppRun
+          cp AppDir/oscars.desktop AppDir/usr/share/applications/
           cat > AppDir/AppRun << EOL
           #!/bin/bash
           HERE=\$(dirname \$(readlink -f "\${0}"))
@@ -87,7 +65,6 @@ jobs:
           export LD_LIBRARY_PATH="\${HERE}/usr/bin/lib:\${LD_LIBRARY_PATH}"
           exec "\${HERE}/usr/bin/oscars" "\$@"
           EOL
-          
           chmod +x AppDir/AppRun
 
       - name: Build AppImage
@@ -98,29 +75,18 @@ jobs:
       # DEB package creation
       - name: Create DEB Package
         run: |
-          APP_NAME="oscars"
-          VERSION="1.0.0"
-          
-          mkdir -p $APP_NAME-$VERSION/DEBIAN
-          mkdir -p $APP_NAME-$VERSION/usr/bin
-          mkdir -p $APP_NAME-$VERSION/usr/share/applications
-          mkdir -p $APP_NAME-$VERSION/usr/share/icons/hicolor/256x256/apps
-          
-          # Copy application
-          cp -r build/linux/x64/release/bundle/* $APP_NAME-$VERSION/usr/bin/
-          
-          # Copy icon
-          cp AppDir/usr/share/icons/hicolor/256x256/apps/$APP_NAME.png \
-            $APP_NAME-$VERSION/usr/share/icons/hicolor/256x256/apps/
-          
-          # Copy desktop file
-          cp AppDir/usr/share/applications/$APP_NAME.desktop \
-            $APP_NAME-$VERSION/usr/share/applications/
-          
-          # Create control file
-          cat > $APP_NAME-$VERSION/DEBIAN/control << EOL
+          mkdir -p oscars-1.0.0/DEBIAN
+          mkdir -p oscars-1.0.0/usr/bin
+          mkdir -p oscars-1.0.0/usr/share/applications
+          mkdir -p oscars-1.0.0/usr/share/icons/hicolor/256x256/apps
+          cp -r build/linux/x64/release/bundle/* oscars-1.0.0/usr/bin/
+          cp AppDir/usr/share/icons/hicolor/256x256/apps/oscars.png \
+            oscars-1.0.0/usr/share/icons/hicolor/256x256/apps/
+          cp AppDir/usr/share/applications/oscars.desktop \
+            oscars-1.0.0/usr/share/applications/
+          cat > oscars-1.0.0/DEBIAN/control << EOL
           Package: oscars
-          Version: $VERSION
+          Version: 1.0.0
           Section: x11
           Priority: optional
           Architecture: amd64
@@ -128,19 +94,15 @@ jobs:
           Description: Oscar Awards app
            A Flutter desktop application for Oscar Awards information.
           EOL
-          
-          # Build DEB package
-          dpkg-deb --build $APP_NAME-$VERSION
-          mv ${APP_NAME}-${VERSION}.deb oscars_1.0.0-1.deb
+          dpkg-deb --build oscars-1.0.0
+          mv oscars-1.0.0.deb oscars_1.0.0-1.deb
 
-      # RPM package creation using alien
+      # RPM package creation
       - name: Create RPM Package
         run: |
           sudo apt-get install -y alien
           sudo alien --keep-version --to-rpm oscars_1.0.0-1.deb
-          mv *.rpm oscars_1.0.0-1.rpm
 
-      # Upload packages separately
       - name: Upload AppImage
         uses: actions/upload-artifact@v4
         with:
@@ -157,4 +119,4 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: oscars-RPM
-          path: oscars_1.0.0-1.rpm
+          path: oscars-1.0.0-1.*.rpm
