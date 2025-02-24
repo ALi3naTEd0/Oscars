@@ -136,11 +136,9 @@ jobs:
       # RPM package creation using alien
       - name: Create RPM Package
         run: |
-          cd ${{ github.workspace }}
           sudo apt-get install -y alien
-          rm -rf *.rpm
-          sudo alien --to-rpm --scripts --keep-version oscars_1.0.0-1.deb
-          mv oscars-1.0.0-1.*.rpm oscars_1.0.0-1.rpm
+          sudo alien --keep-version --to-rpm oscars_1.0.0-1.deb
+          mv *.rpm oscars_1.0.0-1.rpm
 
       # Upload packages separately
       - name: Upload AppImage
