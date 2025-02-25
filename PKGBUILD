@@ -25,9 +25,9 @@ makedepends=(
     'ninja'
     'patchelf'
 )
-options=(!debug)  # Disable debug symbols completely
+options=(!debug)  # Disable debug symbols to avoid conflicts
 
-# For local builds
+# Source configuration for local and CI builds
 if [ -z "$CI" ]; then
     source=("$pkgname::git+file://$PWD")
 else
@@ -57,12 +57,12 @@ package() {
     # Install bundle files
     cp -r build/linux/x64/release/bundle/* "$pkgdir/usr/lib/$pkgname/"
     
-    # Handle plugins
+    # Handle plugins if present
     if [ -d "$pkgdir/usr/lib/$pkgname/plugins" ]; then
         cp -r "$pkgdir/usr/lib/$pkgname/plugins/"* "$pkgdir/usr/lib/$pkgname/lib/"
     fi
     
-    # Create launcher with environment setup
+    # Create launcher script with environment setup
     cat > "$pkgdir/usr/bin/$pkgname" << EOF
 #!/bin/sh
 export GDK_BACKEND=x11
@@ -78,7 +78,7 @@ EOF
     install -Dm644 "desktop/$pkgname.desktop" "$pkgdir/usr/share/applications/$pkgname.desktop"
     install -Dm644 "assets/app-icon.png" "$pkgdir/usr/share/icons/hicolor/512x512/apps/$pkgname.png"
 
-    # Fix library paths
+    # Fix library paths and RPATH
     find "$pkgdir/usr/lib/$pkgname/lib" -type f -name "*.so" -exec \
         patchelf --set-rpath '/usr/lib/oscars/lib:$ORIGIN' {} \;
     patchelf --set-rpath "/usr/lib/$pkgname/lib" "$pkgdir/usr/lib/$pkgname/$pkgname"

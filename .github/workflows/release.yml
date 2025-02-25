@@ -102,5 +102,6 @@ jobs:
           token: ${{ secrets.GITHUB_TOKEN }}
           tag_name: v${{ github.event.inputs.version }}
           name: Release v${{ github.event.inputs.version }}
+          generate_release_notes: true  # Added: generate release notes automatically
           draft: false
           files: dist/**/*
