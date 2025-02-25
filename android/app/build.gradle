@@ -30,7 +30,7 @@ android {
         minSdkVersion 21
         targetSdkVersion 33
         // Update these values for each new release
-        versionCode 2       // Must be incremented for each release
+        versionCode 2       // Must be greater than previous version
         versionName "1.1.0" // Should match release version
     }
 
@@ -45,7 +45,7 @@ android {
 
     buildTypes {
         release {
-            signingConfig signingConfigs.release  // Changed from debug to release
+            signingConfig signingConfigs.release  // Using release signing configuration
             minifyEnabled false
             shrinkResources false
         }
