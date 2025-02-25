@@ -510,7 +510,7 @@ class _MovieBrowserScreenState extends State<MovieBrowserScreen> {
     return Column(
       children: [
         const Text(
-          "Current Nomination",
+          "Nomination",
           style: TextStyle(
             color: Colors.white,
             fontSize: 20,
