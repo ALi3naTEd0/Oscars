@@ -6,7 +6,7 @@ plugins {
 }
 
 android {
-    namespace = "com.alienated.oscars"
+    namespace = "com.example.oscars"
     compileSdkVersion flutter.compileSdkVersion
     ndkVersion "25.1.8937393"
 
@@ -20,7 +20,7 @@ android {
     }
 
     defaultConfig {
-        applicationId "com.alienated.oscars"
+        applicationId "com.example.oscars"
         minSdkVersion 21
         targetSdkVersion 33
         versionCode 1
