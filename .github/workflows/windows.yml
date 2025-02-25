@@ -2,18 +2,15 @@ name: Windows Build
 
 on:
   workflow_dispatch:
-    inputs:
-      version:
-        description: 'Version number'
-        required: true
-        type: string
-        default: '1.0.0-1'
   workflow_call:
     inputs:
       version:
+        description: "Version to build"
         required: true
         type: string
-        description: 'Version number'
+      upload_url:
+        required: false
+        type: string
 
 jobs:
   build:
@@ -27,13 +24,36 @@ jobs:
         with:
           flutter-version: '3.19.3'
           channel: 'stable'
-          cache: true
+        env:
+          LANG: en_US.UTF-8
+
+      - name: Install CMake
+        uses: lukka/get-cmake@latest
+        
+      - name: Install Windows SDK
+        uses: egor-tensin/vs-shell@v2
+        with:
+          arch: x64
 
       - name: Download Icon
         run: |
+          # Create assets directory if it doesn't exist (and don't fail if it does)
+          if (!(Test-Path "assets")) {
+              New-Item -ItemType Directory -Path "assets" -Force
+          }
+          
           $iconUrl = "https://raw.githubusercontent.com/ALi3naTEd0/Oscars/main/assets/app-icon.ico"
           $outputPath = "assets/app-icon.ico"
+          Write-Host "Downloading icon from: $iconUrl"
           Invoke-WebRequest -Uri $iconUrl -OutFile $outputPath
+          
+          if (Test-Path $outputPath) {
+              Write-Host "Icon downloaded successfully to: $outputPath"
+              Get-ChildItem -Path "assets" -Recurse
+          } else {
+              Write-Error "Failed to download icon"
+              exit 1
+          }
 
       - name: Build Windows
         run: |
@@ -45,16 +65,31 @@ jobs:
       - name: Create Portable Package
         shell: pwsh
         run: |
-          $appDir = "oscars"
+          # Create directory structure
+          $appDir = "oscars-${{ inputs.version || github.event.inputs.version }}"
           New-Item -ItemType Directory -Path $appDir
           Copy-Item "build\windows\x64\runner\Release\*" -Destination "$appDir\" -Recurse
-          Compress-Archive -Path "oscars" -DestinationPath "oscars_${{ inputs.version || github.event.inputs.version }}_portable.zip"
+          
+          # Create ZIP preserving directory structure
+          Compress-Archive -Path "$appDir" -DestinationPath "oscars-portable.zip"
 
       - name: Upload Portable Package
+        if: inputs.upload_url == ''
         uses: actions/upload-artifact@v4
         with:
           name: oscars-portable
-          path: oscars_${{ inputs.version || github.event.inputs.version }}_portable.zip
+          path: oscars-portable.zip
+
+      - name: Upload Portable Release Asset
+        if: inputs.upload_url != ''
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ inputs.upload_url }}
+          asset_path: oscars-portable.zip
+          asset_name: oscars-portable.zip
+          asset_content_type: application/zip
 
       # Create and upload installer version
       - name: Install Inno Setup
@@ -63,6 +98,8 @@ jobs:
 
       - name: Create Installer
         shell: pwsh
+        env:
+          VERSION: ${{ inputs.version || github.event.inputs.version }}
         run: |
           New-Item -ItemType Directory -Path "installers\Output" -Force
           & 'C:\Program Files (x86)\Inno Setup 6\ISCC.exe' installers\inno_script_script.iss
@@ -71,9 +108,15 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: oscars-Setup
-          path: installers/Output/oscars_${{ inputs.version || github.event.inputs.version }}_setup.exe
+          path: installers/Output/oscars_${{ inputs.version || github.event.inputs.version }}.exe
 
-      - uses: actions/upload-artifact@v4
+      - name: Upload Setup Release Asset
+        if: inputs.upload_url != ''
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          name: windows-installer
-          path: build/windows/runner/Release/oscars_${{ github.event.inputs.version }}_setup.exe
+          upload_url: ${{ inputs.upload_url }}
+          asset_path: installers/Output/oscars_${{ inputs.version || github.event.inputs.version }}.exe
+          asset_name: oscars_${{ inputs.version || github.event.inputs.version }}.exe
+          asset_content_type: application/x-msdownload
