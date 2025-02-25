@@ -29,9 +29,9 @@ android {
         applicationId "com.example.oscars"
         minSdkVersion 21
         targetSdkVersion 33
-        // Update these values for each new release
-        versionCode 2       // Must be greater than previous version
-        versionName "1.1.0" // Should match release version
+        // Version code must be incremented for each release
+        versionCode 3       // Increment this from 2 to 3
+        versionName "1.1.0" // Current version
     }
 
     signingConfigs {
