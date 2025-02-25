@@ -363,11 +363,19 @@ class _MovieBrowserScreenState extends State<MovieBrowserScreen> {
   }
 
   Future<void> _loadRatings() async {
-    final prefs = await SharedPreferences.getInstance();
-    final ratingsStr = prefs.getString('movie_ratings');
-    if (ratingsStr != null) {
+    try {
+      final prefs = await SharedPreferences.getInstance();
+      final ratingsStr = prefs.getString('movie_ratings');
+      if (ratingsStr != null) {
+        setState(() {
+          _ratings = Map<String, double>.from(json.decode(ratingsStr));
+        });
+      }
+    } catch (e) {
+      print('Error loading ratings: $e');
+      // Initialize empty ratings if there's an error
       setState(() {
-        _ratings = Map<String, double>.from(json.decode(ratingsStr));
+        _ratings = {};
       });
     }
   }
@@ -701,10 +709,11 @@ class MovieCache {
   static const String _watchedFileName = 'watched_movies.json';
 
   static Future<String> _getValidDirectory() async {
+    if (Platform.isAndroid) {
+      return (await getApplicationDocumentsDirectory()).path;
+    }
     final directory = await getApplicationSupportDirectory();
-    final dirPath = directory.path;
-    await Directory(dirPath).create(recursive: true);
-    return dirPath;
+    return directory.path;
   }
 
   static Future<Map<String, dynamic>> loadCache() async {

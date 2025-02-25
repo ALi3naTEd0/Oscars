@@ -66,6 +66,13 @@ jobs:
       - name: Create dist directory
         run: mkdir -p dist
 
+      - name: Debug Needs Context
+        run: |
+          echo "Android build result: ${{ needs.android-build.result }}"
+          echo "Linux build result: ${{ needs.linux-build.result }}"
+          echo "Windows build result: ${{ needs.windows-build.result }}"
+          echo "macOS build result: ${{ needs.macos-build.result }}"
+
       - uses: actions/download-artifact@v4
         with:
           path: dist
@@ -86,4 +93,5 @@ jobs:
           token: ${{ secrets.GITHUB_TOKEN }}
           tag_name: v${{ github.event.inputs.version }}
           name: Release v${{ github.event.inputs.version }}
+          draft: false
           files: dist/**/*
