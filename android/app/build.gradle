@@ -23,8 +23,9 @@ android {
         applicationId "com.example.oscars"
         minSdkVersion 21
         targetSdkVersion 33
-        versionCode 1
-        versionName "1.0"
+        // Update these values for each new release
+        versionCode 2       // Must be incremented for each release
+        versionName "1.1.0" // Should match release version
     }
 
     buildTypes {
