@@ -1,68 +1,92 @@
 # Maintainer: ALi3naTEd0
-pkgname=(oscars{,-dbg})  # Split package with debug
+pkgname=oscars
 pkgver=1.0.1
 pkgrel=1
 pkgdesc="The 97th Academy Awards app"
 arch=('x86_64')
 url="https://github.com/ALi3naTEd0/Oscars"
-license=('MIT')
-makedepends=('flutter' 'gtk3' 'libsecret')
+license=('GPL3')
+depends=(
+    'gtk3'
+    'libsecret'
+    'adwaita-icon-theme'
+    'libglvnd'
+    'pcre2'
+    'openssl'
+    'hicolor-icon-theme'
+    'xcursor-themes'
+    'gnome-themes-extra'
+)
+makedepends=(
+    'git'
+    'flutter'
+    'clang'
+    'cmake'
+    'ninja'
+    'patchelf'
+)
+options=(!strip !debug !lto)  # Disable all debug-related options
 
-# For local builds, use the local source
+# For local builds
 if [ -z "$CI" ]; then
-    source=("oscars::git+file://$PWD")
+    source=("$pkgname::git+file://$PWD")
 else
-    source=("oscars::git+$url.git")
+    source=("$pkgname::git+$url.git")
 fi
-
 sha256sums=('SKIP')
 
+prepare() {
+    cd "$srcdir/$pkgname"
+    flutter upgrade
+    flutter clean
+}
+
 build() {
-    cd "$srcdir/oscars"
-    flutter pub get
+    cd "$srcdir/$pkgname"
+    # Disable debug info generation
+    CFLAGS="${CFLAGS/-g}" \
+    CXXFLAGS="${CXXFLAGS/-g}" \
+    flutter config --enable-linux-desktop
     flutter build linux --release
 }
 
-package_oscars() {
-    depends=('gtk3' 'libsecret')
-    cd "$srcdir/oscars"
+package() {
+    cd "$srcdir/$pkgname"
     
-    # Create directories
-    mkdir -p "$pkgdir/usr/lib/$pkgname"
-    mkdir -p "$pkgdir/usr/bin"
-    mkdir -p "$pkgdir/usr/share/applications"
-    mkdir -p "$pkgdir/usr/share/pixmaps"
-
-    # Install app files
+    # Create required directories
+    install -dm755 "$pkgdir/usr/lib/$pkgname"
+    install -dm755 "$pkgdir/usr/bin"
+    
+    # Install bundle files
     cp -r build/linux/x64/release/bundle/* "$pkgdir/usr/lib/$pkgname/"
-
-    # Create launcher
-    echo '#!/bin/sh' > "$pkgdir/usr/bin/$pkgname"
-    echo "cd /usr/lib/$pkgname && ./$pkgname" >> "$pkgdir/usr/bin/$pkgname"
+    
+    # Handle plugins
+    if [ -d "$pkgdir/usr/lib/$pkgname/plugins" ]; then
+        cp -r "$pkgdir/usr/lib/$pkgname/plugins/"* "$pkgdir/usr/lib/$pkgname/lib/"
+    fi
+    
+    # Create launcher with environment setup
+    cat > "$pkgdir/usr/bin/$pkgname" << EOF
+#!/bin/sh
+export GDK_BACKEND=x11
+export GTK_THEME=Adwaita
+export XCURSOR_THEME=Adwaita
+export XCURSOR_SIZE=24
+export LD_LIBRARY_PATH="/usr/lib/$pkgname/lib:\$LD_LIBRARY_PATH"
+exec /usr/lib/$pkgname/$pkgname "\$@"
+EOF
     chmod 755 "$pkgdir/usr/bin/$pkgname"
     
-    # Install desktop files
+    # Install desktop and icon files
     install -Dm644 "desktop/$pkgname.desktop" "$pkgdir/usr/share/applications/$pkgname.desktop"
-    install -Dm644 "assets/app-icon.png" "$pkgdir/usr/share/pixmaps/$pkgname.png"
+    install -Dm644 "assets/app-icon.png" "$pkgdir/usr/share/icons/hicolor/512x512/apps/$pkgname.png"
+
+    # Fix library paths
+    find "$pkgdir/usr/lib/$pkgname/lib" -type f -name "*.so" -exec \
+        patchelf --set-rpath '/usr/lib/oscars/lib:$ORIGIN' {} \;
+    patchelf --set-rpath "/usr/lib/$pkgname/lib" "$pkgdir/usr/lib/$pkgname/$pkgname"
 }
 
-package_oscars-dbg() {
-    pkgdesc="Debug symbols for Oscars"
-    depends=(oscars)
-    provides=(oscars-debug)
-    conflicts=(oscars-debug)
-    options=('!strip')
-
-    cd "$srcdir/oscars"
-    
-    # Create debug directory
-    mkdir -p "$pkgdir/usr/lib/debug/oscars"
-    
-    # Copy debug files
-    find build/linux/x64/release/bundle -type f -executable | while read -r f; do
-        if [ -f "$f" ]; then
-            dest="$pkgdir/usr/lib/debug/oscars/$(basename "$f").debug"
-            objcopy --only-keep-debug "$f" "$dest"
-        fi
-    done
+post_install() {
+    gtk-update-icon-cache -f -t /usr/share/icons/hicolor
 }
