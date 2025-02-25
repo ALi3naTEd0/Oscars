@@ -1,53 +1,106 @@
-name: Release
+name: Release Build
 
 on:
   workflow_dispatch:
     inputs:
       version:
-        description: 'Version number'
+        description: "Version to build"
         required: true
-        type: string
-        default: '1.0.0-1'
+        default: "1.0.0-1"
+      platforms:
+        description: "Platforms to build"
+        required: true
+        type: choice
+        options:
+          - all
+          - android
+          - linux
+          - windows
+          - macos
 
 jobs:
-  android:
+  # Platform builds - run in parallel when their condition is met
+  android-build:
+    if: ${{ inputs.platforms == 'all' || inputs.platforms == 'android' }}
     uses: ALi3naTEd0/Oscars/.github/workflows/android.yml@main
+    secrets: inherit
     with:
       version: ${{ github.event.inputs.version }}
 
-  linux:
-    needs: android
+  linux-build:
+    if: ${{ inputs.platforms == 'all' || inputs.platforms == 'linux' }}
     uses: ALi3naTEd0/Oscars/.github/workflows/linux.yml@main
+    secrets: inherit
     with:
       version: ${{ github.event.inputs.version }}
 
-  windows:
-    needs: linux
+  windows-build:
+    if: ${{ inputs.platforms == 'all' || inputs.platforms == 'windows' }}
     uses: ALi3naTEd0/Oscars/.github/workflows/windows.yml@main
+    secrets: inherit
     with:
       version: ${{ github.event.inputs.version }}
 
-  macos:
-    needs: windows
+  macos-build:
+    if: ${{ inputs.platforms == 'all' || inputs.platforms == 'macos' }}
     uses: ALi3naTEd0/Oscars/.github/workflows/macos.yml@main
+    secrets: inherit
     with:
       version: ${{ github.event.inputs.version }}
 
-  release:
-    needs: [android, linux, windows, macos]
+  # Release creation - runs after all selected builds are complete
+  create-release:
+    if: |
+      !cancelled() && !failure() &&
+      (needs.android-build.result == 'success' || needs.android-build.result == 'skipped') &&
+      (needs.linux-build.result == 'success' || needs.linux-build.result == 'skipped') &&
+      (needs.windows-build.result == 'success' || needs.windows-build.result == 'skipped') &&
+      (needs.macos-build.result == 'success' || needs.macos-build.result == 'skipped')
+    needs: [android-build, linux-build, windows-build, macos-build]
     runs-on: ubuntu-latest
     permissions:
-      contents: write
+      contents: write    # For creating releases
+      issues: write      # For creating release notes
+      discussions: write # For release discussions
     steps:
-      - uses: actions/checkout@v4
+      - name: Create dist directory
+        run: mkdir -p dist
+
+      - name: Debug Needs Context
+        run: |
+          echo "Android build result: ${{ needs.android-build.result }}"
+          echo "Linux build result: ${{ needs.linux-build.result }}"
+          echo "Windows build result: ${{ needs.windows-build.result }}"
+          echo "macOS build result: ${{ needs.macos-build.result }}"
+
       - uses: actions/download-artifact@v4
         with:
           path: dist
+          pattern: '**/*'  # Download all artifacts without filtering
           merge-multiple: true
-      - run: ls -R dist/
+          
+      - name: List and organize artifacts
+        run: |
+          echo "Initial dist content:"
+          ls -la dist/
+          
+          # Move all nested files to root
+          find dist -mindepth 2 -type f -exec mv -t dist/ {} +
+          
+          # Remove empty directories
+          find dist -type d -empty -delete
+          
+          echo "Final dist content:"
+          ls -la dist/
+          
+          # Show file details
+          echo "Found artifacts with details:"
+          cd dist && ls -lh *
+
       - uses: softprops/action-gh-release@v1
         with:
+          token: ${{ secrets.GITHUB_TOKEN }}
           tag_name: v${{ github.event.inputs.version }}
-          name: Release ${{ github.event.inputs.version }}
-          draft: true
+          name: Release v${{ github.event.inputs.version }}
+          draft: false
           files: dist/**/*

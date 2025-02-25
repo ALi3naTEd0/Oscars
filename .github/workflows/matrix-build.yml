@@ -1,52 +1,80 @@
 name: Matrix Build
 
 on:
-  push:
-    branches: [ "main" ]
-  pull_request:
-    branches: [ "main" ]
+  workflow_dispatch:
+    inputs:
+      version:
+        description: "Version to build"
+        required: true
+        default: "1.0.0-1"
+      platforms:
+        description: "Platforms to build"
+        required: true
+        type: choice
+        options:
+          - all
+          - android
+          - linux
+          - windows
+          - macos
 
 jobs:
-  build:
-    name: Build ${{ matrix.target }}
-    runs-on: ${{ matrix.os }}
-    strategy:
-      fail-fast: false
-      matrix:
-        target: [android, windows, linux, macos]
-        include:
-          - target: android
-            os: ubuntu-latest
-            build-args: apk
-            
-          - target: windows
-            os: windows-latest
-            build-args: windows
-            
-          - target: linux
-            os: ubuntu-latest
-            build-args: linux
-            
-          - target: macos
-            os: macos-latest
-            build-args: macos
-            
+  android:
+    if: ${{ inputs.platforms == 'all' || inputs.platforms == 'android' }}
+    uses: ALi3naTEd0/Oscars/.github/workflows/android.yml@main
+    secrets: inherit
+    with:
+      version: ${{ inputs.version }}
+
+  linux:
+    if: ${{ inputs.platforms == 'all' || inputs.platforms == 'linux' }}
+    uses: ALi3naTEd0/Oscars/.github/workflows/linux.yml@main
+    secrets: inherit
+    with:
+      version: ${{ inputs.version }}
+
+  windows:
+    if: ${{ inputs.platforms == 'all' || inputs.platforms == 'windows' }}
+    uses: ALi3naTEd0/Oscars/.github/workflows/windows.yml@main
+    secrets: inherit
+    with:
+      version: ${{ inputs.version }}
+
+  macos:
+    if: ${{ inputs.platforms == 'all' || inputs.platforms == 'macos' }}
+    uses: ALi3naTEd0/Oscars/.github/workflows/macos.yml@main
+    secrets: inherit
+    with:
+      version: ${{ inputs.version }}
+
+  create-release:
+    if: |
+      !cancelled() && !failure() &&
+      (needs.android.result == 'success' || needs.android.result == 'skipped') &&
+      (needs.linux.result == 'success' || needs.linux.result == 'skipped') &&
+      (needs.windows.result == 'success' || needs.windows.result == 'skipped') &&
+      (needs.macos.result == 'success' || needs.macos.result == 'skipped')
+    needs: [android, linux, windows, macos]
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
     steps:
-      - uses: actions/checkout@v4
-      
-      - if: matrix.target == 'linux'
-        name: Install Linux dependencies
-        run: |
-          sudo apt-get update
-          sudo apt-get install -y ninja-build libgtk-3-dev
-      
-      - uses: subosito/flutter-action@v2
+      - uses: actions/download-artifact@v4
         with:
-          flutter-version: '3.19.3'
-          channel: 'stable'
-          cache: true
+          path: dist
+          pattern: '**/*'
+          merge-multiple: true
           
-      - name: Build ${{ matrix.target }}
+      - name: List artifacts
         run: |
-          flutter config --enable-${{ matrix.target }}-desktop
-          flutter build ${{ matrix.build-args }} --debug
+          echo "Content of dist directory:"
+          ls -la dist/
+          echo "Full directory structure:"
+          find dist -type f
+          
+      - uses: softprops/action-gh-release@v1
+        with:
+          tag_name: v${{ inputs.version }}
+          name: Release ${{ inputs.version }}
+          draft: true
+          files: dist/**/*
