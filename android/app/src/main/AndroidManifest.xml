@@ -1,5 +1,5 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.example.oscars">
+    package="dev.alienated.oscars">
     <!-- Permission to access the Internet -->
     <uses-permission android:name="android.permission.INTERNET" />
     
