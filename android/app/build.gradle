@@ -26,12 +26,12 @@ android {
     }
 
     defaultConfig {
-        applicationId "dev.alienated.oscars"  // Changed from com.example.oscars
+        applicationId "com.example.oscars"  // Revert back to original
         minSdkVersion 21
         targetSdkVersion 33
         // Version code must be incremented for each release
-        versionCode 3       // Must be greater than previous version
-        versionName "1.1.0" // Current version
+        versionCode 4       // Increment to force update
+        versionName "1.1.0" // Keep current version
     }
 
     signingConfigs {
