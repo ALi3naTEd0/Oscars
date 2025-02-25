@@ -25,7 +25,7 @@ makedepends=(
     'ninja'
     'patchelf'
 )
-options=(!strip !debug !lto)  # Disable all debug-related options
+options=(!debug)  # Disable debug symbols completely
 
 # For local builds
 if [ -z "$CI" ]; then
@@ -43,9 +43,6 @@ prepare() {
 
 build() {
     cd "$srcdir/$pkgname"
-    # Disable debug info generation
-    CFLAGS="${CFLAGS/-g}" \
-    CXXFLAGS="${CXXFLAGS/-g}" \
     flutter config --enable-linux-desktop
     flutter build linux --release
 }
