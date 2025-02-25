@@ -10,6 +10,7 @@ import 'package:path_provider/path_provider.dart';
 import 'package:flutter/foundation.dart';
 import 'package:path/path.dart' as p;
 import 'package:http/io_client.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 String _cleanText(String? text) {
   if (text == null) return '';
@@ -73,6 +74,7 @@ class _MovieBrowserScreenState extends State<MovieBrowserScreen> {
   int currentIndex = 0;
   bool isLoading = true;
   Set<String> _watchedMovies = {};
+  Map<String, double> _ratings = {};
 
   final Map<String, String> imdbIds = {
     "A Complete Unknown": "tt11563598",
@@ -204,7 +206,11 @@ class _MovieBrowserScreenState extends State<MovieBrowserScreen> {
   void initState() {
     super.initState();
     MovieCache.loadWatchedList().then((watchedList) {
-      setState(() => _watchedMovies = watchedList);
+      setState(() {
+        _watchedMovies = watchedList;
+        // Start with a random movie after loading watched list
+        currentIndex = Random().nextInt(entries.length);
+      });
     });
     _initializeEntries();
     MovieCache.loadCache().then((loadedCache) {
@@ -214,6 +220,7 @@ class _MovieBrowserScreenState extends State<MovieBrowserScreen> {
       print('Error loading cache: $error');
       _preloadData();
     });
+    _loadRatings();
   }
 
   void _initializeEntries() {
@@ -353,6 +360,85 @@ class _MovieBrowserScreenState extends State<MovieBrowserScreen> {
     setState(() {
       currentIndex = entries.indexOf(unwatchedEntries[Random().nextInt(unwatchedEntries.length)]);
     });
+  }
+
+  Future<void> _loadRatings() async {
+    final prefs = await SharedPreferences.getInstance();
+    final ratingsStr = prefs.getString('movie_ratings');
+    if (ratingsStr != null) {
+      setState(() {
+        _ratings = Map<String, double>.from(json.decode(ratingsStr));
+      });
+    }
+  }
+
+  Future<void> _saveRating(String movieId, double rating) async {
+    final prefs = await SharedPreferences.getInstance();
+    setState(() {
+      _ratings[movieId] = rating;
+    });
+    await prefs.setString('movie_ratings', json.encode(_ratings));
+  }
+
+  Widget _buildStarRating(String movieId) {
+    final rating = _ratings[movieId] ?? 0.0;
+    
+    return Column(
+      children: [
+        Text(
+          'Rating: ${rating > 0 ? rating.toStringAsFixed(1) : "Not rated"}',
+          style: const TextStyle(
+            color: Colors.amber,
+            fontSize: 16,
+            fontWeight: FontWeight.bold,
+          ),
+        ),
+        const SizedBox(height: 8),
+        Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            // Reset rating button
+            GestureDetector(
+              onTap: () => _saveRating(movieId, 0),
+              child: Container(
+                padding: const EdgeInsets.symmetric(horizontal: 8),
+                child: Icon(
+                  Icons.refresh,
+                  color: Colors.grey[600],
+                  size: 20,
+                ),
+              ),
+            ),
+            ...List.generate(10, (index) {
+              final value = (index + 1).toDouble();
+              final halfValue = value - 0.5;
+              
+              return MouseRegion(
+                cursor: SystemMouseCursors.click,
+                child: GestureDetector(
+                  onTapDown: (details) {
+                    // Calculate if click is on left or right half of the star
+                    final box = context.findRenderObject() as RenderBox;
+                    final localPosition = box.globalToLocal(details.globalPosition);
+                    final isLeftHalf = localPosition.dx % 24 < 12; // 24px is icon width
+                    _saveRating(movieId, isLeftHalf ? halfValue : value);
+                  },
+                  child: Icon(
+                    rating >= value 
+                        ? Icons.star
+                        : rating >= halfValue 
+                            ? Icons.star_half
+                            : Icons.star_border,
+                    color: Colors.amber,
+                    size: 24,
+                  ),
+                ),
+              );
+            }),
+          ],
+        ),
+      ],
+    );
   }
 
   @override
@@ -542,6 +628,8 @@ class _MovieBrowserScreenState extends State<MovieBrowserScreen> {
           "⏱️ ${data?["duration"] ?? "N/A"} | 🎭 ${data?["genres"] ?? "N/A"}",
           style: const TextStyle(color: Colors.white),
         ),
+        const SizedBox(height: 20),
+        _buildStarRating(entry['imdbId']),  // Moved here for better flow
         const SizedBox(height: 20),
         Padding(
           padding: const EdgeInsets.symmetric(horizontal: 20),
