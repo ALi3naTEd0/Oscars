@@ -1,58 +1,37 @@
-# Maintainer: ALi3naTEd0 <ALi3naTEd0@protonmail.com>
+# Maintainer: ALi3naTEd0
 pkgname=oscars
-pkgver=1.0.0
+pkgver=1.0.1
 pkgrel=1
-pkgdesc="Application for managing Oscar awards"
+pkgdesc="The 97th Academy Awards app"
 arch=('x86_64')
-url="https://github.com/ALi3naTEd0/oscars"
-license=('GPL3')
-depends=(
-    'gtk3'
-    'libglvnd'
-    'pcre2'
-    'openssl'
-    'libayatana-appindicator'
-    'libsecret'
-)
-makedepends=(
-    'git'
-    'flutter'
-    'clang'
-    'cmake'
-    'ninja'
-    'patchelf'
-)
-source=("git+$url.git")
+url="https://github.com/ALi3naTEd0/Oscars"
+license=('MIT')
+depends=('gtk3' 'libsecret')
+makedepends=('flutter')
+
+# For local builds, use the local source
+if [ -z "$CI" ]; then
+    source=("$pkgname::git+file://$PWD")
+else
+    # In CI, use the GitHub repo
+    source=("$pkgname::git+$url.git")
+fi
+
 sha256sums=('SKIP')
 
 build() {
-    cd "$srcdir/oscars"
-    
-    # Compiling with plugins
-    flutter clean
+    cd "$srcdir/$pkgname"
     flutter pub get
-    flutter build linux --release --dart-define=CI=true
+    flutter build linux --release
 }
 
 package() {
-    # Main installation directory
-    INSTALL_DIR="$pkgdir/usr/lib/oscars"
-    install -d "$INSTALL_DIR"
-
-    # Copy the entire bundle including plugins
-    cp -r "$srcdir/oscars/build/linux/x64/release/bundle/"* "$INSTALL_DIR"
-
-    # Executable Symbolic Link
-    install -d "$pkgdir/usr/bin"
-    ln -s /usr/lib/oscars/oscars "$pkgdir/usr/bin/oscars"
-
-    # Adjust RPATH for all libraries
-    find "$INSTALL_DIR/lib" -name '*.so' -exec patchelf --set-rpath '$ORIGIN' {} \;
-    patchelf --set-rpath '/usr/lib/oscars/lib' "$INSTALL_DIR/oscars"
-
-    # Additional files
-    install -Dm644 "$srcdir/oscars/linux/runner/oscars.desktop" \
-        "$pkgdir/usr/share/applications/oscars.desktop"
-    install -Dm644 "$srcdir/oscars/assets/oscars.png" \
-        "$pkgdir/usr/share/icons/hicolor/512x512/apps/oscars.png"
+    cd "$srcdir/$pkgname"
+    
+    # Install binary
+    install -Dm755 "build/linux/x64/release/bundle/$pkgname" "$pkgdir/usr/bin/$pkgname"
+    
+    # Install desktop and icon files - using absolute paths
+    install -Dm644 "${startdir}/desktop/$pkgname.desktop" "$pkgdir/usr/share/applications/$pkgname.desktop"
+    install -Dm644 "${startdir}/assets/app-icon.png" "$pkgdir/usr/share/pixmaps/$pkgname.png"
 }

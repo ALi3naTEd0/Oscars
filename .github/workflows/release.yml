@@ -1,50 +1,50 @@
-name: Release Build
+name: Release
 
 on:
   workflow_dispatch:
     inputs:
       version:
-        description: "Version to build"
+        description: 'Version number'
         required: true
-        default: "1.0.0-1"
+        type: string
+        default: '1.0.0-1'
 
 jobs:
-  android-build:
+  android:
     uses: ALi3naTEd0/Oscars/.github/workflows/android.yml@main
-    secrets: inherit
     with:
       version: ${{ github.event.inputs.version }}
 
-  linux-build:
-    needs: android-build
+  linux:
+    needs: android
     uses: ALi3naTEd0/Oscars/.github/workflows/linux.yml@main
-    secrets: inherit
     with:
       version: ${{ github.event.inputs.version }}
 
-  windows-build:
-    needs: linux-build
+  windows:
+    needs: linux
     uses: ALi3naTEd0/Oscars/.github/workflows/windows.yml@main
-    secrets: inherit
     with:
       version: ${{ github.event.inputs.version }}
 
-  macos-build:
-    needs: windows-build
+  macos:
+    needs: windows
     uses: ALi3naTEd0/Oscars/.github/workflows/macos.yml@main
-    secrets: inherit
     with:
       version: ${{ github.event.inputs.version }}
 
-  create-release:
-    needs: [android-build, linux-build, windows-build, macos-build]
+  release:
+    needs: [android, linux, windows, macos]
     runs-on: ubuntu-latest
     permissions:
       contents: write
     steps:
+      - uses: actions/checkout@v4
       - uses: actions/download-artifact@v4
         with:
           path: dist
+          merge-multiple: true
+      - run: ls -R dist/
       - uses: softprops/action-gh-release@v1
         with:
           tag_name: v${{ github.event.inputs.version }}

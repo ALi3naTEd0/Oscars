@@ -1,0 +1,11 @@
+[Desktop Entry]
+Name=Oscars
+GenericName=Academy Awards App
+Comment=The 97th Academy Awards app
+Exec=/usr/bin/oscars
+Icon=oscars
+Terminal=false
+Type=Application
+Categories=Utility;Entertainment;
+Keywords=movies;oscars;academy;awards;
+StartupWMClass=oscars
