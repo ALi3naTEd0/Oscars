@@ -389,11 +389,11 @@ class _MovieBrowserScreenState extends State<MovieBrowserScreen> {
           'Rating: ${rating > 0 ? rating.toStringAsFixed(1) : "Not rated"}',
           style: const TextStyle(
             color: Colors.amber,
-            fontSize: 16,
+            fontSize: 18,  // Increased from 16
             fontWeight: FontWeight.bold,
           ),
         ),
-        const SizedBox(height: 8),
+        const SizedBox(height: 12),  // Increased from 8
         Row(
           mainAxisSize: MainAxisSize.min,
           children: [
@@ -401,14 +401,15 @@ class _MovieBrowserScreenState extends State<MovieBrowserScreen> {
             GestureDetector(
               onTap: () => _saveRating(movieId, 0),
               child: Container(
-                padding: const EdgeInsets.symmetric(horizontal: 8),
+                padding: const EdgeInsets.symmetric(horizontal: 12),  // Increased from 8
                 child: Icon(
                   Icons.refresh,
                   color: Colors.grey[600],
-                  size: 20,
+                  size: 24,  // Increased from 20
                 ),
               ),
             ),
+            const SizedBox(width: 8),  // Added spacing
             ...List.generate(10, (index) {
               final value = (index + 1).toDouble();
               final halfValue = value - 0.5;
@@ -420,7 +421,7 @@ class _MovieBrowserScreenState extends State<MovieBrowserScreen> {
                     // Calculate if click is on left or right half of the star
                     final box = context.findRenderObject() as RenderBox;
                     final localPosition = box.globalToLocal(details.globalPosition);
-                    final isLeftHalf = localPosition.dx % 24 < 12; // 24px is icon width
+                    final isLeftHalf = localPosition.dx % 28 < 14; // Adjusted for new size
                     _saveRating(movieId, isLeftHalf ? halfValue : value);
                   },
                   child: Icon(
@@ -430,7 +431,7 @@ class _MovieBrowserScreenState extends State<MovieBrowserScreen> {
                             ? Icons.star_half
                             : Icons.star_border,
                     color: Colors.amber,
-                    size: 24,
+                    size: 28,  // Increased from 24
                   ),
                 ),
               );
