@@ -2,7 +2,7 @@
 
 # The 97th Academy Awards
 
-![Version](https://img.shields.io/badge/version-1.0.0--1-blue)
+![Version](https://img.shields.io/badge/version-1.0.1--1-blue)
 ![License](https://img.shields.io/badge/license-GPL--3.0-green)
 ![Downloads](https://img.shields.io/github/downloads/ALi3naTEd0/oscars/total)
 ![Last Commit](https://img.shields.io/github/last-commit/ALi3naTEd0/oscars)
@@ -43,17 +43,17 @@ Coming soon...
 ## Downloads
 | Windows      | MacOS        | Linux        | Android      | iOS          |
 |--------------|--------------|--------------|--------------|--------------|
-| [Installer](https://github.com/ALi3naTEd0/Oscars/releases/download/v1.0.0/oscars_1.0.0-1_setup.exe)    | [DMG](https://github.com/ALi3naTEd0/Oscars/releases/download/v1.0.0/oscars_1.0.0-1.dmg)  | [DEB](https://github.com/ALi3naTEd0/Oscars/releases/download/v1.0.0/oscars_1.0.0-1_amd64.deb)  | [APK-Universal](https://github.com/ALi3naTEd0/Oscars/releases/download/v1.0.0/oscars-1.0.0-1.apk)       | Maybe?       |
-| [Portable](https://github.com/ALi3naTEd0/Oscars/releases/download/v1.0.0/oscars_1.0.0-1_portable.zip)     |              | [RPM](https://github.com/ALi3naTEd0/Oscars/releases/download/v1.0.0/oscars_1.0.0-1_x86_64.rpm)  | [APK-arm64-v8a](https://github.com/ALi3naTEd0/Oscars/releases/download/v1.0.0/oscars-arm64-v8a-1.0.0-1.apk)             |              |
-|              |              | [Arch](#arch-linux)  | [APK-armeabi-v7a](https://github.com/ALi3naTEd0/Oscars/releases/download/v1.0.0/oscars-armeabi-v7a-1.0.0-1.apk)      |              |
-|              |              | [AppImage](https://github.com/ALi3naTEd0/Oscars/releases/download/v1.0.0/oscars_1.0.0-1.AppImage)  | [APK-x86_64](https://github.com/ALi3naTEd0/Oscars/releases/download/v1.0.0/oscars-x86_64-1.0.0-1.apk)               |              |
+| [Installer](https://github.com/ALi3naTEd0/Oscars/releases/download/v1.0.1-1/oscars_1.0.1-1.exe)    | [DMG](https://github.com/ALi3naTEd0/Oscars/releases/download/v1.0.1-1/oscars_1.0.1-1.dmg)  | [DEB](https://github.com/ALi3naTEd0/Oscars/releases/download/v1.0.1-1/oscars_1.0.1-1_amd64.deb)  | [APK-Universal](https://github.com/ALi3naTEd0/Oscars/releases/download/v1.0.1-1/oscars-1.0.1-1.apk)       | Maybe?       |
+| [Portable](https://github.com/ALi3naTEd0/Oscars/releases/download/v1.0.1-1/oscars-portable.zip)     |              | [RPM](https://github.com/ALi3naTEd0/Oscars/releases/download/v1.0.1-1/oscars_1.0.1-1_x86_64.rpm)  | [APK-arm64-v8a](https://github.com/ALi3naTEd0/Oscars/releases/download/v1.0.1-1/oscars-arm64-v8a-1.0.1-1.apk)             |              |
+|              |              | [Arch](#arch-linux)  | [APK-armeabi-v7a](https://github.com/ALi3naTEd0/Oscars/releases/download/v1.0.1-1/oscars-armeabi-v7a-1.0.1-1.apk)      |              |
+|              |              | [AppImage](https://github.com/ALi3naTEd0/Oscars/releases/download/v1.0.1-1/oscars_1.0.1-1.AppImage)  | [APK-x86_64](https://github.com/ALi3naTEd0/Oscars/releases/download/v1.0.1-1/oscars-x86_64-1.0.1-1.apk)               |              |
 
 ## Installation
 
 ### Windows
-1. Installer: Run `oscars_1.0.0-1_setup.exe` and follow the installation wizard
+1. Installer: Run `oscars_1.0.1-1_setup.exe` and follow the installation wizard
    - Or -
-2. Portable: Extract `oscars_1.0.0-1_portable.zip` and run `oscars.exe`
+2. Portable: Extract `oscars-portable.zip` and run `oscars.exe`
 
 ### Android
 1. Choose the correct version:
@@ -68,7 +68,7 @@ Coming soon...
    - Open the APK and follow installation steps
 
 ### macOS
-1. Download `oscars_1.0.0-1.dmg`
+1. Download `oscars_1.0.1-1.dmg`
 2. Open the DMG file
 3. Drag Oscars to Applications
 4. First launch:
@@ -88,21 +88,21 @@ xattr -cr /Applications/Oscars.app
 1. Download the AppImage
 2. Make executable:
 ```bash
-chmod +x oscars_1.0.0-1.AppImage
+chmod +x oscars_1.0.1-1.AppImage
 ```
 3. Run:
 ```bash
-./oscars_1.0.0-1.AppImage
+./oscars_1.0.1-1.AppImage
 ```
 
 #### DEB Package (Ubuntu/Debian)
 ```bash
-sudo apt install ./oscars_1.0.0-1_amd64.deb
+sudo apt install ./oscars_1.0.1-1_amd64.deb
 ```
 
 #### RPM Package (Fedora/RHEL)
 ```bash
-sudo rpm -i oscars_1.0.0-1_x86_64.rpm
+sudo rpm -i oscars_1.0.1-1_x86_64.rpm
 ```
 
 #### Arch Linux
