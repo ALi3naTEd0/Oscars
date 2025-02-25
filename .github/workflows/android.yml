@@ -56,6 +56,16 @@ jobs:
           echo "Current gradle.properties:"
           cat $HOME/.gradle/gradle.properties
 
+      - uses: actions/cache@v4
+        with:
+          path: |
+            ~/.gradle/caches
+            ~/.gradle/wrapper
+            ~/.android/cache
+          key: gradle-${{ runner.os }}-${{ hashFiles('**/*.gradle*') }}-${{ github.sha }}
+          restore-keys: |
+            gradle-${{ runner.os }}-
+
       # First build universal APK
       - name: Build Universal APK
         run: |
