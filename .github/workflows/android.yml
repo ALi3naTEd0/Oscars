@@ -62,9 +62,10 @@ jobs:
             ~/.gradle/caches
             ~/.gradle/wrapper
             ~/.android/cache
-          key: gradle-${{ runner.os }}-${{ hashFiles('**/*.gradle*') }}-${{ github.sha }}
+          key: gradle-android-${{ runner.os }}-${{ hashFiles('**/*.gradle*', '**/*.properties') }}-${{ github.run_id }}
           restore-keys: |
-            gradle-${{ runner.os }}-
+            gradle-android-${{ runner.os }}-${{ hashFiles('**/*.gradle*', '**/*.properties') }}-
+            gradle-android-${{ runner.os }}-
 
       # First build universal APK
       - name: Build Universal APK
