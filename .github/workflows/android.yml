@@ -45,7 +45,7 @@ jobs:
 
       - name: Decode Keystore
         run: |
-          echo "${{ secrets.UPLOAD_KEYSTORE }}" | base64 -d > android/app/upload-keystore.jks
+          echo "${{ secrets.UPLOAD_KEYSTORE }}" | tr -d '\n' | base64 -d > android/app/upload-keystore.jks
 
       - name: Configure Signing
         run: |
