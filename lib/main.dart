@@ -11,6 +11,11 @@ import 'package:flutter/foundation.dart';
 import 'package:path/path.dart' as p;
 import 'package:http/io_client.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:flutter/rendering.dart';
+import 'dart:ui' as ui;
+import 'package:file_picker/file_picker.dart';  // Add this import
+import 'package:share_plus/share_plus.dart';    // Add this import
+import 'user_data.dart';
 
 String _cleanText(String? text) {
   if (text == null) return '';
@@ -75,6 +80,7 @@ class _MovieBrowserScreenState extends State<MovieBrowserScreen> {
   bool isLoading = true;
   Set<String> _watchedMovies = {};
   Map<String, double> _ratings = {};
+  final GlobalKey _shareWidgetKey = GlobalKey();  // Change to normal GlobalKey
 
   final Map<String, String> imdbIds = {
     "A Complete Unknown": "tt11563598",
@@ -205,11 +211,9 @@ class _MovieBrowserScreenState extends State<MovieBrowserScreen> {
   @override
   void initState() {
     super.initState();
-    // First initialize entries
     _initializeEntries();
     
-    // Then load watched list and set initial index
-    MovieCache.loadWatchedList().then((watchedList) {
+    UserData.loadWatchedMovies().then((watchedList) {
       if (mounted) {
         setState(() {
           _watchedMovies = watchedList;
@@ -220,7 +224,6 @@ class _MovieBrowserScreenState extends State<MovieBrowserScreen> {
       }
     });
 
-    // Finally load cache and preload data
     MovieCache.loadCache().then((loadedCache) {
       if (mounted) {
         setState(() => cache = loadedCache);
@@ -233,8 +236,11 @@ class _MovieBrowserScreenState extends State<MovieBrowserScreen> {
       }
     });
 
-    // Load ratings in parallel
-    _loadRatings();
+    UserData.loadRatings().then((loadedRatings) {
+      if (mounted) {
+        setState(() => _ratings = loadedRatings);
+      }
+    });
   }
 
   void _initializeEntries() {
@@ -376,30 +382,9 @@ class _MovieBrowserScreenState extends State<MovieBrowserScreen> {
     });
   }
 
-  Future<void> _loadRatings() async {
-    try {
-      final prefs = await SharedPreferences.getInstance();
-      final ratingsStr = prefs.getString('movie_ratings');
-      if (ratingsStr != null) {
-        setState(() {
-          _ratings = Map<String, double>.from(json.decode(ratingsStr));
-        });
-      }
-    } catch (e) {
-      print('Error loading ratings: $e');
-      // Initialize empty ratings if there's an error
-      setState(() {
-        _ratings = {};
-      });
-    }
-  }
-
   Future<void> _saveRating(String movieId, double rating) async {
-    final prefs = await SharedPreferences.getInstance();
-    setState(() {
-      _ratings[movieId] = rating;
-    });
-    await prefs.setString('movie_ratings', json.encode(_ratings));
+    await UserData.saveRating(movieId, rating);
+    setState(() => _ratings[movieId] = rating);
   }
 
   Widget _buildStarRating(String movieId) {
@@ -462,6 +447,43 @@ class _MovieBrowserScreenState extends State<MovieBrowserScreen> {
         ),
       ],
     );
+  }
+
+  Future<void> _shareMovie(Map<String, dynamic> movieData, String imdbId) async {
+    try {
+      // Usa una solución más simple similar a RateMe
+      final text = '''
+The 97th Academy Awards
+Movie: ${movieData['title']}
+Category: ${entries[currentIndex]['category']}
+IMDb Rating: ${movieData['rating']}/10
+${_ratings[imdbId] != null ? 'My Rating: ${_ratings[imdbId]?.toStringAsFixed(1)}/10' : ''}
+IMDb: ${movieData['imdb_url']}
+      ''';
+
+      if (Platform.isAndroid) {
+        await Share.share(text);
+      } else {
+        final String? savePath = await FilePicker.platform.saveFile(
+          dialogTitle: 'Save text as',
+          fileName: 'oscars_${movieData['title']?.replaceAll(RegExp(r'[<>:"/\\|?*]'), '_')}.txt',
+          type: FileType.custom,
+          allowedExtensions: ['txt'],
+        );
+
+        if (savePath != null) {
+          final file = File(savePath);
+          await file.writeAsString(text);
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(content: Text('Saved to: $savePath')),
+          );
+        }
+      }
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Error sharing: $e')),
+      );
+    }
   }
 
   @override
@@ -652,7 +674,41 @@ class _MovieBrowserScreenState extends State<MovieBrowserScreen> {
           style: const TextStyle(color: Colors.white),
         ),
         const SizedBox(height: 20),
-        _buildStarRating(entry['imdbId']),  // Moved here for better flow
+        _buildStarRating(entry['imdbId']),
+        const SizedBox(height: 10),
+        // Share button with text
+        InkWell(
+          onTap: () => _shareMovie(data!, entry['imdbId']),
+          child: Container(
+            padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+            decoration: BoxDecoration(
+              color: Colors.grey[800],
+              borderRadius: BorderRadius.circular(20),
+              border: Border.all(
+                color: Colors.grey[600]!,
+                width: 1
+              )
+            ),
+            child: Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                const Icon(
+                  Icons.share,
+                  color: Colors.amber,
+                  size: 20,
+                ),
+                const SizedBox(width: 8),
+                const Text(
+                  "Share",
+                  style: TextStyle(
+                    color: Colors.white70,
+                    fontSize: 14,
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ),
         const SizedBox(height: 20),
         Padding(
           padding: const EdgeInsets.symmetric(horizontal: 20),
@@ -671,8 +727,10 @@ class _MovieBrowserScreenState extends State<MovieBrowserScreen> {
           ),
         ),
         const SizedBox(height: 20),
+        // Watched button solo al final
         InkWell(
-          onTap: () {
+          onTap: () async {
+            await UserData.toggleWatched(entry['imdbId']);
             setState(() {
               if (isWatched) {
                 _watchedMovies.remove(entry['imdbId']);
@@ -680,7 +738,6 @@ class _MovieBrowserScreenState extends State<MovieBrowserScreen> {
                 _watchedMovies.add(entry['imdbId']);
               }
             });
-            MovieCache.saveWatchedList(_watchedMovies.toList());
           },
           child: Container(
             padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
@@ -720,7 +777,6 @@ class _MovieBrowserScreenState extends State<MovieBrowserScreen> {
 class MovieCache {
   static Map<String, dynamic> _cache = {};
   static const String _cacheFileName = 'movie_cache.json';
-  static const String _watchedFileName = 'watched_movies.json';
 
   static Future<String> _getValidDirectory() async {
     if (Platform.isAndroid) {
@@ -751,31 +807,6 @@ class MovieCache {
       await file.writeAsString(json.encode(cacheData));
     } catch (e) {
       print('Error saving cache: $e');
-    }
-  }
-
-  static Future<void> saveWatchedList(List<String> watchedIds) async {
-    try {
-      final dirPath = await _getValidDirectory();
-      final file = File(p.join(dirPath, _watchedFileName));
-      await file.writeAsString(json.encode(watchedIds));
-    } catch (e) {
-      print('Error saving watched list: $e');
-    }
-  }
-
-  static Future<Set<String>> loadWatchedList() async {
-    try {
-      final dirPath = await _getValidDirectory();
-      final file = File(p.join(dirPath, _watchedFileName));
-      if (await file.exists()) {
-        final List<dynamic> data = json.decode(await file.readAsString());
-        return data.cast<String>().toSet();
-      }
-      return {};
-    } catch (e) {
-      print('Error loading watched list: $e');
-      return {};
     }
   }
 }

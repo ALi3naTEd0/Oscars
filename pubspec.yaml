@@ -20,7 +20,7 @@ publish_to: 'none' # Remove this line if you wish to publish to pub.dev
 version: 1.0.1+1
 
 environment:
-  sdk: '>=3.2.6 <4.0.0'  # Lower minimum version to match GitHub Actions runner
+  sdk: '>=3.2.0 <4.0.0'  # Changed to match RateMe
 
 # Dependencies specify other packages that your package needs in order to work.
 # To automatically upgrade your package dependencies to the latest versions
@@ -40,12 +40,11 @@ dependencies:
   flutter_launcher_icons: ^0.14.3
   cached_network_image: ^3.2.3  # Add missing dependency
   path_provider: ^2.1.1  # Add missing dependency
-  shared_preferences: ^2.2.2  # Add this line
-
-  # The following adds the Cupertino Icons font to your application.
-  # Use with the CupertinoIcons class for iOS style icons.
+  shared_preferences: ^2.2.3  # Updated version
+  share_plus: 7.2.1  # Add share_plus like RateMe
   cupertino_icons: ^1.0.8
   package_info_plus: ^8.0.2
+  file_picker: ^8.0.5  # Add like RateMe
 
 dev_dependencies:
   flutter_test:
