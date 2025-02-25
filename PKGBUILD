@@ -1,6 +1,6 @@
 # Maintainer: ALi3naTEd0
 pkgname=oscars
-pkgver=1.0.1
+pkgver=1.1.0
 pkgrel=1
 pkgdesc="The 97th Academy Awards app"
 arch=('x86_64')

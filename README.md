@@ -20,6 +20,7 @@
 - [Getting Started](#getting-started)
 - [Project Architecture](#project-architecture)
 - [Development](#development)
+- [Changelog](#changelog)
 - [License](#license)
 - [Contact](#contact)
 
@@ -43,15 +44,15 @@ Coming soon...
 ## Downloads
 | Windows      | MacOS        | Linux        | Android      | iOS          |
 |--------------|--------------|--------------|--------------|--------------|
-| [Installer](https://github.com/ALi3naTEd0/Oscars/releases/download/v1.0.1-1/oscars_1.0.1-1.exe)    | [DMG](https://github.com/ALi3naTEd0/Oscars/releases/download/v1.0.1-1/oscars_1.0.1-1.dmg)  | [DEB](https://github.com/ALi3naTEd0/Oscars/releases/download/v1.0.1-1/oscars_1.0.1-1_amd64.deb)  | [APK-Universal](https://github.com/ALi3naTEd0/Oscars/releases/download/v1.0.1-1/oscars-1.0.1-1.apk)       | Maybe?       |
-| [Portable](https://github.com/ALi3naTEd0/Oscars/releases/download/v1.0.1-1/oscars-portable.zip)     |              | [RPM](https://github.com/ALi3naTEd0/Oscars/releases/download/v1.0.1-1/oscars_1.0.1-1_x86_64.rpm)  | [APK-arm64-v8a](https://github.com/ALi3naTEd0/Oscars/releases/download/v1.0.1-1/oscars-arm64-v8a-1.0.1-1.apk)             |              |
-|              |              | [Arch](#arch-linux)  | [APK-armeabi-v7a](https://github.com/ALi3naTEd0/Oscars/releases/download/v1.0.1-1/oscars-armeabi-v7a-1.0.1-1.apk)      |              |
-|              |              | [AppImage](https://github.com/ALi3naTEd0/Oscars/releases/download/v1.0.1-1/oscars_1.0.1-1.AppImage)  | [APK-x86_64](https://github.com/ALi3naTEd0/Oscars/releases/download/v1.0.1-1/oscars-x86_64-1.0.1-1.apk)               |              |
+| [Installer](https://github.com/ALi3naTEd0/Oscars/releases/download/v1.1.0-1/oscars_1.1.0-1.exe)    | [DMG](https://github.com/ALi3naTEd0/Oscars/releases/download/v1.1.0-1/oscars_1.1.0-1.dmg)  | [DEB](https://github.com/ALi3naTEd0/Oscars/releases/download/v1.1.0-1/oscars_1.1.0-1_amd64.deb)  | [APK-Universal](https://github.com/ALi3naTEd0/Oscars/releases/download/v1.1.0-1/oscars-1.1.0-1.apk)       | Maybe?       |
+| [Portable](https://github.com/ALi3naTEd0/Oscars/releases/download/v1.1.0-1/oscars-portable.zip)     |              | [RPM](https://github.com/ALi3naTEd0/Oscars/releases/download/v1.1.0-1/oscars_1.1.0-1_x86_64.rpm)  | [APK-arm64-v8a](https://github.com/ALi3naTEd0/Oscars/releases/download/v1.1.0-1/oscars-arm64-v8a-1.1.0-1.apk)             |              |
+|              |              | [Arch](#arch-linux)  | [APK-armeabi-v7a](https://github.com/ALi3naTEd0/Oscars/releases/download/v1.1.0-1/oscars-armeabi-v7a-1.1.0-1.apk)      |              |
+|              |              | [AppImage](https://github.com/ALi3naTEd0/Oscars/releases/download/v1.1.0-1/oscars_1.1.0-1.AppImage)  | [APK-x86_64](https://github.com/ALi3naTEd0/Oscars/releases/download/v1.1.0-1/oscars-x86_64-1.1.0-1.apk)               |              |
 
 ## Installation
 
 ### Windows
-1. Installer: Run `oscars_1.0.1-1_setup.exe` and follow the installation wizard
+1. Installer: Run `oscars_1.1.0-1.exe` and follow the installation wizard
    - Or -
 2. Portable: Extract `oscars-portable.zip` and run `oscars.exe`
 
@@ -68,7 +69,7 @@ Coming soon...
    - Open the APK and follow installation steps
 
 ### macOS
-1. Download `oscars_1.0.1-1.dmg`
+1. Download `oscars_1.1.0-1.dmg`
 2. Open the DMG file
 3. Drag Oscars to Applications
 4. First launch:
@@ -88,21 +89,21 @@ xattr -cr /Applications/Oscars.app
 1. Download the AppImage
 2. Make executable:
 ```bash
-chmod +x oscars_1.0.1-1.AppImage
+chmod +x oscars_1.1.0-1.AppImage
 ```
 3. Run:
 ```bash
-./oscars_1.0.1-1.AppImage
+./oscars_1.1.0-1.AppImage
 ```
 
 #### DEB Package (Ubuntu/Debian)
 ```bash
-sudo apt install ./oscars_1.0.1-1_amd64.deb
+sudo apt install ./oscars_1.1.0-1_amd64.deb
 ```
 
 #### RPM Package (Fedora/RHEL)
 ```bash
-sudo rpm -i oscars_1.0.1-1_x86_64.rpm
+sudo rpm -i oscars_1.1.0-1_x86_64.rpm
 ```
 
 #### Arch Linux
@@ -139,6 +140,26 @@ flutter pub get
 ```bash
 flutter run
 ```
+
+## Changelog
+
+### [1.1.0] - 2024-03-14
+#### Added
+- Share functionality for movie details
+- Improved button designs with more intuitive layout
+- Better user data persistence
+
+#### Fixed
+- Render issues with hidden widgets
+- Various UI layout improvements
+
+### [1.0.1] - 2024-03-13
+#### Added
+- Initial release
+- Basic movie browsing functionality
+- IMDb data integration
+- Rating system
+- Watch status tracking
 
 ## License
 This project is licensed under the GNU General Public License v3.0 (GPL-3.0). See the [LICENSE](LICENSE) file for details.
