@@ -208,6 +208,176 @@ class _MovieBrowserScreenState extends State<MovieBrowserScreen> {
     ]
   };
 
+  // Add nomination titles mapping
+  final Map<String, Map<String, String>> nominationTitles = {
+    "Best Actor": {
+      "The Brutalist": "The Brutalist (Adrien Brody)",
+      "A Complete Unknown": "A Complete Unknown (Timothée Chalamet)",
+      "Sing Sing": "Sing Sing (Colman Domingo)",
+      "Conclave": "Conclave (Ralph Fiennes)",
+      "The Apprentice": "The Apprentice (Sebastian Stan)"
+    },
+    "Best Supporting Actor": {
+      "Anora": "Anora (Yura Borisov)",
+      "A Real Pain": "A Real Pain (Kieran Culkin)",
+      "A Complete Unknown": "A Complete Unknown (Edward Norton)",
+      "The Brutalist": "The Brutalist (Guy Pearce)",
+      "The Apprentice": "The Apprentice (Jeremy Strong)"
+    },
+    "Best Actress": {
+      "Wicked": "Wicked (Cynthia Erivo)",
+      "Emilia Pérez": "Emilia Pérez (Karla Sofía Gascón)",
+      "Anora": "Anora (Mikey Madison)",
+      "The Substance": "The Substance (Demi Moore)",
+      "I'm Still Here": "I'm Still Here (Fernanda Torres)"
+    },
+    "Best Supporting Actress": {
+      "A Complete Unknown": "A Complete Unknown (Monica Barbaro)",
+      "Wicked": "Wicked (Ariana Grande)",
+      "The Brutalist": "The Brutalist (Felicity Jones)",
+      "Conclave": "Conclave (Isabella Rossellini)",
+      "Emilia Pérez": "Emilia Pérez (Zoe Saldaña)"
+    },
+    "Best Director": {
+      "Anora": "Anora (Sean Baker)",
+      "The Brutalist": "The Brutalist (Brady Corbet)",
+      "A Complete Unknown": "A Complete Unknown (James Mangold)",
+      "Emilia Pérez": "Emilia Pérez (Jacques Audiard)",
+      "The Substance": "The Substance (Coralie Fargeat)"
+    },
+    "Best Original Song": {
+      "Emilia Pérez": "Emilia Pérez - 'El Mal' (Clément Ducol, Camille, Jacques Audiard)",
+      "The Six Triple Eight": "The Six Triple Eight - 'The Journey' (Diane Warren)",
+      "Sing Sing": "Sing Sing - 'Like A Bird' (Abraham Alexander, Adrian Quesada)",
+      "Emilia Pérez": "Emilia Pérez - 'Mi Camino' (Camille, Clément Ducol)",
+      "Elton John: Never Too Late": "Elton John: Never Too Late - 'Never Too Late' (Elton John, Brandi Carlile, Andrew Watt, Bernie Taupin)"
+    },
+    "Best Cinematography": {
+      "The Brutalist": "The Brutalist (Lol Crawley)",
+      "Dune: Part Two": "Dune: Part Two (Greig Fraser)",
+      "Emilia Pérez": "Emilia Pérez (Paul Guilhaume)",
+      "Maria": "Maria (Ed Lachman)",
+      "Nosferatu": "Nosferatu (Jarin Blaschke)"
+    },
+    "Best Costume Design": {
+      "A Complete Unknown": "A Complete Unknown (Arianne Phillips)",
+      "Conclave": "Conclave (Lisy Christl)",
+      "Gladiator II": "Gladiator II (Janty Yates and Dave Crossman)",
+      "Nosferatu": "Nosferatu (Linda Muir)",
+      "Wicked": "Wicked (Paul Tazewell)"
+    },
+    "Best International Feature Film": {
+      "I'm Still Here": "I'm Still Here (Brazil)",
+      "The Girl With the Needle": "The Girl with the Needle (Denmark)",
+      "Emilia Pérez": "Emilia Pérez (France)",
+      "The Seed of the Sacred Fig": "The Seed of the Sacred Fig (Germany)",
+      "Flow": "Flow (Latvia)"
+    },
+    "Best Makeup and Hairstyling": {
+      "A Different Man": "A Different Man (Mike Marino, David Presto, Crystal Jurado)",
+      "Emilia Pérez": "Emilia Pérez (Julia Floch Carbonel, Emmanuel Janvier)",
+      "Nosferatu": "Nosferatu (David White, Traci Loader, Suzanne Stokes-Munton)",
+      "The Substance": "The Substance (Pierre-Olivier Persin, Stéphanie Guillon)",
+      "Wicked": "Wicked (Frances Hannon, Laura Blount, Sarah Nuth)"
+    },
+    "Best Original Score": {
+      "The Brutalist": "The Brutalist (Daniel Blumberg)",
+      "Conclave": "Conclave (Volker Bertelmann)",
+      "Emilia Pérez": "Emilia Pérez (Clément Ducol and Camille)",
+      "Wicked": "Wicked (John Powell and Stephen Schwartz)",
+      "The Wild Robot": "The Wild Robot (Kris Bowers)"
+    },
+    "Best Production Design": {
+      "The Brutalist": "The Brutalist (Judy Becker, Patricia Cuccia)",
+      "Conclave": "Conclave (Suzie Davies, Cynthia Sleiter)",
+      "Dune: Part Two": "Dune: Part Two (Patrice Vermette, Shane Vieau)",
+      "Nosferatu": "Nosferatu (Craig Lathrop, Beatrice Brentnerová)",
+      "Wicked": "Wicked (Nathan Crowley, Lee Sandales)"
+    },
+    "Best Sound": {
+      "A Complete Unknown": "A Complete Unknown (Tod A. Maitland, Donald Sylvester)",
+      "Dune: Part Two": "Dune: Part Two (Gareth John, Richard King)",
+      "Emilia Pérez": "Emilia Pérez (Erwan Kerzanet, Aymeric Devoldère)",
+      "Wicked": "Wicked (Simon Hayes, Nancy Nugent Title)",
+      "The Wild Robot": "The Wild Robot (Randy Thom, Brian Chumney)"
+    },
+    "Best Adapted Screenplay": {
+      "A Complete Unknown": "A Complete Unknown (James Mangold, Jay Cocks)",
+      "Conclave": "Conclave (Peter Straughan)",
+      "Emilia Pérez": "Emilia Pérez (Jacques Audiard, Thomas Bidegain, Léa Mysius)",
+      "Nickel Boys": "Nickel Boys (RaMell Ross, Joslyn Barnes)",
+      "Sing Sing": "Sing Sing (Clint Bentley, Greg Kwedar)"
+    },
+    "Best Original Screenplay": {
+      "Anora": "Anora (Sean Baker)",
+      "The Brutalist": "The Brutalist (Brady Corbet, Mona Fastvold)",
+      "A Real Pain": "A Real Pain (Jesse Eisenberg)",
+      "September 5": "September 5 (Moritz Binder, Tim Fehlbaum)",
+      "The Substance": "The Substance (Coralie Fargeat)"
+    },
+    "Best Animated Short Film": {
+      "Beautiful Men": "Beautiful Men (Nicolas Keppens, Brecht Van Elslande)",
+      "In the Shadow of the Cypress": "In the Shadow of the Cypress (Shirin Sohani)",
+      "Magic Candies": "Magic Candies (Daisuke Nishio, Takashi Washio)",
+      "Wander to Wonder": "Wander to Wonder (Nina Gantz, Stienette Bosklopper)",
+      "Yuck!": "Yuck! (Loïc Espuche, Juliette Marquet)"
+    },
+    "Best Picture": {
+      "Anora": "Anora (Alex Coco, Samantha Quan, Sean Baker)",
+      "The Brutalist": "The Brutalist (Nick Gordon, Brian Young, Andrew Morrison, Brady Corbet)",
+      "A Complete Unknown": "A Complete Unknown (Fred Berger, James Mangold, Alex Heineman)",
+      "Conclave": "Conclave (Tessa Ross, Juliette Howell, Michael A. Jackman)",
+      "Dune: Part Two": "Dune: Part Two (Mary Parent, Cale Boyter, Tanya Lapointe, Denis Villeneuve)",
+      "Emilia Pérez": "Emilia Pérez (Pascal Caucheteux, Jacques Audiard)",
+      "I'm Still Here": "I'm Still Here (Maria Carlota Bruno, Rodrigo Teixeira)",
+      "Nickel Boys": "Nickel Boys (Dede Gardner, Jeremy Kleiner, Joslyn Barnes)",
+      "The Substance": "The Substance (Coralie Fargeat, Tim Bevan, Eric Fellner)",
+      "Wicked": "Wicked (Marc Platt)"
+    },
+    "Best Animated Feature Film": {
+      "Flow": "Flow (Gints Zilbalodis)",
+      "Inside Out 2": "Inside Out 2 (Pete Docter, Kelsey Mann)",
+      "Memoir of a Snail": "Memoir of a Snail (Adam Elliot)",
+      "Wallace & Gromit: Vengeance Most Fowl": "Wallace & Gromit: Vengeance Most Fowl (Nick Park)",
+      "The Wild Robot": "The Wild Robot (Chris Sanders)"
+    },
+    "Best Visual Effects": {
+      "Alien: Romulus": "Alien: Romulus (Eric Barba, Nelson Sepulveda-Fauser, Daniel Macarin)",
+      "Better Man": "Better Man (Luke Millar, David Clayton, Keith Herft)",
+      "Dune: Part Two": "Dune: Part Two (Paul Lambert, Gerd Nefzer, Tristan Myles)",
+      "Kingdom of the Planet of the Apes": "Kingdom of the Planet of the Apes (Dan Glass, Anders Langlands)",
+      "Wicked": "Wicked (Dan Glass, Mike Chambers, Brian Connor)"
+    },
+    "Best Documentary Short Film": {
+      "Death by Numbers": "Death by Numbers (Kim A. Snyder, Janique L. Robillard)",
+      "I Am Ready, Warden": "I Am Ready, Warden (Smriti Mundhra, Maya Gnyp)",
+      "Incident": "Incident (Bill Morrison, Jamie Kalven)",
+      "Instruments of a Beating Heart": "Instruments of a Beating Heart (Ema Ryan Yamazaki)",
+      "The Only Girl in the Orchestra": "The Only Girl in the Orchestra (Molly O'Brien)"
+    },
+    "Best Documentary Feature Film": {
+      "Black Box Diaries": "Black Box Diaries (Shiori Ito, Eric Nyari)",
+      "No Other Land": "No Other Land (Basel Adra, Rachel Szor, Yuval Abraham)",
+      "Porcelain War": "Porcelain War (Brendan Bellomo, Slava Leontyev)",
+      "Soundtrack to a Coup d'Etat": "Soundtrack to a Coup d'Etat (Johan Grimonprez)",
+      "Sugarcane": "Sugarcane (Julian Brave NoiseCat, Emily Kassie)"
+    },
+    "Best Film Editing": {
+      "Anora": "Anora (Sean Baker)",
+      "The Brutalist": "The Brutalist (David Jancso)",
+      "Conclave": "Conclave (Nick Emerson)",
+      "Emilia Pérez": "Emilia Pérez (Juliette Welfling)",
+      "Wicked": "Wicked (Myron Kerstein)"
+    },
+    "Best Live Action Short Film": {
+      "A Lien": "A Lien (Sam Cutler-Kreutz, David Cutler-Kreutz)",
+      "Anuja": "Anuja (Adam J. Graves, Suchitra Mattai)",
+      "I'm Not a Robot": "I'm Not a Robot (Victoria Warmerdam)",
+      "The Last Ranger": "The Last Ranger (Cindy Lee, Darwin Shaw)",
+      "The Man Who Could Not Remain Silent": "The Man Who Could Not Remain Silent (Nebojša Slijepčević)"
+    },
+  };
+
   @override
   void initState() {
     super.initState();
@@ -451,38 +621,166 @@ class _MovieBrowserScreenState extends State<MovieBrowserScreen> {
 
   Future<void> _shareMovie(Map<String, dynamic> movieData, String imdbId) async {
     try {
-      // Usa una solución más simple similar a RateMe
-      final text = '''
-The 97th Academy Awards
-Movie: ${movieData['title']}
-Category: ${entries[currentIndex]['category']}
-IMDb Rating: ${movieData['rating']}/10
-${_ratings[imdbId] != null ? 'My Rating: ${_ratings[imdbId]?.toStringAsFixed(1)}/10' : ''}
-IMDb: ${movieData['imdb_url']}
-      ''';
+      // Get poster image
+      ui.Image? poster;
+      if (movieData['image_url'] != null) {
+        try {
+          final response = await http.get(Uri.parse(movieData['image_url']));
+          final bytes = response.bodyBytes;
+          final codec = await ui.instantiateImageCodec(bytes);
+          final frame = await codec.getNextFrame();
+          poster = frame.image;
+        } catch (e) {
+          print('Error loading poster: $e');
+        }
+      }
+
+      final recorder = ui.PictureRecorder();
+      final canvas = Canvas(recorder);
+      // Adjust width based on platform
+      final width = Platform.isAndroid ? 400.0 : 600.0;
+      final size = Size(width, poster != null ? width * 1.3 : width);
+      
+      // Draw black background with amber border
+      final bgPaint = Paint()..color = Colors.black;
+      final borderPaint = Paint()
+        ..color = Colors.amber
+        ..style = PaintingStyle.stroke
+        ..strokeWidth = 2;
+      canvas.drawRect(Offset.zero & size, bgPaint);
+      canvas.drawRect(Rect.fromLTWH(1, 1, size.width - 2, size.height - 2), borderPaint);
+
+      // Draw header text
+      final headerPainter = TextPainter(
+        text: TextSpan(
+          text: "The 97th Academy Awards\n",
+          style: TextStyle(color: Colors.amber, fontSize: 24, fontWeight: FontWeight.bold),
+        ),
+        textDirection: TextDirection.ltr,
+        textAlign: TextAlign.center,  // Add this
+      )..layout(maxWidth: size.width - 40);
+      
+      // Center header text horizontally
+      final headerX = (size.width - headerPainter.width) / 2;
+      headerPainter.paint(canvas, Offset(headerX, 20));
+
+      double yOffset = headerPainter.height + 40;
+
+      // Draw poster if available
+      if (poster != null) {
+        final posterRect = Rect.fromLTWH(
+          (size.width - 200) / 2, // Center horizontally
+          yOffset,
+          200,
+          300
+        );
+        canvas.drawImageRect(
+          poster,
+          Rect.fromLTWH(0, 0, poster.width.toDouble(), poster.height.toDouble()),
+          posterRect,
+          Paint(),
+        );
+        yOffset += 320; // Poster height + margin
+      }
+
+      // Draw movie info
+      // Use app's title instead of IMDb title
+      final movieTitle = entries[currentIndex]['movieTitle'];
+      
+      final textPainter = TextPainter(
+        text: TextSpan(
+          children: [
+            TextSpan(
+              text: "${entries[currentIndex]['category']}\n",
+              style: TextStyle(color: Colors.grey, fontSize: width * 0.027),
+            ),
+            TextSpan(
+              text: "$movieTitle\n", // Removed extra \n
+              style: TextStyle(color: Colors.white, fontSize: width * 0.033, fontWeight: FontWeight.bold),
+            ),
+            // Add nomination info if available, but extract only what's in parentheses
+            if (nominationTitles[entries[currentIndex]['category']]?[movieTitle] != null)
+              TextSpan(
+                text: (nominationTitles[entries[currentIndex]['category']]![movieTitle] ?? '')
+                    .replaceAll(RegExp(r'^.*?\('), '('), // Remove everything before the first parenthesis
+                style: TextStyle(color: Colors.grey, fontSize: width * 0.025), // Changed from amber to grey
+              ),
+            // IMDb rating - en azul sin bold
+            if (movieData["rating"] != null && movieData["rating"] != "N/A")
+              TextSpan(
+                text: "\nIMDb: ${movieData["rating"]}/10\n",
+                style: TextStyle(
+                  color: Colors.blue[300],
+                  fontSize: width * 0.025,
+                ),
+              ),
+            // Personal rating - en amarillo normal (sin bold)
+            if (_ratings[imdbId] != null)
+              TextSpan(
+                text: "My Rating: ${_ratings[imdbId]?.toStringAsFixed(1)}/10\n",
+                style: TextStyle(
+                  color: Colors.amber,
+                  fontSize: width * 0.025,
+                ),
+              ),
+            if (movieData['duration'] != null || movieData['genres'] != null)
+              TextSpan(
+                text: "\n${movieData['duration'] ?? ''} ${movieData['duration'] != null && movieData['genres'] != null ? '| ' : ''}${movieData['genres'] ?? ''}\n",
+                style: TextStyle(color: Colors.grey, fontSize: 14),
+              ),
+          ],
+        ),
+        textDirection: TextDirection.ltr,
+        textAlign: TextAlign.center,
+      )..layout(maxWidth: size.width - 40);
+
+      // Center text horizontally
+      final textX = (size.width - textPainter.width) / 2;
+      textPainter.paint(canvas, Offset(textX, yOffset));
+      yOffset += textPainter.height + 20;
+
+      // Draw synopsis
+      if (movieData['plot'] != null) {
+        final synopsisPainter = TextPainter(
+          text: TextSpan(
+            text: movieData['plot'],
+            style: TextStyle(color: Colors.white70, fontSize: 14, height: 1.5),
+          ),
+          textDirection: TextDirection.ltr,
+          textAlign: TextAlign.justify,
+        )..layout(maxWidth: size.width - 40);
+        synopsisPainter.paint(canvas, Offset(20, yOffset));
+      }
+
+      // Generate and share image
+      final picture = recorder.endRecording();
+      final img = await picture.toImage(size.width.toInt(), size.height.toInt());
+      final pngBytes = await img.toByteData(format: ui.ImageByteFormat.png);
 
       if (Platform.isAndroid) {
-        await Share.share(text);
+        final temp = await getTemporaryDirectory();
+        final file = File('${temp.path}/oscars_share.png');
+        await file.writeAsBytes(pngBytes!.buffer.asUint8List());
+        await Share.shareXFiles([XFile(file.path)]);
       } else {
+        // Desktop save dialog
         final String? savePath = await FilePicker.platform.saveFile(
-          dialogTitle: 'Save text as',
-          fileName: 'oscars_${movieData['title']?.replaceAll(RegExp(r'[<>:"/\\|?*]'), '_')}.txt',
+          dialogTitle: 'Save image as',
+          fileName: 'oscars_${movieData['title']?.replaceAll(RegExp(r'[<>:"/\\|?*]'), '_')}.png',
           type: FileType.custom,
-          allowedExtensions: ['txt'],
+          allowedExtensions: ['png'],
         );
 
         if (savePath != null) {
           final file = File(savePath);
-          await file.writeAsString(text);
+          await file.writeAsBytes(pngBytes!.buffer.asUint8List());
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(content: Text('Saved to: $savePath')),
           );
         }
       }
     } catch (e) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Error sharing: $e')),
-      );
+      print('Error sharing: $e');
     }
   }
 
@@ -529,6 +827,9 @@ IMDb: ${movieData['imdb_url']}
   }
 
   Widget _buildNominationInfo(Map<String, dynamic> entry) {
+    // Get nomination title if available
+    final nominationTitle = nominationTitles[entry['category']]?[entry['movieTitle']];
+    
     return Column(
       children: [
         const Text(
@@ -544,15 +845,18 @@ IMDb: ${movieData['imdb_url']}
           entry['category'],
           style: const TextStyle(color: Colors.grey, fontSize: 16),
         ),
-        const SizedBox(height: 10),
-        Text(
-          _cleanText(entry['movieTitle']),
-          style: const TextStyle(
-            color: Colors.amber,
-            fontSize: 18,
-            fontWeight: FontWeight.bold,
+        if (nominationTitle != null) ...[
+          const SizedBox(height: 10),
+          Text(
+            nominationTitle,
+            style: const TextStyle(
+              color: Colors.amber,
+              fontSize: 16,
+              fontWeight: FontWeight.bold,
+            ),
+            textAlign: TextAlign.center,
           ),
-        ),
+        ],
       ],
     );
   }
@@ -642,7 +946,7 @@ IMDb: ${movieData['imdb_url']}
     return Column(
       children: [
         Text(
-          _cleanText(data?["title"]),
+          _cleanText(entry['movieTitle']), // Use entry's title instead of IMDb title
           style: const TextStyle(
             color: Colors.white,
             fontSize: 20,
@@ -651,6 +955,15 @@ IMDb: ${movieData['imdb_url']}
           textAlign: TextAlign.center,
         ),
         const SizedBox(height: 10),
+        Text(
+          "⭐ ${data?["rating"] ?? "N/A"}/10",
+          style: const TextStyle(
+            color: Colors.amber,
+            fontSize: 18,
+            fontWeight: FontWeight.bold,
+          ),
+        ),
+        const SizedBox(height: 6),
         if (data?["imdb_url"] != null)
           InkWell(
             onTap: () => launchUrl(Uri.parse(data!["imdb_url"])),
@@ -658,16 +971,11 @@ IMDb: ${movieData['imdb_url']}
               "🔗 View on IMDb",
               style: TextStyle(
                 color: Colors.lightBlue,
-                fontSize: 16,
+                fontSize: 14,
                 decoration: TextDecoration.underline,
               ),
             ),
           ),
-        const SizedBox(height: 10),
-        Text(
-          "⭐ ${data?["rating"] ?? "N/A"}/10",
-          style: const TextStyle(color: Colors.red, fontSize: 18),
-        ),
         const SizedBox(height: 10),
         Text(
           "⏱️ ${data?["duration"] ?? "N/A"} | 🎭 ${data?["genres"] ?? "N/A"}",
@@ -676,58 +984,7 @@ IMDb: ${movieData['imdb_url']}
         const SizedBox(height: 20),
         _buildStarRating(entry['imdbId']),
         const SizedBox(height: 10),
-        // Share button with text
-        InkWell(
-          onTap: () => _shareMovie(data!, entry['imdbId']),
-          child: Container(
-            padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
-            decoration: BoxDecoration(
-              color: Colors.grey[800],
-              borderRadius: BorderRadius.circular(20),
-              border: Border.all(
-                color: Colors.grey[600]!,
-                width: 1
-              )
-            ),
-            child: Row(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                const Icon(
-                  Icons.share,
-                  color: Colors.amber,
-                  size: 20,
-                ),
-                const SizedBox(width: 8),
-                const Text(
-                  "Share",
-                  style: TextStyle(
-                    color: Colors.white70,
-                    fontSize: 14,
-                  ),
-                ),
-              ],
-            ),
-          ),
-        ),
-        const SizedBox(height: 20),
-        Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 20),
-          child: Center(
-            child: SizedBox(
-              width: 700,
-              child: Text(
-                _cleanText(data?["plot"]) ?? "No synopsis available",
-                style: const TextStyle(
-                  color: Colors.white,
-                  fontSize: 16,
-                ),
-                textAlign: TextAlign.justify,
-              ),
-            ),
-          ),
-        ),
-        const SizedBox(height: 20),
-        // Watched button solo al final
+        // Watched button moved here
         InkWell(
           onTap: () async {
             await UserData.toggleWatched(entry['imdbId']);
@@ -762,6 +1019,57 @@ IMDb: ${movieData['imdb_url']}
                   isWatched ? "Watched" : "Mark as watched",
                   style: TextStyle(
                     color: isWatched ? Colors.amber : Colors.white70,
+                    fontSize: 14,
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ),
+        const SizedBox(height: 20),
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 20),
+          child: Center(
+            child: SizedBox(
+              width: 700,
+              child: Text(
+                _cleanText(data?["plot"]) ?? "No synopsis available",
+                style: const TextStyle(
+                  color: Colors.white,
+                  fontSize: 16,
+                ),
+                textAlign: TextAlign.justify,
+              ),
+            ),
+          ),
+        ),
+        const SizedBox(height: 20),
+        // Share button moved to the bottom
+        InkWell(
+          onTap: () => _shareMovie(data!, entry['imdbId']),
+          child: Container(
+            padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+            decoration: BoxDecoration(
+              color: Colors.grey[800],
+              borderRadius: BorderRadius.circular(20),
+              border: Border.all(
+                color: Colors.grey[600]!,
+                width: 1
+              )
+            ),
+            child: Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                const Icon(
+                  Icons.share,
+                  color: Colors.amber,
+                  size: 20,
+                ),
+                const SizedBox(width: 8),
+                const Text(
+                  "Share",
+                  style: TextStyle(
+                    color: Colors.white70,
                     fontSize: 14,
                   ),
                 ),

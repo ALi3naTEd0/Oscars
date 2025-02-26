@@ -26,12 +26,11 @@ android {
     }
 
     defaultConfig {
-        applicationId "com.example.oscars"  // Revert back to original
+        applicationId "com.example.oscars"
         minSdkVersion 21
         targetSdkVersion 33
-        // Version code must be incremented for each release
-        versionCode 4       // Increment to force update
-        versionName "1.1.0" // Keep current version
+        versionCode 4       // Keep track of version code for Android
+        versionName "1.2.0-1" // Match semantic version from pubspec.yaml
     }
 
     signingConfigs {

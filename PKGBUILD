@@ -1,38 +1,14 @@
-# Maintainer: ALi3naTEd0
+# Maintainer: Your Name
 pkgname=oscars
-pkgver=1.1.0
+pkgver=1.2.0
 pkgrel=1
-pkgdesc="The 97th Academy Awards app"
+pkgdesc="The 97th Academy Awards unofficial app"
 arch=('x86_64')
-url="https://github.com/ALi3naTEd0/Oscars"
-license=('GPL3')
-depends=(
-    'gtk3'
-    'libsecret'
-    'adwaita-icon-theme'
-    'libglvnd'
-    'pcre2'
-    'openssl'
-    'hicolor-icon-theme'
-    'xcursor-themes'
-    'gnome-themes-extra'
-)
-makedepends=(
-    'git'
-    'flutter'
-    'clang'
-    'cmake'
-    'ninja'
-    'patchelf'
-)
-options=(!debug)  # Disable debug symbols to avoid conflicts
-
-# Source configuration for local and CI builds
-if [ -z "$CI" ]; then
-    source=("$pkgname::git+file://$PWD")
-else
-    source=("$pkgname::git+$url.git")
-fi
+url="https://github.com/yourusername/Oscars"
+license=('MIT')
+depends=('gtk3' 'xdg-user-dirs')
+makedepends=('flutter' 'cmake' 'ninja' 'clang')
+source=("$pkgname-$pkgver.tar.gz")
 sha256sums=('SKIP')
 
 prepare() {
@@ -42,46 +18,28 @@ prepare() {
 }
 
 build() {
-    cd "$srcdir/$pkgname"
-    flutter config --enable-linux-desktop
+    cd "$srcdir/$pkgname-$pkgver"
     flutter build linux --release
 }
 
 package() {
-    cd "$srcdir/$pkgname"
+    cd "$srcdir/$pkgname-$pkgver"
     
-    # Create required directories
-    install -dm755 "$pkgdir/usr/lib/$pkgname"
-    install -dm755 "$pkgdir/usr/bin"
+    # Binary
+    install -Dm755 "build/linux/x64/release/bundle/oscars" "$pkgdir/usr/bin/oscars"
     
-    # Install bundle files
-    cp -r build/linux/x64/release/bundle/* "$pkgdir/usr/lib/$pkgname/"
+    # Desktop file
+    install -Dm644 "linux/flutter/packaging/linux/oscars.desktop" "$pkgdir/usr/share/applications/oscars.desktop"
     
-    # Handle plugins if present
-    if [ -d "$pkgdir/usr/lib/$pkgname/plugins" ]; then
-        cp -r "$pkgdir/usr/lib/$pkgname/plugins/"* "$pkgdir/usr/lib/$pkgname/lib/"
-    fi
+    # Icons
+    install -Dm644 "assets/oscars.png" "$pkgdir/usr/share/icons/hicolor/512x512/apps/oscars.png"
     
-    # Create launcher script with environment setup
-    cat > "$pkgdir/usr/bin/$pkgname" << EOF
-#!/bin/sh
-export GDK_BACKEND=x11
-export GTK_THEME=Adwaita
-export XCURSOR_THEME=Adwaita
-export XCURSOR_SIZE=24
-export LD_LIBRARY_PATH="/usr/lib/$pkgname/lib:\$LD_LIBRARY_PATH"
-exec /usr/lib/$pkgname/$pkgname "\$@"
-EOF
-    chmod 755 "$pkgdir/usr/bin/$pkgname"
+    # License
+    install -Dm644 "LICENSE" "$pkgdir/usr/share/licenses/$pkgname/LICENSE"
     
-    # Install desktop and icon files
-    install -Dm644 "desktop/$pkgname.desktop" "$pkgdir/usr/share/applications/$pkgname.desktop"
-    install -Dm644 "assets/app-icon.png" "$pkgdir/usr/share/icons/hicolor/512x512/apps/$pkgname.png"
-
-    # Fix library paths and RPATH
-    find "$pkgdir/usr/lib/$pkgname/lib" -type f -name "*.so" -exec \
-        patchelf --set-rpath '/usr/lib/oscars/lib:$ORIGIN' {} \;
-    patchelf --set-rpath "/usr/lib/$pkgname/lib" "$pkgdir/usr/lib/$pkgname/$pkgname"
+    # Data files
+    cp -r "build/linux/x64/release/bundle/data" "$pkgdir/usr/lib/oscars/"
+    cp -r "build/linux/x64/release/bundle/lib" "$pkgdir/usr/lib/oscars/"
 }
 
 post_install() {
