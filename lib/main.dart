@@ -15,6 +15,7 @@ import 'package:flutter/rendering.dart';
 import 'dart:ui' as ui;
 import 'package:file_picker/file_picker.dart';  // Add this import
 import 'package:share_plus/share_plus.dart';    // Add this import
+import 'oscar_winners.dart'; // Add this import
 import 'user_data.dart';
 
 String _cleanText(String? text) {
@@ -830,12 +831,15 @@ class _MovieBrowserScreenState extends State<MovieBrowserScreen> {
     // Get nomination title if available
     final nominationTitle = nominationTitles[entry['category']]?[entry['movieTitle']];
     
+    // Check if this is a winner
+    final bool isWinner = OscarWinners.isWinner(entry['category'], entry['movieTitle']);
+    
     return Column(
       children: [
-        const Text(
-          "Nomination",
+        Text(
+          isWinner ? "Winner" : "Nomination",
           style: TextStyle(
-            color: Colors.white,
+            color: isWinner ? Colors.amber : Colors.white,
             fontSize: 20,
             fontWeight: FontWeight.bold,
           ),
@@ -849,12 +853,45 @@ class _MovieBrowserScreenState extends State<MovieBrowserScreen> {
           const SizedBox(height: 10),
           Text(
             nominationTitle,
-            style: const TextStyle(
-              color: Colors.amber,
+            style: TextStyle(
+              color: isWinner ? Colors.amber : Colors.amber.withOpacity(0.8),
               fontSize: 16,
               fontWeight: FontWeight.bold,
             ),
             textAlign: TextAlign.center,
+          ),
+        ],
+        if (isWinner) ...[
+          const SizedBox(height: 10),
+          Container(
+            padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+            decoration: BoxDecoration(
+              color: Colors.amber.withOpacity(0.2),
+              borderRadius: BorderRadius.circular(20),
+              border: Border.all(
+                color: Colors.amber,
+                width: 1
+              )
+            ),
+            child: Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Icon(
+                  Icons.emoji_events,
+                  color: Colors.amber,
+                  size: 20,
+                ),
+                const SizedBox(width: 8),
+                Text(
+                  "Oscar Winner 2025",
+                  style: TextStyle(
+                    color: Colors.amber,
+                    fontSize: 14,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+              ],
+            ),
           ),
         ],
       ],
@@ -942,13 +979,36 @@ class _MovieBrowserScreenState extends State<MovieBrowserScreen> {
 
   Widget _buildMovieDetails(Map<String, dynamic>? data, Map<String, dynamic> entry) {
     final isWatched = _watchedMovies.contains(entry['imdbId']);
+    final isWinner = OscarWinners.isWinner(entry['category'], entry['movieTitle']);
     
     return Column(
       children: [
+        if (isWinner) ...[
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Icon(
+                Icons.emoji_events,
+                color: Colors.amber,
+                size: 24,
+              ),
+              const SizedBox(width: 8),
+              Text(
+                "Oscar Winner",
+                style: TextStyle(
+                  color: Colors.amber,
+                  fontSize: 16,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(height: 10),
+        ],
         Text(
           _cleanText(entry['movieTitle']), // Use entry's title instead of IMDb title
-          style: const TextStyle(
-            color: Colors.white,
+          style: TextStyle(
+            color: isWinner ? Colors.amber : Colors.white,
             fontSize: 20,
             fontWeight: FontWeight.bold,
           ),
