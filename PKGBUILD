@@ -1,6 +1,6 @@
 # Maintainer: ALi3naTEd0
 pkgname=oscars
-pkgver=1.2.0
+pkgver=1.3.0
 pkgrel=1
 pkgdesc="The 97th Academy Awards app"
 arch=('x86_64')
@@ -37,8 +37,15 @@ sha256sums=('SKIP')
 
 prepare() {
     cd "$srcdir/$pkgname"
-    flutter upgrade
+    
+    # Force clean all build and cache directories
     flutter clean
+    rm -rf .dart_tool/ build/ .flutter-plugins .flutter-plugins-dependencies
+    
+    # Clean user data directory to ensure fresh start
+    rm -rf "$HOME/.local/share/oscars"
+    
+    flutter upgrade
 }
 
 build() {
@@ -86,4 +93,12 @@ EOF
 
 post_install() {
     gtk-update-icon-cache -f -t /usr/share/icons/hicolor
+    
+    # Force clean user data on fresh install
+    rm -rf "$HOME/.local/share/oscars"
+    echo "Cache cleared. Please start the application fresh."
+}
+
+post_upgrade() {
+    post_install
 }

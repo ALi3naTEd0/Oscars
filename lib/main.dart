@@ -178,7 +178,11 @@ class _MovieBrowserScreenState extends State<MovieBrowserScreen> {
       "Black Box Diaries", "No Other Land", "Porcelain War", "Soundtrack to a Coup d'Etat", "Sugarcane"
     ],
     "Best Original Song": [
-      "Emilia Pérez", "The Six Triple Eight", "Sing Sing", "Emilia Pérez", "Elton John: Never Too Late"
+      "Song: El Mal",            // Nombre totalmente único
+      "The Six Triple Eight",
+      "Sing Sing",
+      "Song: Mi Camino",         // Nombre totalmente único
+      "Elton John: Never Too Late"
     ],
     "Best Supporting Actress": [
       "A Complete Unknown", "Wicked", "The Brutalist", "Conclave", "Emilia Pérez"
@@ -247,10 +251,10 @@ class _MovieBrowserScreenState extends State<MovieBrowserScreen> {
       "The Substance": "The Substance (Coralie Fargeat)"
     },
     "Best Original Song": {
-      "Emilia Pérez": "Emilia Pérez - 'El Mal' (Clément Ducol, Camille, Jacques Audiard)",
+      "Song: El Mal": "Emilia Pérez - 'El Mal' (Clément Ducol, Camille, Jacques Audiard)",
       "The Six Triple Eight": "The Six Triple Eight - 'The Journey' (Diane Warren)",
       "Sing Sing": "Sing Sing - 'Like A Bird' (Abraham Alexander, Adrian Quesada)",
-      "Emilia Pérez": "Emilia Pérez - 'Mi Camino' (Camille, Clément Ducol)",
+      "Song: Mi Camino": "Emilia Pérez - 'Mi Camino' (Camille, Clément Ducol)",
       "Elton John: Never Too Late": "Elton John: Never Too Late - 'Never Too Late' (Elton John, Brandi Carlile, Andrew Watt, Bernie Taupin)"
     },
     "Best Cinematography": {
@@ -828,8 +832,22 @@ class _MovieBrowserScreenState extends State<MovieBrowserScreen> {
   }
 
   Widget _buildNominationInfo(Map<String, dynamic> entry) {
-    // Get nomination title if available
-    final nominationTitle = nominationTitles[entry['category']]?[entry['movieTitle']];
+    String? nominationTitle;
+    
+    // Special handling for Emilia Pérez songs
+    if (entry['category'] == "Best Original Song") {
+      if (entry['movieTitle'] == "El Mal") {
+        nominationTitle = "Emilia Pérez - 'El Mal' (Clément Ducol, Camille, Jacques Audiard)";
+      } else if (entry['movieTitle'] == "Mi Camino") {
+        nominationTitle = "Emilia Pérez - 'Mi Camino' (Camille, Clément Ducol)";
+      } else {
+        // Use normal mapping for other songs
+        nominationTitle = nominationTitles[entry['category']]?[entry['movieTitle']] ?? entry['movieTitle'];
+      }
+    } else {
+      // Use normal mapping for other categories
+      nominationTitle = nominationTitles[entry['category']]?[entry['movieTitle']];
+    }
     
     // Check if this is a winner
     final bool isWinner = OscarWinners.isWinner(entry['category'], entry['movieTitle']);
