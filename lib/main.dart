@@ -248,11 +248,11 @@ class _MovieBrowserScreenState extends State<MovieBrowserScreen> {
       "The Substance": "The Substance (Coralie Fargeat)"
     },
     "Best Original Song": {
-      // 1ra aparición - El Mal (ganadora)
+      // First appearance - El Mal (winner)
       "Emilia Pérez/0": "Emilia Pérez - 'El Mal' (Clément Ducol, Camille, Jacques Audiard)",
       "The Six Triple Eight": "The Six Triple Eight - 'The Journey' (Diane Warren)",
       "Sing Sing": "Sing Sing - 'Like A Bird' (Abraham Alexander, Adrian Quesada)",
-      // 2da aparición - Mi Camino
+      // Second appearance - Mi Camino
       "Emilia Pérez/1": "Emilia Pérez - 'Mi Camino' (Camille, Clément Ducol)",
       "Elton John: Never Too Late": "Elton John: Never Too Late - 'Never Too Late' (Elton John, Brandi Carlile, Andrew Watt, Bernie Taupin)"
     },
@@ -528,7 +528,7 @@ class _MovieBrowserScreenState extends State<MovieBrowserScreen> {
   void _navigate(int direction) {
     setState(() {
       currentIndex = (currentIndex + direction).clamp(0, entries.length - 1);
-      // Reiniciar el índice cuando cambiamos de película
+      // Reset the index when changing movies
       _lastFoundSongIndex = -1;
     });
   }
@@ -555,7 +555,7 @@ class _MovieBrowserScreenState extends State<MovieBrowserScreen> {
 
     setState(() {
       currentIndex = entries.indexOf(unwatchedEntries[Random().nextInt(unwatchedEntries.length)]);
-      // Reiniciar el índice cuando cambiamos de película
+      // Reset the index when changing movies
       _lastFoundSongIndex = -1;
     });
   }
@@ -839,27 +839,20 @@ class _MovieBrowserScreenState extends State<MovieBrowserScreen> {
     
     if (entry['category'] == "Best Original Song" && entry['movieTitle'] == "Emilia Pérez") {
       final songList = categories["Best Original Song"]!;
-      int occurrenceIndex = songList.indexWhere(
-        (song) => song == "Emilia Pérez",
-        _lastFoundSongIndex + 1
-      );
+      // Get the current song occurrence based on the list position
+      final currentPosition = songList.indexOf("Emilia Pérez", 0);
+      final nextPosition = songList.indexOf("Emilia Pérez", currentPosition + 1);
       
-      if (occurrenceIndex == -1) {
-        _lastFoundSongIndex = -1;
-        occurrenceIndex = 0;
-      } else {
-        _lastFoundSongIndex = occurrenceIndex;
-      }
+      // Check if this is the first or second occurrence
+      final songIndex = (currentIndex % songList.length) == currentPosition ? 0 : 1;
 
-      nominationTitle = occurrenceIndex == 0 
+      nominationTitle = songIndex == 0 
           ? "Emilia Pérez - 'El Mal' (Clément Ducol, Camille, Jacques Audiard)"
           : "Emilia Pérez - 'Mi Camino' (Camille, Clément Ducol)";
 
-      entry['songIndex'] = occurrenceIndex;
+      entry['songIndex'] = songIndex;
     } else {
       nominationTitle = nominationTitles[entry['category']]?[entry['movieTitle']];
-      // Reiniciar el índice cuando no estamos en Best Original Song
-      _lastFoundSongIndex = -1;
     }
     
     final bool isWinner = OscarWinners.isWinner(entry['category'], entry['movieTitle'], entry['songIndex']);
