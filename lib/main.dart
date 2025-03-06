@@ -823,8 +823,6 @@ class _MovieBrowserScreenState extends State<MovieBrowserScreen> {
                       const SizedBox(height: 20),
                       _buildNavigationControls(),
                       const SizedBox(height: 20),
-                      _buildPoster(cachedData),
-                      const SizedBox(height: 20),
                       _buildMovieDetails(cachedData, entry),
                     ],
                   ),
@@ -839,18 +837,19 @@ class _MovieBrowserScreenState extends State<MovieBrowserScreen> {
     
     if (entry['category'] == "Best Original Song" && entry['movieTitle'] == "Emilia Pérez") {
       final songList = categories["Best Original Song"]!;
-      // Get the current song occurrence based on the list position
-      final currentPosition = songList.indexOf("Emilia Pérez", 0);
-      final nextPosition = songList.indexOf("Emilia Pérez", currentPosition + 1);
+      // Get the first occurrence index
+      final firstIndex = songList.indexOf("Emilia Pérez");
       
-      // Check if this is the first or second occurrence
-      final songIndex = (currentIndex % songList.length) == currentPosition ? 0 : 1;
+      // Calculate if this is the first or second occurrence based on the current entry index
+      final isFirstSong = entries.indexOf(entry) == entries.indexWhere(
+        (e) => e['category'] == "Best Original Song" && e['movieTitle'] == "Emilia Pérez"
+      );
+      
+      entry['songIndex'] = isFirstSong ? 0 : 1;
 
-      nominationTitle = songIndex == 0 
+      nominationTitle = isFirstSong
           ? "Emilia Pérez - 'El Mal' (Clément Ducol, Camille, Jacques Audiard)"
           : "Emilia Pérez - 'Mi Camino' (Camille, Clément Ducol)";
-
-      entry['songIndex'] = songIndex;
     } else {
       nominationTitle = nominationTitles[entry['category']]?[entry['movieTitle']];
     }
@@ -872,51 +871,17 @@ class _MovieBrowserScreenState extends State<MovieBrowserScreen> {
           entry['category'],
           style: const TextStyle(color: Colors.grey, fontSize: 16),
         ),
-        if (nominationTitle != null) ...[
-          const SizedBox(height: 10),
+        const SizedBox(height: 10),
+        if (nominationTitle != null) 
           Text(
             nominationTitle,
             style: TextStyle(
-              color: isWinner ? Colors.amber : Colors.amber.withOpacity(0.8),
+              color: Colors.amber.withOpacity(0.8),
               fontSize: 16,
               fontWeight: FontWeight.bold,
             ),
             textAlign: TextAlign.center,
           ),
-        ],
-        if (isWinner) ...[
-          const SizedBox(height: 10),
-          Container(
-            padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
-            decoration: BoxDecoration(
-              color: Colors.amber.withOpacity(0.2),
-              borderRadius: BorderRadius.circular(20),
-              border: Border.all(
-                color: Colors.amber,
-                width: 1
-              )
-            ),
-            child: Row(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Icon(
-                  Icons.emoji_events,
-                  color: Colors.amber,
-                  size: 20,
-                ),
-                const SizedBox(width: 8),
-                Text(
-                  "Oscar Winner 2025",
-                  style: TextStyle(
-                    color: Colors.amber,
-                    fontSize: 14,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-              ],
-            ),
-          ),
-        ],
       ],
     );
   }
@@ -980,54 +945,59 @@ class _MovieBrowserScreenState extends State<MovieBrowserScreen> {
     );
   }
 
-  Widget _buildPoster(Map<String, dynamic>? data) {
-    final imageUrl = data?["image_url"] as String?;
-    return Container(
-      width: 250,
-      height: 375,
-      decoration: BoxDecoration(
-        border: Border.all(color: Colors.white30),
-        borderRadius: BorderRadius.circular(8),
-      ),
-      child: imageUrl != null
-          ? CachedNetworkImage(
-              imageUrl: imageUrl,
-              fit: BoxFit.cover,
-              placeholder: (context, url) => const Center(child: CircularProgressIndicator()),
-              errorWidget: (context, url, error) => const Icon(Icons.error, color: Colors.red),
-            )
-          : const Center(child: Text("Image unavailable", style: TextStyle(color: Colors.white))),
-    );
-  }
-
   Widget _buildMovieDetails(Map<String, dynamic>? data, Map<String, dynamic> entry) {
     final isWatched = _watchedMovies.contains(entry['imdbId']);
-    final isWinner = OscarWinners.isWinner(entry['category'], entry['movieTitle']);
+    final bool isWinner = OscarWinners.isWinner(entry['category'], entry['movieTitle'], entry['songIndex']);
     
     return Column(
       children: [
-        if (isWinner) ...[
-          Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Icon(
-                Icons.emoji_events,
-                color: Colors.amber,
-                size: 24,
+        Stack(
+          alignment: Alignment.bottomCenter,  // Cambiado de topCenter a bottomCenter
+          children: [
+            Container(
+              width: 250,
+              height: 375,
+              decoration: BoxDecoration(
+                border: Border.all(color: Colors.white30),
+                borderRadius: BorderRadius.circular(8),
               ),
-              const SizedBox(width: 8),
-              Text(
-                "Oscar Winner",
-                style: TextStyle(
-                  color: Colors.amber,
-                  fontSize: 16,
-                  fontWeight: FontWeight.bold,
+              child: data?["image_url"] != null
+                ? CachedNetworkImage(
+                    imageUrl: data!["image_url"],
+                    fit: BoxFit.cover,
+                    placeholder: (context, url) => const Center(child: CircularProgressIndicator()),
+                    errorWidget: (context, url, error) => const Icon(Icons.error, color: Colors.red),
+                  )
+                : const Center(child: Text("Image unavailable", style: TextStyle(color: Colors.white))),
+            ),
+            if (isWinner)
+              Container(
+                margin: const EdgeInsets.only(bottom: 10),  // Cambiado de top a bottom
+                padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                decoration: BoxDecoration(
+                  color: Colors.black.withOpacity(0.8),
+                  borderRadius: BorderRadius.circular(20),
+                  border: Border.all(color: Colors.amber, width: 1)
+                ),
+                child: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Icon(Icons.emoji_events, color: Colors.amber, size: 20),
+                    const SizedBox(width: 8),
+                    Text(
+                      "Oscar Winner 2025",
+                      style: TextStyle(
+                        color: Colors.amber,
+                        fontSize: 14,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  ],
                 ),
               ),
-            ],
-          ),
-          const SizedBox(height: 10),
-        ],
+          ],
+        ),
+        const SizedBox(height: 20),
         Text(
           _cleanText(entry['movieTitle']), // Use entry's title instead of IMDb title
           style: TextStyle(

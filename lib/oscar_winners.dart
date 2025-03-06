@@ -50,7 +50,8 @@ class OscarWinners {
 
   static bool isWinner(String category, String movieTitle, [int? songIndex]) {
     if (category == "Best Original Song" && movieTitle == "Emilia Pérez") {
-      return songIndex == 0;  // Only the first song is winner
+      // Solo "El Mal" (songIndex = 0) es ganadora
+      return songIndex == 0;
     }
     return winners[category] == movieTitle;
   }
