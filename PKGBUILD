@@ -81,8 +81,8 @@ EOF
     # Create desktop entry with correct name
     cat > "$pkgdir/usr/share/applications/$pkgname.desktop" << EOF
 [Desktop Entry]
-Name=The 97th Academy Awards
-Comment=Browse and rate Oscar nominees
+Name=Oscars
+Comment=The 97th Academy Awards
 Exec=/usr/bin/$pkgname
 Icon=$pkgname
 Type=Application
