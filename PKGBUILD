@@ -38,14 +38,16 @@ sha256sums=('SKIP')
 prepare() {
     cd "$srcdir/$pkgname"
     
-    # Force clean all build and cache directories
-    flutter clean
+    # Force clean and reset everything
+    git stash --all || true
+    git reset --hard HEAD || true
+    
+    # Clean build directories
+    flutter clean || true
     rm -rf .dart_tool/ build/ .flutter-plugins .flutter-plugins-dependencies
     
-    # Clean user data directory to ensure fresh start
-    rm -rf "$HOME/.local/share/oscars"
-    
-    flutter upgrade
+    # Use --force to skip local changes check
+    flutter upgrade --force
 }
 
 build() {
