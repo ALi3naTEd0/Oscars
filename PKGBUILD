@@ -2,7 +2,7 @@
 pkgname=oscars
 pkgver=1.3.0
 pkgrel=1
-pkgdesc="The 97th Academy Awards app"
+pkgdesc="The 97th Academy Awards"
 arch=('x86_64')
 url="https://github.com/ALi3naTEd0/Oscars"
 license=('GPL3')
@@ -27,41 +27,36 @@ makedepends=(
 )
 options=(!debug)  # Disable debug symbols to avoid conflicts
 
-# Source configuration for local and CI builds
-if [ -z "$CI" ]; then
-    source=("$pkgname::git+file://$PWD")
-else
-    source=("$pkgname::git+$url.git")
-fi
+source=("git+$url.git#branch=main")
 sha256sums=('SKIP')
 
 prepare() {
-    cd "$srcdir/$pkgname"
+    cd "$srcdir/Oscars"
     
-    # Force clean and reset everything
-    git stash --all || true
-    git reset --hard HEAD || true
-    
-    # Clean build directories
-    flutter clean || true
-    rm -rf .dart_tool/ build/ .flutter-plugins .flutter-plugins-dependencies
-    
-    # Use --force to skip local changes check
-    flutter upgrade --force
+    # Simple upgrade without force flags
+    flutter upgrade
+    flutter clean
 }
 
 build() {
-    cd "$srcdir/$pkgname"
+    cd "$srcdir/Oscars"
+    
+    # Verify essential files
+    [ ! -f "desktop/$pkgname.desktop" ] && { echo "Error: .desktop file not found"; exit 1; }
+    [ ! -f "assets/app-icon.png" ] && { echo "Error: app-icon.png not found"; exit 1; }
+
     flutter config --enable-linux-desktop
     flutter build linux --release
 }
 
 package() {
-    cd "$srcdir/$pkgname"
+    cd "$srcdir/Oscars"
     
-    # Create required directories
+    # Create required directories first
     install -dm755 "$pkgdir/usr/lib/$pkgname"
     install -dm755 "$pkgdir/usr/bin"
+    install -dm755 "$pkgdir/usr/share/applications"
+    install -dm755 "$pkgdir/usr/share/icons/hicolor/512x512/apps"
     
     # Install bundle files
     cp -r build/linux/x64/release/bundle/* "$pkgdir/usr/lib/$pkgname/"
@@ -83,8 +78,20 @@ exec /usr/lib/$pkgname/$pkgname "\$@"
 EOF
     chmod 755 "$pkgdir/usr/bin/$pkgname"
     
-    # Install desktop and icon files
-    install -Dm644 "desktop/$pkgname.desktop" "$pkgdir/usr/share/applications/$pkgname.desktop"
+    # Create desktop entry with correct name
+    cat > "$pkgdir/usr/share/applications/$pkgname.desktop" << EOF
+[Desktop Entry]
+Name=The 97th Academy Awards
+Comment=Browse and rate Oscar nominees
+Exec=/usr/bin/$pkgname
+Icon=$pkgname
+Type=Application
+Categories=Entertainment;
+EOF
+
+    chmod 644 "$pkgdir/usr/share/applications/$pkgname.desktop"
+
+    # Install icon files
     install -Dm644 "assets/app-icon.png" "$pkgdir/usr/share/icons/hicolor/512x512/apps/$pkgname.png"
 
     # Fix library paths and RPATH
@@ -95,10 +102,6 @@ EOF
 
 post_install() {
     gtk-update-icon-cache -f -t /usr/share/icons/hicolor
-    
-    # Force clean user data on fresh install
-    rm -rf "$HOME/.local/share/oscars"
-    echo "Cache cleared. Please start the application fresh."
 }
 
 post_upgrade() {
