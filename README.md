@@ -4,7 +4,7 @@
 
 ![Version](https://img.shields.io/github/v/release/ALi3naTEd0/Oscars)
 ![License](https://img.shields.io/badge/license-GPL--3.0-green)
-![Downloads](https://img.shields.io/github/downloads/ALi3naTEd0/oscars/total)
+![Downloads](https://img.shields.io/github/downloads/ALi3naTEd0/Oscars/total)
 ![Last Commit](https://img.shields.io/github/last-commit/ALi3naTEd0/oscars)
 ![Stars](https://img.shields.io/github/stars/ALi3naTEd0/oscars)
 
