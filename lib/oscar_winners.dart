@@ -37,20 +37,20 @@ class OscarWinners {
     "Best Documentary Short Film": "The Only Girl in the Orchestra", // Molly O'Brien
   };
 
-  // Agregar acceso a las categorías
+  // Add access to categories
   static final Map<String, List<String>> categories = {
     "Best Original Song": [
-      "Emilia Pérez",            // índice 0 = El Mal (ganadora)
+      "Emilia Pérez",            // index 0 = El Mal (winner)
       "The Six Triple Eight",
       "Sing Sing",
-      "Emilia Pérez",           // índice 3 = Mi Camino
+      "Emilia Pérez",           // index 3 = Mi Camino
       "Elton John: Never Too Late"
     ]
   };
 
   static bool isWinner(String category, String movieTitle, [int? songIndex]) {
     if (category == "Best Original Song" && movieTitle == "Emilia Pérez") {
-      // Solo "El Mal" (songIndex = 0) es ganadora
+      // Only "El Mal" (songIndex = 0) is winner
       return songIndex == 0;
     }
     return winners[category] == movieTitle;

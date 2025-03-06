@@ -952,7 +952,6 @@ class _MovieBrowserScreenState extends State<MovieBrowserScreen> {
     return Column(
       children: [
         Stack(
-          alignment: Alignment.bottomCenter,  // Cambiado de topCenter a bottomCenter
           children: [
             Container(
               width: 250,
@@ -971,28 +970,44 @@ class _MovieBrowserScreenState extends State<MovieBrowserScreen> {
                 : const Center(child: Text("Image unavailable", style: TextStyle(color: Colors.white))),
             ),
             if (isWinner)
-              Container(
-                margin: const EdgeInsets.only(bottom: 10),  // Cambiado de top a bottom
-                padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
-                decoration: BoxDecoration(
-                  color: Colors.black.withOpacity(0.8),
-                  borderRadius: BorderRadius.circular(20),
-                  border: Border.all(color: Colors.amber, width: 1)
-                ),
-                child: Row(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    Icon(Icons.emoji_events, color: Colors.amber, size: 20),
-                    const SizedBox(width: 8),
-                    Text(
-                      "Oscar Winner 2025",
-                      style: TextStyle(
-                        color: Colors.amber,
-                        fontSize: 14,
-                        fontWeight: FontWeight.bold,
+              Positioned(
+                bottom: 30,  // Cambiado de top a bottom
+                right: -60, // Cambiado de left a right
+                child: Transform.rotate(
+                  angle: -0.785398, // Mantenemos el mismo ángulo (-45 grados)
+                  child: Container(
+                    width: 200,
+                    height: 35,
+                    decoration: BoxDecoration(
+                      color: Colors.amber,
+                      boxShadow: [
+                        BoxShadow(
+                          color: Colors.black.withOpacity(0.5),
+                          spreadRadius: 1,
+                          blurRadius: 4,
+                          offset: const Offset(0, 2),
+                        ),
+                      ],
+                    ),
+                    child: Center(
+                      child: Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Icon(Icons.emoji_events, color: Colors.black, size: 18),
+                          const SizedBox(width: 4),
+                          Text(
+                            "WINNER",
+                            style: TextStyle(
+                              color: Colors.black,
+                              fontSize: 14,
+                              fontWeight: FontWeight.bold,
+                              letterSpacing: 2,
+                            ),
+                          ),
+                        ],
                       ),
                     ),
-                  ],
+                  ),
                 ),
               ),
           ],
