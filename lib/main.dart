@@ -971,10 +971,10 @@ class _MovieBrowserScreenState extends State<MovieBrowserScreen> {
             ),
             if (isWinner)
               Positioned(
-                bottom: 30,  // Cambiado de top a bottom
-                right: -60, // Cambiado de left a right
+                top: 30,  // Position at top
+                left: -60, // Position at left
                 child: Transform.rotate(
-                  angle: -0.785398, // Mantenemos el mismo ángulo (-45 grados)
+                  angle: -0.785398, // -45 degrees
                   child: Container(
                     width: 200,
                     height: 35,
