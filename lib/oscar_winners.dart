@@ -48,9 +48,10 @@ class OscarWinners {
     ]
   };
 
-  static bool isWinner(String category, String movieTitle, [int? songIndex]) {
+  static bool isWinner(String category, String movieTitle) {
     if (category == "Best Original Song" && movieTitle == "Emilia Pérez") {
-      return songIndex == 0;  // Solo la primera canción es ganadora
+      final songList = categories["Best Original Song"]!;
+      return songList.indexOf(movieTitle) == 0;  // Solo la primera aparición es ganadora
     }
     return winners[category] == movieTitle;
   }

@@ -839,26 +839,27 @@ class _MovieBrowserScreenState extends State<MovieBrowserScreen> {
     
     if (entry['category'] == "Best Original Song" && entry['movieTitle'] == "Emilia Pérez") {
       final songList = categories["Best Original Song"]!;
-      // Obtener todos los índices donde aparece Emilia Pérez
-      final List<int> allOccurrences = [];
-      for (int i = 0; i < songList.length; i++) {
-        if (songList[i] == "Emilia Pérez") {
-          allOccurrences.add(i);
-        }
-      }
+      int occurrenceIndex = songList.indexWhere(
+        (song) => song == "Emilia Pérez",
+        _lastFoundSongIndex + 1
+      );
       
-      // Encontrar qué aparición es esta basado en el índice actual
-      final songIndex = allOccurrences.contains(currentIndex % songList.length) 
-          ? currentIndex % songList.length 
-          : allOccurrences[0];
+      if (occurrenceIndex == -1) {
+        _lastFoundSongIndex = -1;
+        occurrenceIndex = 0;
+      } else {
+        _lastFoundSongIndex = occurrenceIndex;
+      }
 
-      nominationTitle = songIndex == 0 
+      nominationTitle = occurrenceIndex == 0 
           ? "Emilia Pérez - 'El Mal' (Clément Ducol, Camille, Jacques Audiard)"
           : "Emilia Pérez - 'Mi Camino' (Camille, Clément Ducol)";
 
-      entry['songIndex'] = songIndex;
+      entry['songIndex'] = occurrenceIndex;
     } else {
       nominationTitle = nominationTitles[entry['category']]?[entry['movieTitle']];
+      // Reiniciar el índice cuando no estamos en Best Original Song
+      _lastFoundSongIndex = -1;
     }
     
     final bool isWinner = OscarWinners.isWinner(entry['category'], entry['movieTitle'], entry['songIndex']);
