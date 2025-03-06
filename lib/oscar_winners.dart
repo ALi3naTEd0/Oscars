@@ -29,7 +29,7 @@ class OscarWinners {
     "Best Costume Design": "Wicked", // Paul Tazewell
     "Best Makeup and Hairstyling": "The Substance", // Pierre-Olivier Persin, Stéphanie Guillon
     "Best Original Score": "The Brutalist", // Daniel Blumberg
-    "Best Original Song": "Emilia Pérez - El Mal", // "El Mal" by Clément Ducol, Camille, Jacques Audiard
+    "Best Original Song": "Emilia Pérez", // "El Mal" by Clément Ducol, Camille, Jacques Audiard
     
     // Short Films
     "Best Animated Short Film": "In the Shadow of the Cypress", // Shirin Sohani
@@ -37,9 +37,20 @@ class OscarWinners {
     "Best Documentary Short Film": "The Only Girl in the Orchestra", // Molly O'Brien
   };
 
-  static bool isWinner(String category, String movieTitle) {
-    if (category == "Best Original Song") {
-      return movieTitle == "Song: El Mal";  // Usar el nuevo nombre único
+  // Agregar acceso a las categorías
+  static final Map<String, List<String>> categories = {
+    "Best Original Song": [
+      "Emilia Pérez",            // índice 0 = El Mal (ganadora)
+      "The Six Triple Eight",
+      "Sing Sing",
+      "Emilia Pérez",           // índice 3 = Mi Camino
+      "Elton John: Never Too Late"
+    ]
+  };
+
+  static bool isWinner(String category, String movieTitle, [int? songIndex]) {
+    if (category == "Best Original Song" && movieTitle == "Emilia Pérez") {
+      return songIndex == 0;  // Solo la primera canción es ganadora
     }
     return winners[category] == movieTitle;
   }
