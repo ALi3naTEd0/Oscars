@@ -197,16 +197,27 @@ footer {
 }
 
 footer p {
-    margin-bottom: 8px;
+    margin-bottom: 16px; /* Increased from 8px */
 }
 
 footer a {
     color: var(--primary-color);
     text-decoration: none;
+    padding: 4px 8px;
 }
 
-footer a:hover {
-    text-decoration: underline;
+.license-link {
+    border: 1px solid var(--primary-color);
+    border-radius: 4px;
+    padding: 4px 12px;
+    font-weight: 500;
+    transition: all 0.2s ease;
+}
+
+.license-link:hover {
+    background-color: var(--primary-color);
+    color: var(--bg-color);
+    text-decoration: none;
 }
 
 @media (max-width: 768px) {
