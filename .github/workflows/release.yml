@@ -231,3 +231,45 @@ jobs:
           git add README.md
           git commit -m "docs: update version to ${VERSION}" || echo "No changes to commit"
           git push || echo "No changes to push"
+          
+          # Update Website
+          if [ -d "docs" ]; then
+            cd docs
+            
+            # Update all download links in HTML
+            sed -i "s|/download/v[0-9]\+\.[0-9]\+\.[0-9]\+-[0-9]\+/|/download/v${VERSION}/|g" index.html
+            
+            # Update file patterns for all formats
+            sed -i "s|oscars_[0-9]\+\.[0-9]\+\.[0-9]\+-[0-9]\+\.exe|oscars_${VERSION}.exe|g" index.html
+            sed -i "s|oscars_[0-9]\+\.[0-9]\+\.[0-9]\+-[0-9]\+\.dmg|oscars_${VERSION}.dmg|g" index.html
+            sed -i "s|oscars_[0-9]\+\.[0-9]\+\.[0-9]\+-[0-9]\+\.AppImage|oscars_${VERSION}.AppImage|g" index.html
+            sed -i "s|oscars_[0-9]\+\.[0-9]\+\.[0-9]\+-[0-9]\+_amd64\.deb|oscars_${VERSION}_amd64.deb|g" index.html
+            sed -i "s|oscars_[0-9]\+\.[0-9]\+\.[0-9]\+-[0-9]\+_x86_64\.rpm|oscars_${VERSION}_x86_64.rpm|g" index.html
+            sed -i "s|oscars_[0-9]\+\.[0-9]\+\.[0-9]\+-[0-9]\+\.tar\.gz|oscars_${VERSION}.tar.gz|g" index.html
+            sed -i "s|oscars_[0-9]\+\.[0-9]\+\.[0-9]\+-[0-9]\+\.flatpak|oscars_${VERSION}.flatpak|g" index.html
+            
+            # Update Android APK pattern
+            sed -i "s|oscars_[0-9]\+\.[0-9]\+\.[0-9]\+-[0-9]\+\.apk|oscars_${VERSION}.apk|g" index.html
+            
+            # Update Android button click handler
+            sed -i "s|window.open('https://github.com/ALi3naTEd0/Oscars/releases/latest/download/oscars_[0-9]\+\.[0-9]\+\.[0-9]\+-[0-9]\+\.apk'|window.open('https://github.com/ALi3naTEd0/Oscars/releases/latest/download/oscars_${VERSION}.apk'|g" index.html
+            
+            # Update the fallback version for when GitHub API calls fail
+            sed -i "s|document.getElementById('current-version').textContent = '[0-9.]\+-[0-9]\+'|document.getElementById('current-version').textContent = '${VERSION}'|g" index.html
+            
+            # Verify the update was successful
+            echo "Website version updated to: ${VERSION}"
+            grep -n "current-version" index.html
+            
+            # Debug information
+            echo "Website changes:"
+            git diff index.html
+            
+            # Commit changes
+            cd ..
+            git add docs/index.html
+            git commit -m "docs: update website to version ${VERSION}" || echo "No changes to website"
+            git push || echo "No website changes to push"
+          else
+            echo "Docs directory not found, skipping website update"
+          fi
