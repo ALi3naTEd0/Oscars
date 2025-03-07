@@ -415,17 +415,17 @@ footer {
     }
     
     nav ul li {
-        margin: 10px 0;
+        margin: 0;
+        padding: 5px 0;
         width: 100%;
-        text-align: center;
     }
     
     nav ul li a {
-        display: flex;
-        align-items: center;
         justify-content: center;
+        display: flex;
         width: 100%;
         padding: 12px 0;
+        text-align: center;
     }
 
     .github-icon {
@@ -437,8 +437,9 @@ footer {
     }
     
     .github-icon i {
-        margin-right: 8px;
-        margin-left: 0;
+        margin: 0 8px 0 0;
+        position: relative;
+        top: 0;
     }
     
     .hero h2 {
