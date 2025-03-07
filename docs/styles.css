@@ -82,17 +82,15 @@ nav ul li a:hover {
     color: var(--primary-color);
 }
 
+/* Base GitHub icon style */
 .github-icon {
     display: inline-flex;
     align-items: center;
-    justify-content: center;
-    gap: 6px;
+    gap: 8px;
 }
 
 .github-icon i {
-    font-size: 16px;  /* Match icon size with text for better alignment */
-    line-height: 1;
-    margin: 0;
+    font-size: 16px;
 }
 
 .menu-toggle {
@@ -436,26 +434,12 @@ footer {
         display: inline-flex;
         justify-content: center;
         align-items: center;
-        width: 100%;
+        padding: 12px 0;
     }
-    
+
     .github-icon i {
-        margin-right: 8px;
-        /* No position manipulation */
-    }
-    
-    .github-icon {
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        gap: 5px;
-        width: 100%;
-    }
-    
-    .github-icon i {
-        margin: 0 8px 0 0;
-        position: relative;
-        top: 0;
+        font-size: 16px;
+        margin: 0;
     }
     
     .hero h2 {
