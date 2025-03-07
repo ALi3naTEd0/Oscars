@@ -215,6 +215,7 @@ jobs:
           sed -i "s|oscars_[0-9]\+\.[0-9]\+\.[0-9]\+-[0-9]\+_amd64\.deb|oscars_${VERSION}_amd64.deb|g" README.md
           sed -i "s|oscars_[0-9]\+\.[0-9]\+\.[0-9]\+-[0-9]\+_x86_64\.rpm|oscars_${VERSION}_x86_64.rpm|g" README.md
           sed -i "s|oscars_[0-9]\+\.[0-9]\+\.[0-9]\+-[0-9]\+\.tar\.gz|oscars_${VERSION}.tar.gz|g" README.md
+          sed -i "s|oscars_[0-9]\+\.[0-9]\+\.[0-9]\+-[0-9]\+\.flatpak|oscars_${VERSION}.flatpak|g" README.md
           
           # Update Android APK patterns - including universal APK
           sed -i "s|oscars_[0-9]\+\.[0-9]\+\.[0-9]\+-[0-9]\+\.apk|oscars_${VERSION}.apk|g" README.md
