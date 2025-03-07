@@ -376,7 +376,7 @@ footer {
     color: var(--primary-color);
 }
 
-copyright {
+.copyright {
     text-align: center;
     font-size: 0.9rem;
     color: var(--text-color);
@@ -421,12 +421,16 @@ copyright {
         padding: 10px 0;
     }
 
-    .github-icon i {
-        margin-right: 10px;
+    .github-icon {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        gap: 5px;
+        width: 100%;
     }
     
-    header .container {
-        flex-wrap: wrap;
+    .github-icon i {
+        margin-right: 5px; /* Reduced from 10px for better alignment */
     }
     
     .hero h2 {
