@@ -44,9 +44,9 @@ Coming soon...
 ## Downloads
 | Windows      | MacOS        | Linux        | Android      | iOS          |
 |--------------|--------------|--------------|--------------|--------------|
-| [Installer](https://github.com/ALi3naTEd0/Oscars/releases/download/v1.1.0-1/oscars_1.1.0-1.exe)    | [DMG](https://github.com/ALi3naTEd0/Oscars/releases/download/v1.1.0-1/oscars_1.1.0-1.dmg)  | [DEB](https://github.com/ALi3naTEd0/Oscars/releases/download/v1.1.0-1/oscars_1.1.0-1_amd64.deb)  | [APK-Universal](https://github.com/ALi3naTEd0/Oscars/releases/download/v1.1.0-1/oscars-1.1.0-1.apk)       | Maybe?       |
-| [Portable](https://github.com/ALi3naTEd0/Oscars/releases/download/v1.1.0-1/oscars-portable.zip)     |              | [RPM](https://github.com/ALi3naTEd0/Oscars/releases/download/v1.1.0-1/oscars_1.1.0-1_x86_64.rpm)  | [APK-arm64-v8a](https://github.com/ALi3naTEd0/Oscars/releases/download/v1.1.0-1/oscars-arm64-v8a-1.1.0-1.apk)             |              |
-|              |              | [TAR](https://github.com/ALi3naTEd0/Oscars/releases/download/v1.1.0-1/oscars-1.1.0-1.tar.gz)  | [APK-armeabi-v7a](https://github.com/ALi3naTEd0/Oscars/releases/download/v1.1.0-1/oscars-armeabi-v7a-1.1.0-1.apk)      |              |
+| [Installer](https://github.com/ALi3naTEd0/Oscars/releases/download/v1.1.0-1/oscars_1.1.0-1.exe)    | [DMG](https://github.com/ALi3naTEd0/Oscars/releases/download/v1.1.0-1/oscars_1.1.0-1.dmg)  | [TAR](https://github.com/ALi3naTEd0/Oscars/releases/download/v1.1.0-1/oscars-1.1.0-1.tar.gz)  | [APK-Universal](https://github.com/ALi3naTEd0/Oscars/releases/download/v1.1.0-1/oscars-1.1.0-1.apk)       | Maybe?       |
+| [Portable](https://github.com/ALi3naTEd0/Oscars/releases/download/v1.1.0-1/oscars-portable.zip)     |              | [DEB](https://github.com/ALi3naTEd0/Oscars/releases/download/v1.1.0-1/oscars_1.1.0-1_amd64.deb)  | [APK-arm64-v8a](https://github.com/ALi3naTEd0/Oscars/releases/download/v1.1.0-1/oscars-arm64-v8a-1.1.0-1.apk)             |              |
+|              |              | [RPM](https://github.com/ALi3naTEd0/Oscars/releases/download/v1.1.0-1/oscars_1.1.0-1_x86_64.rpm)  | [APK-armeabi-v7a](https://github.com/ALi3naTEd0/Oscars/releases/download/v1.1.0-1/oscars-armeabi-v7a-1.1.0-1.apk)      |              |
 |              |              | [Arch](#arch-linux)  | [APK-x86_64](https://github.com/ALi3naTEd0/Oscars/releases/download/v1.1.0-1/oscars-x86_64-1.1.0-1.apk)               |              |
 |              |              |  [Flatpak](https://github.com/ALi3naTEd0/Oscars/releases/download/v1.1.0-1/oscars_1.1.0-1.flatpak)            |                 |                 |
 |              |              |  [AppImage](https://github.com/ALi3naTEd0/Oscars/releases/download/v1.1.0-1/oscars_1.1.0-1.AppImage)               |                | 
@@ -98,17 +98,6 @@ chmod +x oscars_1.1.0-1.AppImage
 ./oscars_1.1.0-1.AppImage
 ```
 
-#### Flatpak
-1. Download the Flatpak package
-2. Install with:
-```bash
-flatpak install --user oscars_1.1.0-1.flatpak
-```
-3. Run:
-```bash
-flatpak run com.ali3nated0.oscars
-```
-
 #### DEB Package (Ubuntu/Debian)
 ```bash
 sudo apt install ./oscars_1.1.0-1_amd64.deb
@@ -119,11 +108,46 @@ sudo apt install ./oscars_1.1.0-1_amd64.deb
 sudo rpm -i oscars_1.1.0-1_x86_64.rpm
 ```
 
+#### Flatpak
+1. Download the Flatpak package
+2. Install with:
+```bash
+flatpak install --user oscars_1.1.0-1.flatpak
+```
+3. Run:
+```bash
+flatpak run com.ali3nated0.oscars
+```
+4. The application will appear in your desktop environment's app launcher with the proper icon and category
+
 #### Arch Linux
 ```bash
 git clone https://github.com/ALi3naTEd0/Oscars.git
 cd Oscars
 makepkg -si
+```
+
+#### TAR Archive (Portable)
+1. Download and extract the TAR archive:
+```bash
+mkdir -p ~/oscars-app
+tar -xzf oscars_1.1.0-1.tar.gz -C ~/oscars-app
+cd ~/oscars-app
+```
+2. Run directly from the extracted directory:
+```bash
+./oscars
+```
+3. Optional - create a desktop shortcut:
+```bash
+mkdir -p ~/.local/bin
+cp oscars ~/.local/bin/
+echo "[Desktop Entry]
+Name=Oscars
+Exec=~/.local/bin/oscars
+Icon=video-display
+Type=Application
+Categories=Entertainment;" > ~/.local/share/applications/oscars.desktop
 ```
 
 ## Technologies Used
