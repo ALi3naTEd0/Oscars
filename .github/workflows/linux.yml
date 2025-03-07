@@ -166,6 +166,20 @@ jobs:
           name: oscars-RPM
           path: oscars_${{ inputs.version || github.event.inputs.version }}_x86_64.rpm
 
+      # Add TAR build
+      - name: Build TAR Package
+        run: |
+          VERSION="${{ inputs.version || github.event.inputs.version }}"
+          # Create minimal package with compiled files
+          cd build/linux/x64/release/bundle
+          tar -czf "../../../../../oscars_${VERSION}_linux.tar.gz" *
+
+      - name: Upload TAR Package
+        uses: actions/upload-artifact@v4
+        with:
+          name: oscars-TAR
+          path: oscars_${{ inputs.version || github.event.inputs.version }}_linux.tar.gz
+
       - name: Update PKGBUILD version
         run: |
           sed -i "s/pkgver=.*/pkgver=${{ inputs.version || github.event.inputs.version }}/" PKGBUILD
