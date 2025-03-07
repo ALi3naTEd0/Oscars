@@ -17,81 +17,205 @@ on:
           - linux
           - windows
           - macos
+      release_type:
+        description: "Release type"
+        required: true
+        type: choice
+        options:
+          - draft
+          - release
+        default: 'draft'
+  push:
+    tags:
+      - 'v*'  # matches any version tag starting with 'v'
+
+permissions:
+  contents: write
 
 jobs:
-  # Platform builds - run in parallel when their condition is met
+  # STEP 1: BUILD PHASE
   android-build:
-    if: ${{ inputs.platforms == 'all' || inputs.platforms == 'android' }}
+    if: |
+      (github.event_name == 'workflow_dispatch' && (inputs.platforms == 'all' || inputs.platforms == 'android')) ||
+      (github.event_name == 'push' && startsWith(github.ref, 'refs/tags/'))
     uses: ALi3naTEd0/Oscars/.github/workflows/android.yml@main
     secrets: inherit
     with:
-      version: ${{ github.event.inputs.version }}
+      version: ${{ github.event_name == 'workflow_dispatch' && inputs.version || github.ref_name }}
 
   linux-build:
-    if: ${{ inputs.platforms == 'all' || inputs.platforms == 'linux' }}
+    if: |
+      (github.event_name == 'workflow_dispatch' && (inputs.platforms == 'all' || inputs.platforms == 'linux')) ||
+      (github.event_name == 'push' && startsWith(github.ref, 'refs/tags/'))
     uses: ALi3naTEd0/Oscars/.github/workflows/linux.yml@main
     secrets: inherit
     with:
-      version: ${{ github.event.inputs.version }}
+      version: ${{ github.event_name == 'workflow_dispatch' && inputs.version || github.ref_name }}
 
   windows-build:
-    if: ${{ inputs.platforms == 'all' || inputs.platforms == 'windows' }}
+    if: |
+      (github.event_name == 'workflow_dispatch' && (inputs.platforms == 'all' || inputs.platforms == 'windows')) ||
+      (github.event_name == 'push' && startsWith(github.ref, 'refs/tags/'))
     uses: ALi3naTEd0/Oscars/.github/workflows/windows.yml@main
     secrets: inherit
     with:
-      version: ${{ github.event.inputs.version }}
+      version: ${{ github.event_name == 'workflow_dispatch' && inputs.version || github.ref_name }}
 
   macos-build:
-    if: ${{ inputs.platforms == 'all' || inputs.platforms == 'macos' }}
+    if: |
+      (github.event_name == 'workflow_dispatch' && (inputs.platforms == 'all' || inputs.platforms == 'macos')) ||
+      (github.event_name == 'push' && startsWith(github.ref, 'refs/tags/'))
     uses: ALi3naTEd0/Oscars/.github/workflows/macos.yml@main
     secrets: inherit
     with:
-      version: ${{ github.event.inputs.version }}
+      version: ${{ github.event_name == 'workflow_dispatch' && inputs.version || github.ref_name }}
 
-  # Release creation - runs after all selected builds are complete
+  # STEP 2: CREATE RELEASE
   create-release:
+    name: Create Release
+    needs: [android-build, linux-build, windows-build, macos-build]
     if: |
       !cancelled() && !failure() &&
       (needs.android-build.result == 'success' || needs.android-build.result == 'skipped') &&
       (needs.linux-build.result == 'success' || needs.linux-build.result == 'skipped') &&
       (needs.windows-build.result == 'success' || needs.windows-build.result == 'skipped') &&
       (needs.macos-build.result == 'success' || needs.macos-build.result == 'skipped')
-    needs: [android-build, linux-build, windows-build, macos-build]
     runs-on: ubuntu-latest
-    permissions:
-      contents: write    # For creating releases
-      issues: write      # For creating release notes
-      discussions: write # For release discussions
+    outputs:
+      version: ${{ steps.get_version.outputs.VERSION }}
+      release_url: ${{ steps.set_release_url.outputs.url }}
     steps:
-      - name: Create dist directory
+      - name: Get Version
+        id: get_version
+        run: |
+          if [ "${{ github.event_name }}" = "workflow_dispatch" ]; then
+            echo "VERSION=${{ github.event.inputs.version }}" >> "$GITHUB_OUTPUT"
+          else
+            echo "VERSION=${GITHUB_REF#refs/tags/v}" >> "$GITHUB_OUTPUT"
+          fi
+          echo "Using version: ${{ github.event_name == 'workflow_dispatch' && github.event.inputs.version || github.ref_name }}"
+
+      - name: Create Dist Directory
         run: mkdir -p dist
 
-      - name: Debug Needs Context
+      - name: List Available Artifacts
         run: |
-          echo "Android build result: ${{ needs.android-build.result }}"
-          echo "Linux build result: ${{ needs.linux-build.result }}"
-          echo "Windows build result: ${{ needs.windows-build.result }}"
-          echo "macOS build result: ${{ needs.macos-build.result }}"
+          echo "Available artifacts:"
+          gh api /repos/${{ github.repository }}/actions/artifacts \
+            --jq '.artifacts[] | {name: .name, size: .size_in_bytes, created: .created_at}'
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-      - uses: actions/download-artifact@v4
+      - name: Download Artifacts
+        uses: actions/download-artifact@v4
         with:
           path: dist
-          pattern: '**/*'
           merge-multiple: true
-          
-      - name: List and organize artifacts
+          pattern: '*'
+
+      - name: Debug Directory Contents
+        run: |
+          echo "Root directory:"
+          ls -la
+          echo "Dist directory content:"
+          ls -la dist/ || echo "Dist directory is empty or doesn't exist"
+
+      - name: Organize Artifacts
         run: |
           echo "Initial dist content:"
           ls -la dist/
+          
+          # Move nested files to root of dist/
           find dist -mindepth 2 -type f -exec mv -t dist/ {} +
           find dist -type d -empty -delete
+          
           echo "Final dist content:"
-          cd dist && ls -lh *
+          ls -lh dist/
 
-      - uses: softprops/action-gh-release@v1
+      - name: Create Release and Upload Assets
+        id: create_release
+        uses: softprops/action-gh-release@v1
         with:
-          token: ${{ secrets.GITHUB_TOKEN }}
-          tag_name: v${{ github.event.inputs.version }}
-          name: Release v${{ github.event.inputs.version }}
-          draft: false
+          tag_name: ${{ github.event_name == 'workflow_dispatch' && format('v{0}', github.event.inputs.version) || github.ref }}
+          name: Release v${{ steps.get_version.outputs.VERSION }}
           files: dist/**/*
+          draft: ${{ github.event.inputs.release_type != 'release' }}
+          prerelease: false
+          fail_on_unmatched_files: false
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Set Release URL
+        id: set_release_url
+        run: |
+          REPO_OWNER="${GITHUB_REPOSITORY_OWNER}"
+          REPO_NAME="${GITHUB_REPOSITORY#*/}"
+          VERSION="${{ steps.get_version.outputs.VERSION }}"
+          TAG_NAME="${{ github.event_name == 'workflow_dispatch' && format('v{0}', github.event.inputs.version) || github.ref_name }}"
+          RELEASE_URL="https://github.com/${REPO_OWNER}/${REPO_NAME}/releases/tag/${TAG_NAME}"
+          echo "Setting release URL to: $RELEASE_URL"
+          echo "url=$RELEASE_URL" >> "$GITHUB_OUTPUT"
+          
+      - name: Debug Release Info
+        run: |
+          echo "Release created successfully:"
+          echo "Version: ${{ steps.get_version.outputs.VERSION }}"
+          echo "URL: ${{ steps.set_release_url.outputs.url }}"
+
+  # STEP 3: UPDATE DOCUMENTATION (Only if release type is 'release')
+  update-docs:
+    name: Update Documentation
+    needs: create-release
+    if: |
+      !cancelled() && !failure() &&
+      github.event_name == 'workflow_dispatch' &&
+      github.event.inputs.release_type == 'release'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Debug Release Type
+        run: |
+          echo "Release type: ${{ github.event.inputs.release_type }}"
+          echo "Skipping documentation update for draft releases"
+          
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          ref: main
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Configure Git
+        run: |
+          git config --global user.name "github-actions[bot]"
+          git config --global user.email "41898282+github-actions[bot]@users.noreply.github.com"
+
+      - name: Update Documentation
+        run: |
+          VERSION="${{ needs.create-release.outputs.version }}"
+          
+          # Update download URLs in README.md (e.g., /download/v1.0.0-1/ -> /download/v1.0.1-1/)
+          sed -i "s|/download/v[0-9]\+\.[0-9]\+\.[0-9]\+-[0-9]\+/|/download/v${VERSION}/|g" README.md
+          
+          # Update filenames in README.md
+          sed -i "s|oscars_[0-9]\+\.[0-9]\+\.[0-9]\+-[0-9]\+\.exe|oscars_${VERSION}.exe|g" README.md
+          
+          # Update file patterns for all formats
+          sed -i "s|oscars_[0-9]\+\.[0-9]\+\.[0-9]\+-[0-9]\+\.dmg|oscars_${VERSION}.dmg|g" README.md
+          sed -i "s|oscars_[0-9]\+\.[0-9]\+\.[0-9]\+-[0-9]\+\.AppImage|oscars_${VERSION}.AppImage|g" README.md
+          sed -i "s|oscars_[0-9]\+\.[0-9]\+\.[0-9]\+-[0-9]\+_amd64\.deb|oscars_${VERSION}_amd64.deb|g" README.md
+          sed -i "s|oscars_[0-9]\+\.[0-9]\+\.[0-9]\+-[0-9]\+_x86_64\.rpm|oscars_${VERSION}_x86_64.rpm|g" README.md
+          sed -i "s|oscars_[0-9]\+\.[0-9]\+\.[0-9]\+-[0-9]\+\.tar\.gz|oscars_${VERSION}.tar.gz|g" README.md
+          
+          # Update Android APK patterns - including universal APK
+          sed -i "s|oscars_[0-9]\+\.[0-9]\+\.[0-9]\+-[0-9]\+\.apk|oscars_${VERSION}.apk|g" README.md
+          sed -i "s|oscars_[0-9]\+\.[0-9]\+\.[0-9]\+-[0-9]\+_arm64-v8a\.apk|oscars_${VERSION}_arm64-v8a.apk|g" README.md
+          sed -i "s|oscars_[0-9]\+\.[0-9]\+\.[0-9]\+-[0-9]\+_armeabi-v7a\.apk|oscars_${VERSION}_armeabi-v7a.apk|g" README.md
+          sed -i "s|oscars_[0-9]\+\.[0-9]\+\.[0-9]\+-[0-9]\+_x86_64\.apk|oscars_${VERSION}_x86_64.apk|g" README.md
+
+          # Update any displayed version text
+          sed -i "s|Version [0-9]\+\.[0-9]\+\.[0-9]\+-[0-9]\+|Version ${VERSION}|g" README.md
+          sed -i "s|\"version\": \"[0-9]\+\.[0-9]\+\.[0-9]\+-[0-9]\+\"|\"version\": \"${VERSION}\"|g" README.md
+          
+          # Commit changes if any
+          git add README.md
+          git commit -m "docs: update version to ${VERSION}" || echo "No changes to commit"
+          git push || echo "No changes to push"
