@@ -172,13 +172,13 @@ jobs:
           VERSION="${{ inputs.version || github.event.inputs.version }}"
           # Create minimal package with compiled files
           cd build/linux/x64/release/bundle
-          tar -czf "../../../../../oscars_${VERSION}_linux.tar.gz" *
+          tar -czf "../../../../../oscars_${VERSION}.tar.gz" *
 
       - name: Upload TAR Package
         uses: actions/upload-artifact@v4
         with:
           name: oscars-TAR
-          path: oscars_${{ inputs.version || github.event.inputs.version }}_linux.tar.gz
+          path: oscars_${{ inputs.version || github.event.inputs.version }}.tar.gz
 
       - name: Update PKGBUILD version
         run: |
