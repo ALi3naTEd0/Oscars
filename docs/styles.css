@@ -83,13 +83,16 @@ nav ul li a:hover {
 }
 
 .github-icon {
-    display: flex;
+    display: inline-flex;
     align-items: center;
-    gap: 5px;
+    justify-content: center;
+    gap: 6px;
 }
 
 .github-icon i {
-    margin-right: 5px;
+    font-size: 16px;  /* Match icon size with text for better alignment */
+    line-height: 1;
+    margin: 0;
 }
 
 .menu-toggle {
@@ -426,8 +429,21 @@ footer {
         width: 100%;
         padding: 12px 0;
         text-align: center;
+        line-height: 1.5;
     }
 
+    nav ul li a.github-icon {
+        display: inline-flex;
+        justify-content: center;
+        align-items: center;
+        width: 100%;
+    }
+    
+    .github-icon i {
+        margin-right: 8px;
+        /* No position manipulation */
+    }
+    
     .github-icon {
         display: flex;
         justify-content: center;
