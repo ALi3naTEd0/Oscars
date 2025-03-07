@@ -413,6 +413,18 @@ copyright {
         margin: 10px 0;
     }
     
+    nav ul li a {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 100%;
+        padding: 10px 0;
+    }
+
+    .github-icon i {
+        margin-right: 10px;
+    }
+    
     header .container {
         flex-wrap: wrap;
     }
