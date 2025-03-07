@@ -203,26 +203,25 @@ jobs:
         run: |
           VERSION="${{ needs.create-release.outputs.version }}"
           
-          # Update download URLs in README.md (e.g., /download/v1.0.0-1/ -> /download/v1.0.1-1/)
+          # Update README.md links
+          # First update the download URLs paths
           sed -i "s|/download/v[0-9]\+\.[0-9]\+\.[0-9]\+-[0-9]\+/|/download/v${VERSION}/|g" README.md
           
-          # Update filenames in README.md
-          sed -i "s|oscars_[0-9]\+\.[0-9]\+\.[0-9]\+-[0-9]\+\.exe|oscars_${VERSION}.exe|g" README.md
+          # Update both filename formats (with _ and with -)
+          sed -i "s|oscars_[0-9]\+\.[0-9]\+\.[0-9]\+-[0-9]\+|oscars_${VERSION}|g" README.md
+          sed -i "s|oscars-[0-9]\+\.[0-9]\+\.[0-9]\+-[0-9]\+|oscars-${VERSION}|g" README.md
           
-          # Update file patterns for all formats
-          sed -i "s|oscars_[0-9]\+\.[0-9]\+\.[0-9]\+-[0-9]\+\.dmg|oscars_${VERSION}.dmg|g" README.md
-          sed -i "s|oscars_[0-9]\+\.[0-9]\+\.[0-9]\+-[0-9]\+\.AppImage|oscars_${VERSION}.AppImage|g" README.md
-          sed -i "s|oscars_[0-9]\+\.[0-9]\+\.[0-9]\+-[0-9]\+_amd64\.deb|oscars_${VERSION}_amd64.deb|g" README.md
-          sed -i "s|oscars_[0-9]\+\.[0-9]\+\.[0-9]\+-[0-9]\+_x86_64\.rpm|oscars_${VERSION}_x86_64.rpm|g" README.md
-          sed -i "s|oscars_[0-9]\+\.[0-9]\+\.[0-9]\+-[0-9]\+\.tar\.gz|oscars_${VERSION}.tar.gz|g" README.md
-          sed -i "s|oscars_[0-9]\+\.[0-9]\+\.[0-9]\+-[0-9]\+\.flatpak|oscars_${VERSION}.flatpak|g" README.md
-          
-          # Update Android APK patterns - including universal APK
-          sed -i "s|oscars_[0-9]\+\.[0-9]\+\.[0-9]\+-[0-9]\+\.apk|oscars_${VERSION}.apk|g" README.md
+          # Update architecture specific Android APKs that use both formats
           sed -i "s|oscars_[0-9]\+\.[0-9]\+\.[0-9]\+-[0-9]\+_arm64-v8a\.apk|oscars_${VERSION}_arm64-v8a.apk|g" README.md
           sed -i "s|oscars_[0-9]\+\.[0-9]\+\.[0-9]\+-[0-9]\+_armeabi-v7a\.apk|oscars_${VERSION}_armeabi-v7a.apk|g" README.md
           sed -i "s|oscars_[0-9]\+\.[0-9]\+\.[0-9]\+-[0-9]\+_x86_64\.apk|oscars_${VERSION}_x86_64.apk|g" README.md
+          sed -i "s|oscars-arm64-v8a-[0-9]\+\.[0-9]\+\.[0-9]\+-[0-9]\+\.apk|oscars_${VERSION}_arm64-v8a.apk|g" README.md
+          sed -i "s|oscars-armeabi-v7a-[0-9]\+\.[0-9]\+\.[0-9]\+-[0-9]\+\.apk|oscars_${VERSION}_armeabi-v7a.apk|g" README.md
+          sed -i "s|oscars-x86_64-[0-9]\+\.[0-9]\+\.[0-9]\+-[0-9]\+\.apk|oscars_${VERSION}_x86_64.apk|g" README.md
 
+          # Final inspection to catch any missed patterns
+          grep -o "oscars[_-][0-9].*" README.md || echo "No remaining version strings found"
+          
           # Update any displayed version text
           sed -i "s|Version [0-9]\+\.[0-9]\+\.[0-9]\+-[0-9]\+|Version ${VERSION}|g" README.md
           sed -i "s|\"version\": \"[0-9]\+\.[0-9]\+\.[0-9]\+-[0-9]\+\"|\"version\": \"${VERSION}\"|g" README.md
