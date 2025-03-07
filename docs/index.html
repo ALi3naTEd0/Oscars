@@ -164,17 +164,14 @@
                     </div>
                 </div>
 
-                <!-- Android button - Updated with direct href link -->
-                <a href="https://github.com/ALi3naTEd0/Oscars/releases/latest/download/oscars_1.2.0-1.apk" 
-                   target="_blank" rel="noopener" 
-                   class="download-button" 
-                   id="android-download-btn">
+                <!-- Android button - Fixed to match RateMe style -->
+                <button onclick="window.open('https://github.com/ALi3naTEd0/Oscars/releases/latest/download/oscars_1.2.0-1.apk', '_blank')" class="download-button">
                     <i class="fab fa-android"></i>
                     <span>
                         <strong>Android</strong>
                         <small style="white-space: nowrap;">Universal APK</small>
                     </span>
-                </a>
+                </button>
             </div>
 
             <!-- Version info section -->
@@ -267,21 +264,21 @@
                     document.getElementById('release-date').textContent = 'Check GitHub';
                 });
 
-            // Update Android button href dynamically
-            const androidButton = document.getElementById('android-download-btn');
-            
+            // Update the Android button with correct link based on version
             fetch('https://api.github.com/repos/ALi3naTEd0/Oscars/releases/latest')
                 .then(response => response.json())
                 .then(data => {
-                    // ...existing fetch code...
-                    
-                    // Update Android link
                     const version = data.tag_name.replace('v', '');
                     const baseUrl = 'https://github.com/ALi3naTEd0/Oscars/releases/download';
-                    androidButton.href = `${baseUrl}/v${version}/oscars_${version}.apk`;
+                    const versionTag = `v${version}`;
+                    
+                    // Update Android button click handler with latest version
+                    document.querySelector('button.download-button:not(.dropdown-toggle)').onclick = function() {
+                        window.open(`${baseUrl}/${versionTag}/oscars_${version}.apk`, '_blank');
+                    };
                 })
                 .catch(error => {
-                    console.error('Error updating Android link:', error);
+                    console.error('Error updating Android button:', error);
                 });
 
             // Function to update download links with the correct version
