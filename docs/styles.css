@@ -88,6 +88,10 @@ nav ul li a:hover {
     gap: 5px;
 }
 
+.github-icon i {
+    margin-right: 5px;
+}
+
 .menu-toggle {
     display: none;
     background: none;
@@ -407,10 +411,13 @@ footer {
     nav ul {
         flex-direction: column;
         padding: 0 20px;
+        width: 100%;
     }
     
     nav ul li {
         margin: 10px 0;
+        width: 100%;
+        text-align: center;
     }
     
     nav ul li a {
@@ -418,7 +425,7 @@ footer {
         align-items: center;
         justify-content: center;
         width: 100%;
-        padding: 10px 0;
+        padding: 12px 0;
     }
 
     .github-icon {
@@ -430,7 +437,8 @@ footer {
     }
     
     .github-icon i {
-        margin-right: 5px; /* Reduced from 10px for better alignment */
+        margin-right: 8px;
+        margin-left: 0;
     }
     
     .hero h2 {
