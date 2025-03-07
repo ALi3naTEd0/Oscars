@@ -19,7 +19,7 @@ env:
   FLUTTER_VERSION: '3.19.3'
 
 jobs:
-  build-linux:
+  build:
     runs-on: ubuntu-22.04
     steps:
       - uses: actions/checkout@v4
