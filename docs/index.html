@@ -4,72 +4,293 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>The 97th Academy Awards</title>
+    <meta name="description" content="Your digital companion for exploring Oscar-nominated movies. Browse nominations, check ratings, and access IMDb pages - all in one place.">
+    <meta name="keywords" content="oscars, academy awards, movie ratings, imdb ratings, movie app">
     <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- Simple direct favicon references -->
     <link rel="icon" href="favicon.ico" type="image/x-icon">
+    <link rel="shortcut icon" href="favicon.ico" type="image/x-icon">
+    
+    <!-- Open Graph meta tags for better sharing -->
+    <meta property="og:title" content="The 97th Academy Awards">
+    <meta property="og:description" content="Your digital companion for exploring Oscar-nominated movies.">
+    <meta property="og:image" content="https://ali3nated0.github.io/Oscars/images/oscars.png">
+    <meta property="og:url" content="https://ali3nated0.github.io/Oscars/">
+    <meta property="og:type" content="website">
 </head>
 <body>
-    <div class="container">
-        <header>
-            <img src="oscars.png" alt="Oscars Logo" class="logo">
-            <h1>The 97th Academy Awards</h1>
-            <div class="badges">
-                <a href="https://github.com/ALi3naTEd0/Oscars/releases/latest">
-                    <img src="https://img.shields.io/github/v/release/ALi3naTEd0/Oscars" alt="Version">
-                </a>
-                <img src="https://img.shields.io/badge/license-GPL--3.0-green" alt="License">
-                <a href="https://github.com/ALi3naTEd0/Oscars/releases">
-                    <img src="https://img.shields.io/github/downloads/ALi3naTEd0/Oscars/total" alt="Downloads">
-                </a>
+    <header>
+        <div class="container">
+            <div class="logo">
+                <img src="images/oscars.png" alt="Oscars Logo" width="50" height="50">
+                <h1>The 97th Academy Awards</h1>
             </div>
-        </header>
+            <button class="menu-toggle" aria-label="Toggle navigation menu">
+                <i class="fas fa-bars"></i>
+            </button>
+            <nav>
+                <ul>
+                    <li><a href="#features">Features</a></li>
+                    <li><a href="#platforms">Download</a></li>
+                    <li><a href="https://github.com/ALi3naTEd0/Oscars" class="github-icon" target="_blank" rel="noopener">
+                        <i class="fab fa-github"></i> GitHub
+                    </a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
 
-        <section class="hero">
+    <section class="hero">
+        <div class="container">
             <h2>Your digital companion for exploring Oscar nominated movies</h2>
             <p>Browse nominations, check ratings, and access IMDb pages - all in one place.</p>
             <div class="buttons">
                 <a href="https://github.com/ALi3naTEd0/Oscars/releases/latest" class="btn-primary">Download Now</a>
                 <a href="https://github.com/ALi3naTEd0/Oscars" class="btn-secondary">View Source</a>
             </div>
-        </section>
+        </div>
+    </section>
 
-        <section class="features">
+    <section id="features" class="features">
+        <div class="container">
             <h2>Features</h2>
-            <ul>
-                <li>🎬 Browse Oscar nominated movies</li>
-                <li>⭐ View IMDb ratings and details</li>
-                <li>🔗 Direct links to IMDb pages</li>
-                <li>🎲 Random movie selection</li>
-                <li>🖼️ Movie poster visualization</li>
-                <li>💾 Cached images for faster loading</li>
-            </ul>
-        </section>
-
-        <section class="platforms">
-            <h2>Available For</h2>
-            <div class="platform-grid">
-                <div class="platform">
-                    <h3>Windows</h3>
-                    <a href="https://github.com/ALi3naTEd0/Oscars/releases/latest">Download</a>
+            <div class="feature-grid">
+                <div class="feature-card">
+                    <i class="fas fa-film"></i>
+                    <h3>Browse Nominations</h3>
+                    <p>Explore Oscar-nominated movies across all categories</p>
                 </div>
-                <div class="platform">
-                    <h3>macOS</h3>
-                    <a href="https://github.com/ALi3naTEd0/Oscars/releases/latest">Download</a>
+                <div class="feature-card">
+                    <i class="fas fa-star"></i>
+                    <h3>IMDb Ratings</h3>
+                    <p>Check official IMDb ratings for every movie</p>
                 </div>
-                <div class="platform">
-                    <h3>Linux</h3>
-                    <a href="https://github.com/ALi3naTEd0/Oscars/releases/latest">Download</a>
+                <div class="feature-card">
+                    <i class="fas fa-link"></i>
+                    <h3>Direct Links</h3>
+                    <p>Quick access to IMDb pages for more information</p>
                 </div>
-                <div class="platform">
-                    <h3>Android</h3>
-                    <a href="https://github.com/ALi3naTEd0/Oscars/releases/latest">Download</a>
+                <div class="feature-card">
+                    <i class="fas fa-random"></i>
+                    <h3>Random Selection</h3>
+                    <p>Discover movies with the random selection feature</p>
+                </div>
+                <div class="feature-card">
+                    <i class="fas fa-images"></i>
+                    <h3>Movie Posters</h3>
+                    <p>View high-quality movie poster images</p>
+                </div>
+                <div class="feature-card">
+                    <i class="fas fa-save"></i>
+                    <h3>Cached Images</h3>
+                    <p>Faster loading with image caching technology</p>
                 </div>
             </div>
-        </section>
+        </div>
+    </section>
 
-        <footer>
-            <p>Created with ♥ by <a href="https://github.com/ALi3naTEd0">X</a></p>
-            <p>Licensed under <a href="https://github.com/ALi3naTEd0/Oscars/blob/main/LICENSE" class="license-link">GPL-3.0</a></p>
-        </footer>
-    </div>
+    <section id="platforms" class="platforms">
+        <div class="container">
+            <h2>Available For</h2>
+            <div class="download-options">
+                <!-- Windows dropdown -->
+                <div class="download-dropdown">
+                    <button class="download-button dropdown-toggle">
+                        <i class="fab fa-windows"></i>
+                        <span>
+                            <strong>Windows</strong>
+                            <small>Select installer</small>
+                        </span>
+                        <i class="fas fa-chevron-down"></i>
+                    </button>
+                    <div class="dropdown-content">
+                        <a href="https://github.com/ALi3naTEd0/Oscars/releases/latest/download/oscars_1.1.0-1.exe" target="_blank" rel="noopener">
+                            Setup Installer
+                        </a>
+                        <a href="https://github.com/ALi3naTEd0/Oscars/releases/latest/download/oscars-portable.zip" target="_blank" rel="noopener">
+                            Portable ZIP
+                        </a>
+                    </div>
+                </div>
+
+                <!-- macOS button -->
+                <div class="download-dropdown">
+                    <button class="download-button dropdown-toggle">
+                        <i class="fab fa-apple"></i>
+                        <span>
+                            <strong>macOS</strong>
+                            <small>Universal</small>
+                        </span>
+                        <i class="fas fa-chevron-down"></i>
+                    </button>
+                    <div class="dropdown-content">
+                        <a href="https://github.com/ALi3naTEd0/Oscars/releases/latest/download/oscars_1.1.0-1.dmg" target="_blank" rel="noopener">
+                            DMG Installer
+                        </a>
+                    </div>
+                </div>
+
+                <!-- Linux dropdown -->
+                <div class="download-dropdown">
+                    <button class="download-button dropdown-toggle">
+                        <i class="fab fa-linux"></i>
+                        <span>
+                            <strong>Linux</strong>
+                            <small>Select format</small>
+                        </span>
+                        <i class="fas fa-chevron-down"></i>
+                    </button>
+                    <div class="dropdown-content">
+                        <a href="https://github.com/ALi3naTEd0/Oscars/releases/latest/download/oscars_1.1.0-1.tar.gz" target="_blank" rel="noopener">
+                            TAR Archive
+                        </a>
+                        <a href="https://github.com/ALi3naTEd0/Oscars/releases/latest/download/oscars_1.1.0-1.AppImage" target="_blank" rel="noopener">
+                            AppImage
+                        </a>
+                        <a href="https://github.com/ALi3naTEd0/Oscars/releases/latest/download/oscars_1.1.0-1_amd64.deb" target="_blank" rel="noopener">
+                            Debian/Ubuntu Package
+                        </a>
+                        <a href="https://github.com/ALi3naTEd0/Oscars/releases/latest/download/oscars_1.1.0-1_x86_64.rpm" target="_blank" rel="noopener">
+                            RPM Package
+                        </a>
+                        <a href="https://github.com/ALi3naTEd0/Oscars/releases/latest/download/oscars_1.1.0-1.flatpak" target="_blank" rel="noopener">
+                            Flatpak Package
+                        </a>
+                        <a href="https://github.com/ALi3naTEd0/Oscars#arch-linux" target="_blank" rel="noopener">
+                            Arch Linux Installation
+                        </a>
+                    </div>
+                </div>
+
+                <!-- Android button -->
+                <button onclick="window.open('https://github.com/ALi3naTEd0/Oscars/releases/latest/download/oscars_1.1.0-1.apk', '_blank')" class="download-button">
+                    <i class="fab fa-android"></i>
+                    <span>
+                        <strong>Android</strong>
+                        <small style="white-space: nowrap;">Universal APK</small>
+                    </span>
+                </button>
+            </div>
+
+            <!-- Version info section -->
+            <div class="version-info">
+                <p>Latest version: <span id="current-version">Loading...</span></p>
+                <p>Latest release: <span id="release-date">Loading...</span></p>
+                <a href="https://github.com/ALi3naTEd0/Oscars/releases" class="version-link" target="_blank" rel="noopener">View all releases</a>
+            </div>
+        </div>
+    </section>
+
+    <footer>
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-logo">
+                    <img src="images/oscars.png" alt="Oscars Logo" width="50">
+                    <p>The 97th Academy Awards</p>
+                </div>
+                <div class="footer-links">
+                    <a href="https://github.com/ALi3naTEd0/Oscars" target="_blank" rel="noopener">GitHub</a>
+                    <a href="https://github.com/ALi3naTEd0/Oscars/issues" target="_blank" rel="noopener">Report Issue</a>
+                    <a href="https://github.com/ALi3naTEd0/Oscars/blob/main/LICENSE" target="_blank" rel="noopener">License</a>
+                </div>
+            </div>
+            <p class="copyright">&copy; 2024 ALi3naTEd0. Licensed under GPL-3.0.</p>
+        </div>
+    </footer>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Dropdowns functionality
+            const dropdowns = document.querySelectorAll('.dropdown-toggle');
+            dropdowns.forEach(dropdown => {
+                dropdown.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    const content = this.nextElementSibling;
+                    document.querySelectorAll('.dropdown-content').forEach(item => {
+                        if (item !== content) item.classList.remove('show');
+                    });
+                    content.classList.toggle('show');
+                });
+            });
+
+            // Close dropdowns when clicking outside
+            window.addEventListener('click', function(e) {
+                if (!e.target.matches('.dropdown-toggle') && !e.target.closest('.dropdown-toggle')) {
+                    document.querySelectorAll('.dropdown-content').forEach(item => {
+                        item.classList.remove('show');
+                    });
+                }
+            });
+
+            // Add mobile menu toggle functionality
+            const menuToggle = document.querySelector('.menu-toggle');
+            const nav = document.querySelector('nav');
+            
+            menuToggle.addEventListener('click', () => {
+                nav.classList.toggle('show');
+                menuToggle.classList.toggle('active');
+            });
+
+            // Close mobile menu when clicking links
+            const navLinks = nav.querySelectorAll('a');
+            navLinks.forEach(link => {
+                link.addEventListener('click', () => {
+                    nav.classList.remove('show');
+                    menuToggle.classList.remove('active');
+                });
+            });
+
+            // Fetch latest release info
+            fetch('https://api.github.com/repos/ALi3naTEd0/Oscars/releases/latest')
+                .then(response => response.json())
+                .then(data => {
+                    const version = data.tag_name.replace('v', '');
+                    // Update version display
+                    document.getElementById('current-version').textContent = version;
+                    
+                    // Format date
+                    const releaseDate = new Date(data.published_at);
+                    const options = { year: 'numeric', month: 'long', day: 'numeric' };
+                    document.getElementById('release-date').textContent = releaseDate.toLocaleDateString('en-US', options);
+
+                    // Update download links with the correct version
+                    updateDownloadLinks(version);
+                })
+                .catch(error => {
+                    console.error('Error fetching release info:', error);
+                    document.getElementById('current-version').textContent = '1.1.0-1'; // Fallback version
+                    document.getElementById('release-date').textContent = 'Check GitHub';
+                });
+
+            // Function to update download links with the correct version
+            function updateDownloadLinks(version) {
+                const baseUrl = 'https://github.com/ALi3naTEd0/Oscars/releases/download';
+                const versionTag = `v${version}`;
+                
+                // Update all download links
+                document.querySelectorAll('.dropdown-content a').forEach(link => {
+                    if (link.href.includes('github.com') && !link.href.includes('#arch-linux')) {
+                        // Extract the filename part from the current URL
+                        const urlParts = link.href.split('/');
+                        const filename = urlParts[urlParts.length - 1];
+                        
+                        // Replace the version number in the filename
+                        const newFilename = filename.replace(/[0-9]+\.[0-9]+\.[0-9]+-[0-9]+/, version);
+                        
+                        // Construct the new URL
+                        link.href = `${baseUrl}/${versionTag}/${newFilename}`;
+                    }
+                });
+                
+                // Update the Android direct download button
+                const androidButton = document.querySelector('button.download-button:not(.dropdown-toggle)');
+                if (androidButton) {
+                    androidButton.onclick = () => window.open(`${baseUrl}/${versionTag}/oscars_${version}.apk`, '_blank');
+                }
+            }
+        });
+    </script>
 </body>
 </html>
