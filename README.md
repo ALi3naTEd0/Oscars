@@ -46,8 +46,10 @@ Coming soon...
 |--------------|--------------|--------------|--------------|--------------|
 | [Installer](https://github.com/ALi3naTEd0/Oscars/releases/download/v1.1.0-1/oscars_1.1.0-1.exe)    | [DMG](https://github.com/ALi3naTEd0/Oscars/releases/download/v1.1.0-1/oscars_1.1.0-1.dmg)  | [DEB](https://github.com/ALi3naTEd0/Oscars/releases/download/v1.1.0-1/oscars_1.1.0-1_amd64.deb)  | [APK-Universal](https://github.com/ALi3naTEd0/Oscars/releases/download/v1.1.0-1/oscars-1.1.0-1.apk)       | Maybe?       |
 | [Portable](https://github.com/ALi3naTEd0/Oscars/releases/download/v1.1.0-1/oscars-portable.zip)     |              | [RPM](https://github.com/ALi3naTEd0/Oscars/releases/download/v1.1.0-1/oscars_1.1.0-1_x86_64.rpm)  | [APK-arm64-v8a](https://github.com/ALi3naTEd0/Oscars/releases/download/v1.1.0-1/oscars-arm64-v8a-1.1.0-1.apk)             |              |
-|              |              | [Arch](#arch-linux)  | [APK-armeabi-v7a](https://github.com/ALi3naTEd0/Oscars/releases/download/v1.1.0-1/oscars-armeabi-v7a-1.1.0-1.apk)      |              |
-|              |              | [AppImage](https://github.com/ALi3naTEd0/Oscars/releases/download/v1.1.0-1/oscars_1.1.0-1.AppImage)  | [APK-x86_64](https://github.com/ALi3naTEd0/Oscars/releases/download/v1.1.0-1/oscars-x86_64-1.1.0-1.apk)               |              |
+|              |              | [TAR](https://github.com/ALi3naTEd0/Oscars/releases/download/v1.1.0-1/oscars-1.1.0-1.tar.gz)  | [APK-armeabi-v7a](https://github.com/ALi3naTEd0/Oscars/releases/download/v1.1.0-1/oscars-armeabi-v7a-1.1.0-1.apk)      |              |
+|              |              | [Arch](#arch-linux)  | [APK-x86_64](https://github.com/ALi3naTEd0/Oscars/releases/download/v1.1.0-1/oscars-x86_64-1.1.0-1.apk)               |              |
+|              |              |  [Flatpak](https://github.com/ALi3naTEd0/Oscars/releases/download/v1.1.0-1/oscars_1.1.0-1.flatpak)            |                 |                 |
+|              |              |  [AppImage](https://github.com/ALi3naTEd0/Oscars/releases/download/v1.1.0-1/oscars_1.1.0-1.AppImage)               |                | 
 
 ## Installation
 
@@ -94,6 +96,17 @@ chmod +x oscars_1.1.0-1.AppImage
 3. Run:
 ```bash
 ./oscars_1.1.0-1.AppImage
+```
+
+#### Flatpak
+1. Download the Flatpak package
+2. Install with:
+```bash
+flatpak install --user oscars_1.1.0-1.flatpak
+```
+3. Run:
+```bash
+flatpak run com.ali3nated0.oscars
 ```
 
 #### DEB Package (Ubuntu/Debian)
