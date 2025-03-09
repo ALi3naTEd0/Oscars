@@ -1,7 +1,7 @@
 # Maintainer: ALi3naTEd0
 pkgname=oscars
-pkgver=1.3.0
-pkgrel=2
+pkgver=1.3.1
+pkgrel=1
 pkgdesc="The 97th Academy Awards"
 arch=('x86_64')
 url="https://github.com/ALi3naTEd0/Oscars"
