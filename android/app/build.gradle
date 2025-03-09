@@ -12,13 +12,13 @@ if (keystorePropertiesFile.exists()) {
 }
 
 android {
-    namespace = "com.example.oscars"
+    namespace = "com.ali3nated0.oscars"
     compileSdkVersion flutter.compileSdkVersion
     ndkVersion "25.1.8937393"
 
     compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_17
-        targetCompatibility = JavaVersion.VERSION_17
+        sourceCompatibility = JavaVersion.VERSION_1_8
+        targetCompatibility = JavaVersion.VERSION_1_8
     }
 
     kotlinOptions {
@@ -26,27 +26,35 @@ android {
     }
 
     defaultConfig {
-        applicationId "com.example.oscars"
-        minSdkVersion 21
+        applicationId "com.ali3nated0.oscars"
+        minSdkVersion 21  // Updated from flutter.minSdkVersion
         targetSdkVersion 33
-        versionCode 5       // Incrementado de 4
-        versionName "1.3.0-1" // Actualizado de 1.2.0-1
+        versionCode 1
+        versionName "1.0"
     }
 
     signingConfigs {
         release {
-            keyAlias keystoreProperties['keyAlias']
-            keyPassword keystoreProperties['keyPassword']
-            storeFile keystoreProperties['storeFile'] ? file(keystoreProperties['storeFile']) : null
-            storePassword keystoreProperties['storePassword']
+            if (System.getenv()["CI"]) { // CI=true is exported by GitHub Actions
+                storeFile file("upload-keystore.jks")
+                storePassword System.getenv()["KEYSTORE_PASSWORD"]
+                keyAlias System.getenv()["KEY_ALIAS"]
+                keyPassword System.getenv()["KEY_PASSWORD"]
+            } else {
+                keyAlias keystoreProperties['keyAlias']
+                keyPassword keystoreProperties['keyPassword']
+                storeFile keystoreProperties['storeFile'] ? file(keystoreProperties['storeFile']) : null
+                storePassword keystoreProperties['storePassword']
+            }
         }
     }
 
     buildTypes {
         release {
-            signingConfig signingConfigs.release  // Using release signing configuration
-            minifyEnabled false
-            shrinkResources false
+            signingConfig signingConfigs.release
+            minifyEnabled true
+            shrinkResources true
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
 }
