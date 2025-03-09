@@ -44,19 +44,19 @@ Coming soon...
 ## Downloads
 | Windows      | MacOS        | Linux        | Android      | iOS          |
 |--------------|--------------|--------------|--------------|--------------|
-| [Installer](https://github.com/ALi3naTEd0/Oscars/releases/download/v1.3.0-1/oscars_1.3.0-1.exe)    | [DMG](https://github.com/ALi3naTEd0/Oscars/releases/download/v1.3.0-1/oscars_1.3.0-1.dmg)  | [TAR](https://github.com/ALi3naTEd0/Oscars/releases/download/v1.3.0-1/oscars_1.3.0-1.tar.gz)  | [APK-Universal](https://github.com/ALi3naTEd0/Oscars/releases/download/v1.3.0-1/oscars_1.3.0-1.apk)       | Maybe?       |
-| [Portable](https://github.com/ALi3naTEd0/Oscars/releases/download/v1.3.0-1/oscars_1.3.0-1_portable.zip)     |              | [DEB](https://github.com/ALi3naTEd0/Oscars/releases/download/v1.3.0-1/oscars_1.3.0-1_amd64.deb)  | [APK-arm64-v8a](https://github.com/ALi3naTEd0/Oscars/releases/download/v1.3.0-1/oscars_1.3.0-1_arm64-v8a.apk)             |              |
-|              |              | [RPM](https://github.com/ALi3naTEd0/Oscars/releases/download/v1.3.0-1/oscars_1.3.0-1_x86_64.rpm)  | [APK-armeabi-v7a](https://github.com/ALi3naTEd0/Oscars/releases/download/v1.3.0-1/oscars_1.3.0-1_armeabi-v7a.apk)      |              |
-|              |              | [Arch](#arch-linux)  | [APK-x86_64](https://github.com/ALi3naTEd0/Oscars/releases/download/v1.3.0-1/oscars_1.3.0-1_x86_64.apk)               |              |
-|              |              |  [Flatpak](https://github.com/ALi3naTEd0/Oscars/releases/download/v1.3.0-1/oscars_1.3.0-1.flatpak)            |                 |                 |
-|              |              |  [AppImage](https://github.com/ALi3naTEd0/Oscars/releases/download/v1.3.0-1/oscars_1.3.0-1.AppImage)               |                | 
+| [Installer](https://github.com/ALi3naTEd0/Oscars/releases/download/v1.3.1-1/oscars_1.3.1-1.exe)    | [DMG](https://github.com/ALi3naTEd0/Oscars/releases/download/v1.3.1-1/oscars_1.3.1-1.dmg)  | [TAR](https://github.com/ALi3naTEd0/Oscars/releases/download/v1.3.1-1/oscars_1.3.1-1.tar.gz)  | [APK-Universal](https://github.com/ALi3naTEd0/Oscars/releases/download/v1.3.1-1/oscars_1.3.1-1.apk)       | Maybe?       |
+| [Portable](https://github.com/ALi3naTEd0/Oscars/releases/download/v1.3.1-1/oscars_1.3.1-1_portable.zip)     |              | [DEB](https://github.com/ALi3naTEd0/Oscars/releases/download/v1.3.1-1/oscars_1.3.1-1_amd64.deb)  | [APK-arm64-v8a](https://github.com/ALi3naTEd0/Oscars/releases/download/v1.3.1-1/oscars_1.3.1-1_arm64-v8a.apk)             |              |
+|              |              | [RPM](https://github.com/ALi3naTEd0/Oscars/releases/download/v1.3.1-1/oscars_1.3.1-1_x86_64.rpm)  | [APK-armeabi-v7a](https://github.com/ALi3naTEd0/Oscars/releases/download/v1.3.1-1/oscars_1.3.1-1_armeabi-v7a.apk)      |              |
+|              |              | [Arch](#arch-linux)  | [APK-x86_64](https://github.com/ALi3naTEd0/Oscars/releases/download/v1.3.1-1/oscars_1.3.1-1_x86_64.apk)               |              |
+|              |              |  [Flatpak](https://github.com/ALi3naTEd0/Oscars/releases/download/v1.3.1-1/oscars_1.3.1-1.flatpak)            |                 |                 |
+|              |              |  [AppImage](https://github.com/ALi3naTEd0/Oscars/releases/download/v1.3.1-1/oscars_1.3.1-1.AppImage)               |                | 
 
 ## Installation
 
 ### Windows
-1. Installer: Run `oscars_1.3.0-1.exe` and follow the installation wizard
+1. Installer: Run `oscars_1.3.1-1.exe` and follow the installation wizard
    - Or -
-2. Portable: Extract `oscars-portable.zip` and run `oscars.exe`
+2. Portable: Extract `oscars_1.3.1-1_portable.zip` and run `oscars.exe`
 
 ### Android
 1. Choose the correct version:
@@ -72,7 +72,7 @@ Coming soon...
    - Install the new version
 
 ### macOS
-1. Download `oscars_1.3.0-1.dmg`
+1. Download `oscars_1.3.1-1.dmg`
 2. Open the DMG file
 3. Drag Oscars to Applications
 4. First launch:
@@ -92,28 +92,28 @@ xattr -cr /Applications/Oscars.app
 1. Download the AppImage
 2. Make executable:
 ```bash
-chmod +x oscars_1.3.0-1.AppImage
+chmod +x oscars_1.3.1-1.AppImage
 ```
 3. Run:
 ```bash
-./oscars_1.3.0-1.AppImage
+./oscars_1.3.1-1.AppImage
 ```
 
 #### DEB Package (Ubuntu/Debian)
 ```bash
-sudo apt install ./oscars_1.3.0-1_amd64.deb
+sudo apt install ./oscars_1.3.1-1_amd64.deb
 ```
 
 #### RPM Package (Fedora/RHEL)
 ```bash
-sudo rpm -i oscars_1.3.0-1_x86_64.rpm
+sudo rpm -i oscars_1.3.1-1_x86_64.rpm
 ```
 
 #### Flatpak
 1. Download the Flatpak package
 2. Install with:
 ```bash
-flatpak install --user oscars_1.3.0-1.flatpak
+flatpak install --user oscars_1.3.1-1.flatpak
 ```
 3. Run:
 ```bash
@@ -132,7 +132,7 @@ makepkg -si
 1. Download and extract the TAR archive:
 ```bash
 mkdir -p ~/oscars-app
-tar -xzf oscars_1.3.0-1.tar.gz -C ~/oscars-app
+tar -xzf oscars_1.3.1-1.tar.gz -C ~/oscars-app
 cd ~/oscars-app
 ```
 2. Run directly from the extracted directory:
