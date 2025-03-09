@@ -81,15 +81,15 @@ jobs:
           New-Item -ItemType Directory -Path $appDir
           Copy-Item "build\windows\x64\runner\Release\*" -Destination "$appDir\" -Recurse
           
-          # Create ZIP preserving directory structure
-          Compress-Archive -Path "$appDir" -DestinationPath "oscars-portable.zip"
+          # Create ZIP with new naming format
+          Compress-Archive -Path "$appDir" -DestinationPath "oscars_${{ inputs.version || github.event.inputs.version }}_portable.zip"
 
       - name: Upload Portable Package
         if: inputs.upload_url == ''
         uses: actions/upload-artifact@v4
         with:
-          name: oscars-portable
-          path: oscars-portable.zip
+          name: oscars-Portable
+          path: oscars_${{ inputs.version || github.event.inputs.version }}_portable.zip
 
       - name: Upload Portable Release Asset
         if: inputs.upload_url != ''
@@ -98,8 +98,8 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           upload_url: ${{ inputs.upload_url }}
-          asset_path: oscars-portable.zip
-          asset_name: oscars-portable.zip
+          asset_path: oscars_${{ inputs.version || github.event.inputs.version }}_portable.zip
+          asset_name: oscars_${{ inputs.version || github.event.inputs.version }}_portable.zip
           asset_content_type: application/zip
 
       # Create and upload installer version
