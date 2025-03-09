@@ -3,7 +3,7 @@
 # The 97th Academy Awards
 
 ![Version](https://img.shields.io/github/v/release/ALi3naTEd0/Oscars)
-![License](https://img.shields.io/badge/license-GPL--3.0-green)
+![License](https://img.shields.io/badge/license-MIT-green)
 ![Downloads](https://img.shields.io/github/downloads/ALi3naTEd0/Oscars/total)
 ![Last Commit](https://img.shields.io/github/last-commit/ALi3naTEd0/oscars)
 ![Stars](https://img.shields.io/github/stars/ALi3naTEd0/oscars)
@@ -199,7 +199,7 @@ flutter run
 - Watch status tracking
 
 ## License
-This project is licensed under the GNU General Public License v3.0 (GPL-3.0). See the [LICENSE](LICENSE) file for details.
+This project is licensed under the MIT License. See the [LICENSE](LICENSE) file for details.
 
 ## Contact
 [Discord](https://discordapp.com/channels/@me/343448030986371072/)
