@@ -5,7 +5,7 @@ pkgrel=1
 pkgdesc="The 97th Academy Awards"
 arch=('x86_64')
 url="https://github.com/ALi3naTEd0/Oscars"
-license=('GPL3')
+license=('MIT')
 depends=(
     'gtk3'
     'libsecret'

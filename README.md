@@ -11,18 +11,18 @@
 [Discord](https://discordapp.com/channels/@me/343448030986371072/)
 
 ## Table of Contents
-- [Introduction](#introduction)
-- [Features](#features)
-- [Screenshots](#screenshots)
-- [Downloads](#downloads)
-- [Installation](#installation)
-- [Technologies Used](#technologies-used)
-- [Getting Started](#getting-started)
-- [Project Architecture](#project-architecture)
-- [Development](#development)
-- [Changelog](#changelog)
-- [License](#license)
-- [Contact](#contact)
+[Introduction](#introduction) • 
+[Features](#features) • 
+[Screenshots](#screenshots) • 
+[Downloads](#downloads) • 
+[Installation](#installation) • 
+[Technologies](#technologies-used) • 
+[Getting Started](#getting-started) • 
+[Architecture](#project-architecture) • 
+[Development](#development) • 
+[Changelog](#changelog) • 
+[License](#license) • 
+[Contact](#contact)
 
 ## Introduction
 
@@ -66,9 +66,13 @@ Coming soon...
    - APK-x86_64: Some tablets/ChromeOS
 
 2. Installation steps:
-   - Download your chosen APK
-   - Enable "Install from unknown sources" if prompted
-   - Open the APK and follow installation steps
+   - If upgrading from version with package name `com.example.oscars`:
+     1. Uninstall previous version first
+     2. Install new version with package name `com.ali3nated0.oscars`
+   - Otherwise:
+     1. Download your chosen APK
+     2. Enable "Install from unknown sources" if prompted
+     3. Open the APK and follow installation steps
 
 ### macOS
 1. Download `oscars_1.3.0-1.dmg`
