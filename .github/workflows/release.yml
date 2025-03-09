@@ -219,6 +219,10 @@ jobs:
           sed -i "s|oscars-armeabi-v7a-[0-9]\+\.[0-9]\+\.[0-9]\+-[0-9]\+\.apk|oscars_${VERSION}_armeabi-v7a.apk|g" README.md
           sed -i "s|oscars-x86_64-[0-9]\+\.[0-9]\+\.[0-9]\+-[0-9]\+\.apk|oscars_${VERSION}_x86_64.apk|g" README.md
 
+          # Update both filename formats (with _ and with -) for windows portable
+          sed -i "s|oscars-portable\.zip|oscars_${VERSION}_portable.zip|g" README.md
+          sed -i "s|oscars_[0-9]\+\.[0-9]\+\.[0-9]\+-[0-9]\+_portable\.zip|oscars_${VERSION}_portable.zip|g" README.md
+
           # Final inspection to catch any missed patterns
           grep -o "oscars[_-][0-9].*" README.md || echo "No remaining version strings found"
           
@@ -250,6 +254,9 @@ jobs:
             # Update Android APK pattern
             sed -i "s|oscars_[0-9]\+\.[0-9]\+\.[0-9]\+-[0-9]\+\.apk|oscars_${VERSION}.apk|g" index.html
             
+            # Update Windows portable link format
+            sed -i "s|oscars-portable\.zip|oscars_${VERSION}_portable.zip|g" index.html
+
             # Update Android button click handler
             sed -i "s|window.open('https://github.com/ALi3naTEd0/Oscars/releases/latest/download/oscars_[0-9]\+\.[0-9]\+\.[0-9]\+-[0-9]\+\.apk'|window.open('https://github.com/ALi3naTEd0/Oscars/releases/latest/download/oscars_${VERSION}.apk'|g" index.html
             
