@@ -65,14 +65,11 @@ Coming soon...
    - APK-armeabi-v7a: Older phones
    - APK-x86_64: Some tablets/ChromeOS
 
-2. Installation steps:
-   - If upgrading from version with package name `com.example.oscars`:
-     1. Uninstall previous version first
-     2. Install new version with package name `com.ali3nated0.oscars`
-   - Otherwise:
-     1. Download your chosen APK
-     2. Enable "Install from unknown sources" if prompted
-     3. Open the APK and follow installation steps
+2. Installation:
+   - If updating from a previous version: Uninstall it first
+   - Download your chosen APK
+   - Enable "Install from unknown sources" if prompted (in Settings > Security)
+   - Install the new version
 
 ### macOS
 1. Download `oscars_1.3.0-1.dmg`
