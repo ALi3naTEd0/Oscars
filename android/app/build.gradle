@@ -1,14 +1,20 @@
 plugins {
     id "com.android.application"
     id "kotlin-android"
-    // The Flutter Gradle Plugin must be applied after the Android and Kotlin Gradle plugins.
     id "dev.flutter.flutter-gradle-plugin"
 }
 
-def keystoreProperties = new Properties()
 def keystorePropertiesFile = rootProject.file('key.properties')
+def keystoreProperties = new Properties()
 if (keystorePropertiesFile.exists()) {
-    keystoreProperties.load(new FileInputStream(keystorePropertiesFile))
+    try {
+        keystoreProperties.load(new FileInputStream(keystorePropertiesFile))
+        println "Keystore properties loaded successfully"
+    } catch (Exception e) {
+        println "Error loading key.properties: ${e.message}"
+    }
+} else {
+    println "Warning: key.properties file not found!"
 }
 
 android {
@@ -17,8 +23,8 @@ android {
     ndkVersion "25.1.8937393"
 
     compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_1_8
-        targetCompatibility = JavaVersion.VERSION_1_8
+        sourceCompatibility = JavaVersion.VERSION_17
+        targetCompatibility = JavaVersion.VERSION_17
     }
 
     kotlinOptions {
@@ -26,24 +32,23 @@ android {
     }
 
     defaultConfig {
+        // Ensure package name matches manifest
         applicationId "com.ali3nated0.oscars"
-        minSdkVersion 21  // Updated from flutter.minSdkVersion
-        targetSdkVersion 33
-        versionCode 1
-        versionName "1.0"
+        minSdkVersion 21 // Changed from flutter.minSdkVersion to 21 for better compatibility
+        targetSdkVersion flutter.targetSdkVersion
+        versionCode 3  // Increment from 2 to 3 for version 1.3.1-1
+        versionName "1.3.1-1"
+        
+        // Set app name
+        resValue "string", "app_name", "Oscars"
     }
 
     signingConfigs {
-        release {
-            if (System.getenv()["CI"]) { // CI=true is exported by GitHub Actions
-                storeFile file("upload-keystore.jks")
-                storePassword System.getenv()["KEYSTORE_PASSWORD"]
-                keyAlias System.getenv()["KEY_ALIAS"]
-                keyPassword System.getenv()["KEY_PASSWORD"]
-            } else {
+        if (keystorePropertiesFile.exists()) {
+            release {
                 keyAlias keystoreProperties['keyAlias']
                 keyPassword keystoreProperties['keyPassword']
-                storeFile keystoreProperties['storeFile'] ? file(keystoreProperties['storeFile']) : null
+                storeFile file(keystoreProperties['storeFile'])
                 storePassword keystoreProperties['storePassword']
             }
         }
@@ -51,10 +56,13 @@ android {
 
     buildTypes {
         release {
-            signingConfig signingConfigs.release
-            minifyEnabled true
-            shrinkResources true
-            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            if (keystorePropertiesFile.exists()) {
+                signingConfig signingConfigs.release
+            } else {
+                signingConfig signingConfigs.debug
+            }
+            minifyEnabled false
+            shrinkResources false
         }
     }
 }
