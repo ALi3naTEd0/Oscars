@@ -1,6 +1,6 @@
 <img src="assets/oscars.png" width="200">
 
-# The 97th Academy Awards
+# The 98th Academy Awards
 
 ![Version](https://img.shields.io/github/v/release/ALi3naTEd0/Oscars)
 ![License](https://img.shields.io/badge/license-MIT-green)
@@ -26,7 +26,7 @@
 
 ## Introduction
 
-Welcome to **The 97th Academy Awards** app, your digital companion for exploring Oscar-nominated movies. Browse through nominations, view movie details, check IMDb ratings, and access direct links to IMDb pages - all in one place.
+Welcome to **The 98th Academy Awards** app, your digital companion for exploring Oscar-nominated movies. Browse through nominations, view movie details, check IMDb ratings, and access direct links to IMDb pages - all in one place.
 
 ## Features
 - 🎬 Browse Oscar nominated movies
@@ -35,6 +35,16 @@ Welcome to **The 97th Academy Awards** app, your digital companion for exploring
 - 🎲 Random movie selection
 - 🖼️ Movie poster visualization
 - 💾 Cached images for faster loading
+
+## Recent Additions
+- Per-year JSON assets for historical ceremonies (assets/oscars_<year>.json). Newly added: 1929, 1930, 1931, 1932, 2023, 2024, 2025, 2026.
+- Asset metadata fields: `date`, `ceremonyNumber`, and `imdbEventUrl` to provide canonical ceremony info and links.
+- Automated IMDb ID resolver: `tools/fetch_imdb_ids.py --year <YEAR>` populates `imdbIds` in assets and writes a `.imdb.bak` backup.
+- `displayNominations` entries now include credited names and movie associations for many categories (e.g., `Music (Original Song)`, `Production Design`).
+- Placeholders are added for titles the resolver couldn't match; you can paste `tt` ids directly into `assets/oscars_<year>.json`.
+- UI: year selector now displays the year; the app reads per-year metadata from assets to show ceremony details where needed.
+ 
+
 
 <!---
 ## Screenshots
@@ -52,6 +62,112 @@ Coming soon...
 |              |              |  [AppImage](https://github.com/ALi3naTEd0/Oscars/releases/download/v1.3.1-1/oscars_1.3.1-1.AppImage)               |                | 
 
 ## Installation
+
+## Years TODO (1929–2026)
+The repository maintains per-year assets under `assets/`. Marked years are already present in the repo; unmarked years still need to be added.
+
+<!-- NOTE: keep this list in sync with `assets/` -->
+
+1929 - [x]
+1930 - [x]
+1931 - [x]
+1932 - [x]
+1933 - [ ]
+1934 - [ ]
+1935 - [ ]
+1936 - [ ]
+1937 - [ ]
+1938 - [ ]
+1939 - [ ]
+1940 - [ ]
+1941 - [ ]
+1942 - [ ]
+1943 - [ ]
+1944 - [ ]
+1945 - [ ]
+1946 - [ ]
+1947 - [ ]
+1948 - [ ]
+1949 - [ ]
+1950 - [ ]
+1951 - [ ]
+1952 - [ ]
+1953 - [ ]
+1954 - [ ]
+1955 - [ ]
+1956 - [ ]
+1957 - [ ]
+1958 - [ ]
+1959 - [ ]
+1960 - [ ]
+1961 - [ ]
+1962 - [ ]
+1963 - [ ]
+1964 - [ ]
+1965 - [ ]
+1966 - [ ]
+1967 - [ ]
+1968 - [ ]
+1969 - [ ]
+1970 - [ ]
+1971 - [ ]
+1972 - [ ]
+1973 - [ ]
+1974 - [ ]
+1975 - [ ]
+1976 - [ ]
+1977 - [ ]
+1978 - [ ]
+1979 - [ ]
+1980 - [ ]
+1981 - [ ]
+1982 - [ ]
+1983 - [ ]
+1984 - [ ]
+1985 - [ ]
+1986 - [ ]
+1987 - [ ]
+1988 - [ ]
+1989 - [ ]
+1990 - [ ]
+1991 - [ ]
+1992 - [ ]
+1993 - [ ]
+1994 - [ ]
+1995 - [ ]
+1996 - [ ]
+1997 - [ ]
+1998 - [ ]
+1999 - [ ]
+2000 - [ ]
+2001 - [ ]
+2002 - [ ]
+2003 - [ ]
+2004 - [ ]
+2005 - [ ]
+2006 - [ ]
+2007 - [ ]
+2008 - [ ]
+2009 - [ ]
+2010 - [ ]
+2011 - [ ]
+2012 - [ ]
+2013 - [ ]
+2014 - [ ]
+2015 - [ ]
+2016 - [ ]
+2017 - [ ]
+2018 - [ ]
+2019 - [ ]
+2020 - [ ]
+2021 - [ ]
+2022 - [ ]
+2023 - [x]
+2024 - [x]
+2025 - [x]
+2026 - [x]
+
+If you'd like, I can run a script to auto-detect which `assets/oscars_<year>.json` files exist and update this checklist automatically.
 
 ### Windows
 1. Installer: Run `oscars_1.3.1-1.exe` and follow the installation wizard
